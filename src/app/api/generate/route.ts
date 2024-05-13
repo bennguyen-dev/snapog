@@ -1,4 +1,3 @@
-import puppeteer from "puppeteer";
 import { GenerateService } from "@/sevices/generate";
 
 export async function POST(req: Request) {
