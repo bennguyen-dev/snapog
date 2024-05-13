@@ -4,7 +4,7 @@ import {useState} from "react";
 
 export default function Home() {
     const [url, setUrl] = useState<string>('');
-    const [image, setImage] = useState<string>('');
+    const [images, setImages] = useState<any[]>([]);
 
     const handleSubmit = async () => {
         console.log('url 😋', {url}, '');
@@ -18,15 +18,14 @@ export default function Home() {
             body: JSON.stringify(body),
         })
 
-        const imageRes = await res?.json()
+        const imagesRes = await res?.json()
 
-        console.log('imageRes 😋', {imageRes}, '');
+        console.log('imagesRes 😋', {imagesRes}, '');
 
-
-        setImage(imageRes?.image)
+        setImages(imagesRes)
     }
 
-    console.log('image 😋', {image}, '');
+    console.log('images 😋', {images}, '');
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -47,9 +46,16 @@ export default function Home() {
                 </button>
             </div>
 
-            {image &&
-                <img className="h-auto max-w-full" src={image} alt="image description"/>
-            }
+            <div className="grid grid-rows-4 grid-flow-col gap-4">
+                {images && images?.map(image => {
+                    return <div className={''} key={image.url}>
+                        <a className={'mb-4'} target={'_blank'} href={image.url}>{image.url}</a>
+                        <img className="" src={image.base64Image} alt="images description"/>
+                    </div>
+                })
+                }
+            </div>
+
         </main>
     );
 }
