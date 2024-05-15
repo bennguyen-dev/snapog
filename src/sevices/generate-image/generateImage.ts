@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer";
-import { GenerateImageReq } from "@/sevices/generate-image/generateImageReq";
-import { GenerateImageRes } from "@/sevices/generate-image/generateImageRes";
+import { GenerateImageReq, GenerateImageRes } from "@/sevices/generate-image";
 
 export const generateImageByUrl = async (
   req: GenerateImageReq,

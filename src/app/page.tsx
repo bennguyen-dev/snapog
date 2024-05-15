@@ -13,7 +13,7 @@ export default function Home() {
       url,
     };
 
-    const res = await fetch("/api/generate?url=" + url, {
+    const res = await fetch("/api/demo?url=" + url, {
       method: "POST",
       body: JSON.stringify(body),
     });
