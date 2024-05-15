@@ -1,13 +1,10 @@
-import {
-  GenerateImagesDemoReq,
-  GenerateImagesDemoRes,
-} from "@/sevices/generate-images-demo";
+import { GetImagesDemoReq, GetImagesDemoRes } from "@/sevices/get-images-demo";
 import { getUrlByDomain } from "@/sevices/get-url-by-domain";
-import { generateImageByUrl } from "@/sevices/generate-image";
+import { generateImageByUrl } from "../generate-image-by-url";
 
-export const generateImagesDemo = async (
-  req: GenerateImagesDemoReq,
-): Promise<GenerateImagesDemoRes[]> => {
+export const getImagesDemo = async (
+  req: GetImagesDemoReq,
+): Promise<GetImagesDemoRes[]> => {
   const { domain, numberOfImages = 4 } = req;
 
   try {
@@ -22,7 +19,7 @@ export const generateImagesDemo = async (
     );
     const ogImages = await Promise.all(screenshotPromises);
 
-    const results: GenerateImagesDemoRes[] = [];
+    const results: GetImagesDemoRes[] = [];
     // Filter out null values (in case of errors during screenshot generation)
     ogImages.forEach((result) => {
       if (result.image) {

@@ -1,9 +1,12 @@
 import puppeteer from "puppeteer";
-import { GenerateImageReq, GenerateImageRes } from "@/sevices/generate-image";
+import {
+  GenerateImageByUrlReq,
+  GenerateImageByUrlRes,
+} from "@/sevices/generate-image-by-url";
 
 export const generateImageByUrl = async (
-  req: GenerateImageReq,
-): Promise<GenerateImageRes> => {
+  req: GenerateImageByUrlReq,
+): Promise<GenerateImageByUrlRes> => {
   const url = req.url;
 
   try {

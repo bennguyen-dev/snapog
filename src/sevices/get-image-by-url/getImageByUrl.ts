@@ -1,5 +1,5 @@
 import { GetImageByUrlReq, GetImageByUrlRes } from "@/sevices/get-image-by-url";
-import { generateImageByUrl } from "@/sevices/generate-image";
+import { generateImageByUrl } from "../generate-image-by-url";
 
 export const getImageByUrl = async (
   req: GetImageByUrlReq,

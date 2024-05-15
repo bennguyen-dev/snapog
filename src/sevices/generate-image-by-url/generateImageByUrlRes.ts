@@ -1,4 +1,4 @@
-export interface GenerateImageRes {
+export interface GenerateImageByUrlRes {
   image: Buffer | null;
   url: string;
 }

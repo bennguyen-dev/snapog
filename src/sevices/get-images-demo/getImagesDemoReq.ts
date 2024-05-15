@@ -1,4 +1,4 @@
-export interface GenerateImagesDemoReq {
+export interface GetImagesDemoReq {
   domain: string;
   numberOfImages?: number;
 }
