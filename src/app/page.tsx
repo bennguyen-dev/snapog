@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
   const [url, setUrl] = useState<string>("");
@@ -28,51 +30,25 @@ export default function Home() {
   console.log("images 😋", { images }, "");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <div>
-          <label
-            htmlFor="first_name"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            URL
-          </label>
-          <input
-            type="text"
-            id="first_name"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="John"
-            required
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </div>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
-      </div>
+    <>
+      <div className="z-10 w-full flex-col items-center justify-between font-mono text-sm lg:flex">
+        <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+          Automate your open-graph social images
+        </h1>
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          Get better CTR to your link with engaging OG social images. Fully
+          automated screenshots , no code required.
+        </h4>
 
-      <div className="grid grid-rows-4 grid-flow-col gap-4">
-        {images &&
-          images?.map((image) => {
-            return (
-              <div className={""} key={image.url}>
-                <a className={"mb-4"} target={"_blank"} href={image.url}>
-                  {image.url}
-                </a>
-                <img
-                  className=""
-                  src={image.base64Image}
-                  alt="images description"
-                />
-              </div>
-            );
-          })}
+        <div className="flex w-full max-w-md items-center space-x-2 py-12">
+          <Input
+            title="Enter your website URL to see a live demo:"
+            type="text"
+            placeholder="yoursite.com"
+          />
+          <Button type="submit">View Demo</Button>
+        </div>
       </div>
-    </main>
+    </>
   );
 }
