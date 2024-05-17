@@ -9,8 +9,10 @@ export const getUrlByDomain = async (
 ): Promise<GetUrlByDomainRes> => {
   const domain = req.domain;
 
+  const url = domain.startsWith("http") ? domain : `https://${domain}`;
+
   try {
-    const response = await fetch(domain);
+    const response = await fetch(url);
     const htmlContent = await response.text();
     const $ = cheerio.load(htmlContent);
 
@@ -18,7 +20,7 @@ export const getUrlByDomain = async (
 
     $("a").each((index, element) => {
       const href = $(element).attr("href");
-      if (href && href.startsWith(domain)) {
+      if (href && href.startsWith(url)) {
         internalLinksSet.add(href); // Add link to the Set
       }
     });

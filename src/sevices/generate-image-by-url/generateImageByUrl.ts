@@ -49,6 +49,20 @@ export const generateImageByUrl = async (
     // Capture screenshot
     const screenshot = await page.screenshot();
 
+    // Get title and description, image
+    const title = await page.title();
+    const description = await page.evaluate(() => {
+      const metaDescription = document.querySelector(
+        'meta[name="description"]',
+      );
+      return metaDescription ? metaDescription.getAttribute("content") : "";
+    });
+
+    const image = await page.evaluate(() => {
+      const ogImage = document.querySelector('meta[property="og:image"]');
+      return ogImage ? ogImage.getAttribute("content") : null;
+    });
+
     // Close page and browser after capturing screenshot
     await page.close();
     await browser.close();
@@ -56,6 +70,9 @@ export const generateImageByUrl = async (
     return {
       image: screenshot,
       url: url,
+      title,
+      description: description as string,
+      imageOG: image as string,
     };
   } catch (error) {
     console.error("Error generating OG image:", error);

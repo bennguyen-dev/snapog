@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ROUTES } from "@/lib/constants";
 
-import IconLogo from "@/assets/icons/logo.svg";
-
 const Hamburger = () => {
   return (
     <button
@@ -63,7 +61,6 @@ export const Header = () => {
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
-            <IconLogo className="h-4" />
             <span className="hidden font-bold sm:inline-block">Smart OG</span>
           </Link>
         </div>

@@ -26,6 +26,9 @@ export const getImagesDemo = async (
         results.push({
           url: result.url,
           base64Image: `data:image/png;base64,${result.image.toString("base64")}`,
+          title: result.title,
+          description: result.description,
+          imageOG: result.imageOG,
         });
       }
     });

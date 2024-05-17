@@ -3,31 +3,27 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [url, setUrl] = useState<string>("");
-  const [images, setImages] = useState<any[]>([]);
+  const router = useRouter();
+  const [domain, setDomain] = useState<string>("");
 
-  const handleSubmit = async () => {
-    console.log("url 😋", { url }, "");
+  const handleSubmit = () => {
+    if (!domain) {
+      return;
+    }
 
-    const body = {
-      url,
-    };
+    let domainClean = domain.trim();
 
-    const res = await fetch("/api/demo?url=" + url, {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+    if (domain.startsWith("https")) {
+      domainClean = domain.replace("https://", "");
+    } else if (domain.startsWith("http")) {
+      domainClean = domain.replace("http://", "");
+    }
 
-    const imagesRes = await res?.json();
-
-    console.log("imagesRes 😋", { imagesRes }, "");
-
-    setImages(imagesRes);
+    router.push(`/demo/${domainClean}`);
   };
-
-  console.log("images 😋", { images }, "");
 
   return (
     <>
@@ -45,8 +41,10 @@ export default function Home() {
             title="Enter your website URL to see a live demo:"
             type="text"
             placeholder="yoursite.com"
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
           />
-          <Button type="submit">View Demo</Button>
+          <Button onClick={handleSubmit}>View Demo</Button>
         </div>
       </div>
     </>
