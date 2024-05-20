@@ -43,7 +43,7 @@ export const Header = async () => {
         {session?.user ? (
           <div className="flex items-center gap-4">
             <div className="flex cursor-pointer flex-col items-end">
-              <p>{session.user.name}</p>
+              <p className="text-base">{session.user.name}</p>
               <form
                 action={async () => {
                   "use server";
@@ -51,7 +51,10 @@ export const Header = async () => {
                   redirect("/");
                 }}
               >
-                <button type="submit" className="font-semibold underline">
+                <button
+                  type="submit"
+                  className="text-sm font-semibold underline"
+                >
                   Logout
                 </button>
               </form>

@@ -1,8 +1,9 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import { Provider } from "@auth/core/providers";
+import Google from "@auth/core/providers/google";
 
-const providers: Provider[] = [GitHub];
+const providers: Provider[] = [GitHub, Google];
 
 export const providerMap = providers.map((provider) => {
   if (typeof provider === "function") {
