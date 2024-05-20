@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function DemoPage() {
   const router = useRouter();
   const [domain, setDomain] = useState<string>("");
 

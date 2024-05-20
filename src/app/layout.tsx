@@ -29,7 +29,7 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="container flex min-h-screen flex-col items-center justify-between">
           {children}
         </main>
       </body>
