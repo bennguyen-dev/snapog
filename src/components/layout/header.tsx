@@ -1,17 +1,11 @@
-"use client";
-
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ROUTES } from "@/lib/constants";
 
 import HamburgerIcon from "@/assets/icons/hamburger.svg";
+import { redirect } from "next/navigation";
+import { auth, signOut } from "@/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Navbar } from "@/components/layout/navbar";
 
 const Hamburger = () => {
   return (
@@ -29,7 +23,11 @@ const Hamburger = () => {
   );
 };
 
-export const Header = () => {
+export const Header = async () => {
+  const session = await auth();
+
+  console.log("session 😋", { session }, "");
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
@@ -41,23 +39,43 @@ export const Header = () => {
 
         <Hamburger />
 
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {ROUTES.map((route) => (
-              <NavigationMenuItem key={route.name}>
-                <Link href={route.path} legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    {route.name}
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        <div className="flex items-center justify-between space-x-2 md:justify-end">
-          <Button>Login</Button>
-        </div>
+        <Navbar />
+        {session?.user ? (
+          <div className="flex items-center gap-4">
+            <div className="flex cursor-pointer flex-col items-end">
+              <p>{session.user.name}</p>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                  redirect("/");
+                }}
+              >
+                <button type="submit" className="font-semibold underline">
+                  Logout
+                </button>
+              </form>
+            </div>
+            <Avatar>
+              <AvatarImage
+                src={session.user.image as string}
+                alt="User Image"
+              />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between space-x-2 md:justify-end">
+            <form
+              action={async () => {
+                "use server";
+                redirect("./signin");
+              }}
+            >
+              <Button type="submit">Sign in</Button>
+            </form>
+          </div>
+        )}
       </div>
     </header>
   );
