@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import GitHubIcon from "@/assets/icons/github.svg";
 import GoogleIcon from "@/assets/icons/google.svg";
+import { redirect } from "next/navigation";
 
 const IconPlatforms: any = {
   GitHub: <GitHubIcon className="mr-2 h-5 w-5" />,
@@ -29,7 +30,7 @@ export const SignIn = () => {
               key={provider.id}
               action={async () => {
                 "use server";
-                await signIn(provider.id);
+                await signIn(provider.id, { redirectTo: "/dashboard" });
               }}
             >
               <Button className="w-full" variant="outline" type="submit">
