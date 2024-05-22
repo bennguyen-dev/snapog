@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardSites } from "@/modules/dashboard/CardSites";
 
 export const Dashboard = () => {
   return (
@@ -18,12 +13,7 @@ export const Dashboard = () => {
           <div>Next usage reset: Never</div>
         </div>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Sign in</CardTitle>
-          <CardDescription>Get started in just 2 minutes.</CardDescription>
-        </CardHeader>
-      </Card>
+      <CardSites />
     </div>
   );
 };
