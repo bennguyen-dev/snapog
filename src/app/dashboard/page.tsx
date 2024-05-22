@@ -1,5 +1,8 @@
 import { Dashboard } from "@/modules/dashboard";
+import { auth } from "@/auth";
 
-export default function DashboardPage() {
-  return <Dashboard />;
+export default async function DashboardPage() {
+  const session = await auth();
+
+  return <Dashboard session={session} />;
 }

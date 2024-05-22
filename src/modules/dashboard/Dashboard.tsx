@@ -1,8 +1,13 @@
 "use client";
 
 import { CardSites } from "@/modules/dashboard/CardSites";
+import { Session } from "next-auth";
 
-export const Dashboard = () => {
+interface IProps {
+  session: Session | null;
+}
+
+export const Dashboard = ({ session }: IProps) => {
   return (
     <div className="mt-16 flex w-full max-w-screen-lg flex-col justify-start">
       <div className="mb-4  items-center justify-between gap-2 ">
@@ -13,7 +18,7 @@ export const Dashboard = () => {
           <div>Next usage reset: Never</div>
         </div>
       </div>
-      <CardSites />
+      <CardSites session={session} />
     </div>
   );
 };

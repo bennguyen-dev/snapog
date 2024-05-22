@@ -14,9 +14,30 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Session } from "next-auth";
 
-export const CardSites = () => {
+interface IProps {
+  session: Session | null;
+}
+
+export const CardSites = ({ session }: IProps) => {
   const [domain, setDomain] = useState<string>("");
+
+  const handleCreateSite = async () => {
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    await fetch(`/api/site/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ domain }),
+    });
+  };
 
   return (
     <Card>
@@ -45,7 +66,11 @@ export const CardSites = () => {
               />
             </div>
             <DialogFooter className="sm:justify-end">
-              <Button type="submit" disabled={!domain.trim()}>
+              <Button
+                type="submit"
+                disabled={!domain.trim()}
+                onClick={handleCreateSite}
+              >
                 Add site
               </Button>
             </DialogFooter>

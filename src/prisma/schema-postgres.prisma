@@ -21,6 +21,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Site      Site[]
 }
 
 model Account {
@@ -76,4 +77,19 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model Site {
+  id     String @id @default(cuid())
+  domain String @unique
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  pages  Page[]
+}
+
+model Page {
+  id     String @id @default(cuid())
+  url    String
+  siteId String
+  site   Site   @relation(fields: [siteId], references: [id])
 }
