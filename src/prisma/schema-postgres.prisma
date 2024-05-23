@@ -81,7 +81,7 @@ model Authenticator {
 
 model Site {
   id     String @id @default(cuid())
-  domain String @unique
+  domain String
   userId String
   user   User   @relation(fields: [userId], references: [id])
   pages  Page[]

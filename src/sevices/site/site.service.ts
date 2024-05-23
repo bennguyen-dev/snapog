@@ -1,8 +1,4 @@
-import {
-  ICreateSiteReq,
-  IGetSiteByUserIdReq,
-  ISiteDetail,
-} from "@/sevices/site";
+import { ICreateSite, IGetSitesByUserId, ISiteDetail } from "@/sevices/site";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 
@@ -12,24 +8,8 @@ class SiteService {
   async create({
     userId,
     domain,
-  }: ICreateSiteReq): Promise<IResponse<ISiteDetail | null>> {
+  }: ICreateSite): Promise<IResponse<ISiteDetail | null>> {
     try {
-      if (!domain) {
-        return {
-          message: "Domain is required",
-          status: 400,
-          data: null,
-        };
-      }
-
-      if (!userId) {
-        return {
-          message: "userId is required",
-          status: 400,
-          data: null,
-        };
-      }
-
       const exists = await prisma.site.findFirst({
         where: {
           domain,
@@ -65,36 +45,20 @@ class SiteService {
     }
   }
 
-  async getByUserId({
+  async getAllByUserId({
     userId,
-  }: IGetSiteByUserIdReq): Promise<IResponse<ISiteDetail | null>> {
+  }: IGetSitesByUserId): Promise<IResponse<ISiteDetail[] | null>> {
     try {
-      if (!userId) {
-        return {
-          message: "userId is required",
-          status: 400,
-          data: null,
-        };
-      }
-
-      const site = await prisma.site.findFirst({
+      const sites = await prisma.site.findMany({
         where: {
           userId,
         },
       });
 
-      if (!site) {
-        return {
-          message: "Site not found",
-          status: 404,
-          data: null,
-        };
-      }
-
       return {
-        message: "Site found successfully",
+        message: "Sites fetched successfully",
         status: 200,
-        data: site,
+        data: sites,
       };
     } catch (error) {
       return {
@@ -106,6 +70,4 @@ class SiteService {
   }
 }
 
-const siteService = new SiteService();
-
-export default siteService;
+export const siteService = new SiteService();

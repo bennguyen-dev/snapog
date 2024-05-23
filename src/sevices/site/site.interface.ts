@@ -1,9 +1,9 @@
-export interface ICreateSiteReq {
+export interface ICreateSite {
   userId: string;
   domain: string;
 }
 
-export interface IGetSiteByUserIdReq {
+export interface IGetSitesByUserId {
   userId: string;
 }
 

@@ -15,8 +15,6 @@ export default function DemoDetail({ params: { domain } }: IProps) {
   const { mounted } = useMounted();
   const [images, setImages] = useState<GetImagesDemoRes[]>([]);
 
-  console.log("domain 😋", { domain }, "");
-
   const fetchData = useCallback(async () => {
     const res = await fetch("/api/demo", {
       method: "POST",
@@ -25,8 +23,6 @@ export default function DemoDetail({ params: { domain } }: IProps) {
 
     setImages(await res.json());
   }, [domain]);
-
-  console.log("images 😋", { images }, "");
 
   useEffect(() => {
     mounted && fetchData();
