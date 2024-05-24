@@ -23,6 +23,18 @@ import {
 import { ISiteDetail } from "@/sevices/site";
 import { useMounted } from "@/hooks/useMouted";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Typography } from "@/components/ui/typography";
+import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DURATION_CACHE } from "@/lib/constants";
+import { CodeSnippet } from "@/components/ui/code-snippet";
 
 interface IProps {}
 
@@ -89,18 +101,69 @@ export const CardSites = ({}: IProps) => {
                 <Skeleton className="h-14 w-full border" />
               </>
             )}
-            {sites?.map((site) => (
-              <AccordionItem className="border-0" key={site.id} value={site.id}>
-                <Card>
-                  <CardContent className="py-0">
-                    <AccordionTrigger>{site.domain}</AccordionTrigger>
-                    <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                  </CardContent>
-                </Card>
-              </AccordionItem>
-            ))}
+            {sites?.map((site) => {
+              const urlExample = `https://${window.location.host}/api/get-image?url=${site.domain}`;
+
+              return (
+                <AccordionItem
+                  className="border-0"
+                  key={site.id}
+                  value={site.id}
+                >
+                  <Card>
+                    <CardContent className="py-0">
+                      <AccordionTrigger className="px-2">
+                        {site.domain}
+                      </AccordionTrigger>
+                      <AccordionContent className="-mx-1 pb-6">
+                        <div className="px-2">
+                          <Typography
+                            affects="small"
+                            className="mb-4 text-gray-500"
+                          >
+                            Example URL:{" "}
+                            <Link
+                              href={urlExample}
+                              target="_blank"
+                              className="text-blue-500 hover:underline"
+                            >
+                              {urlExample}
+                            </Link>
+                          </Typography>
+
+                          <Label htmlFor="duration">Duration cache</Label>
+                          <Select value={"1"}>
+                            <SelectTrigger className="mb-4 mt-1">
+                              <SelectValue
+                                id="duration"
+                                placeholder="Duration cache"
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {DURATION_CACHE.map((duration) => (
+                                  <SelectItem
+                                    key={duration.value}
+                                    value={`${duration.value}`}
+                                  >
+                                    {duration.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+
+                          <div className="flex flex-col">
+                            <Label htmlFor="duration">Snippet</Label>
+                            <CodeSnippet />
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </CardContent>
+                  </Card>
+                </AccordionItem>
+              );
+            })}
           </Accordion>
         </CardContent>
       </Card>
