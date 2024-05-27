@@ -3,6 +3,13 @@ export interface ICreatePage {
   siteId: string;
 }
 
+export interface IGetPageBy {
+  url?: string;
+  siteId?: string;
+
+  id?: string;
+}
+
 export interface IPageDetail {
   id: string;
   url: string;

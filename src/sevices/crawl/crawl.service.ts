@@ -1,5 +1,5 @@
 import { IGetInfoByUrl, IGetInfoByUrlResponse } from "@/sevices/crawl";
-import { verifyUrl } from "@/lib/utils";
+import { getUrlWithProtocol } from "@/lib/utils";
 import puppeteer from "puppeteer";
 import { IResponse } from "@/lib/type";
 
@@ -7,7 +7,7 @@ class CrawlService {
   async getInfoByUrl({
     url,
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
-    const verifiedUrl = verifyUrl(url);
+    const verifiedUrl = getUrlWithProtocol(url);
 
     try {
       const browser = await puppeteer.launch();

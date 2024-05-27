@@ -7,6 +7,10 @@ export interface IGetSitesByUserId {
   userId: string;
 }
 
+export interface IGetSiteByDomain {
+  domain: string;
+}
+
 export interface ISiteDetail {
   id: string;
   domain: string;

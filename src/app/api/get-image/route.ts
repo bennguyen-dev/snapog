@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getImageByUrl } from "@/sevices/get-image-by-url";
+import { PrismaClient } from "@prisma/client";
+import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
+import { pageService } from "@/sevices/page";
+import { siteService } from "@/sevices/site";
+import { imageService } from "@/sevices/image";
+
+const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
@@ -8,18 +14,20 @@ export async function GET(req: NextRequest) {
 
   if (!url) {
     return NextResponse.json(
-      { error: "Missing url parameter" },
+      { error: "URL is required", status: 400, data: null },
       { status: 400 },
     );
   }
 
-  if (!url.startsWith("https://") && !url.startsWith("http://")) {
-    url = `https://${url}`;
+  const res = await imageService.getImageByUrl({ url });
+
+  if (!res.data) {
+    return NextResponse.json(res, { status: res.status });
   }
 
-  const image = await getImageByUrl({ url });
-
-  return new Response(image, {
-    headers: { "content-type": "image/png" },
+  return new Response(res.data?.image, {
+    headers: {
+      "Content-Type": res.data?.contentType,
+    },
   });
 }

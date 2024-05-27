@@ -1,4 +1,9 @@
-import { ICreateSite, IGetSitesByUserId, ISiteDetail } from "@/sevices/site";
+import {
+  ICreateSite,
+  IGetSiteByDomain,
+  IGetSitesByUserId,
+  ISiteDetail,
+} from "@/sevices/site";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 
@@ -43,6 +48,30 @@ class SiteService {
         data: null,
       };
     }
+  }
+
+  async getByDomain({
+    domain,
+  }: IGetSiteByDomain): Promise<IResponse<ISiteDetail | null>> {
+    const site = await prisma.site.findFirst({
+      where: {
+        domain,
+      },
+    });
+
+    if (!site) {
+      return {
+        message: "Site not found",
+        status: 404,
+        data: null,
+      };
+    }
+
+    return {
+      message: "Site found",
+      status: 200,
+      data: site,
+    };
   }
 
   async getAllByUserId({

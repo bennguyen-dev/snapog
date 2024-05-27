@@ -1,8 +1,8 @@
-import { ICreatePage, IPageDetail } from "@/sevices/page";
+import { ICreatePage, IGetPageBy, IPageDetail } from "@/sevices/page";
 import {
   getUrlWithoutProtocol,
   sanitizeFilename,
-  verifyUrl,
+  getUrlWithProtocol,
 } from "@/lib/utils";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
@@ -17,7 +17,7 @@ class PageService {
     url,
     siteId,
   }: ICreatePage): Promise<IResponse<IPageDetail | null>> {
-    const verifiedUrl = verifyUrl(url);
+    const verifiedUrl = getUrlWithProtocol(url);
     const cleanProtocolUrl = getUrlWithoutProtocol(url);
 
     const site = await prisma.site.findUnique({
@@ -81,6 +81,42 @@ class PageService {
 
       return {
         message: "Page created successfully",
+        status: 200,
+        data: page as IPageDetail,
+      };
+    } catch (error) {
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async getBy({
+    url,
+    siteId,
+    id,
+  }: IGetPageBy): Promise<IResponse<IPageDetail | null>> {
+    try {
+      const page = await prisma.page.findFirst({
+        where: {
+          url,
+          siteId,
+          id,
+        },
+      });
+
+      if (!page) {
+        return {
+          message: "Page not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      return {
+        message: "Page found",
         status: 200,
         data: page as IPageDetail,
       };

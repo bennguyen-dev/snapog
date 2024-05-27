@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { siteService } from "@/sevices/site";
 import { auth } from "@/auth";
 import { pageService } from "@/sevices/page";
-import { verifyUrl } from "@/lib/utils";
+import { getUrlWithProtocol } from "@/lib/utils";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();
@@ -33,7 +33,7 @@ export const POST = auth(async function POST(req) {
     return NextResponse.json(site, { status: site.status });
   }
 
-  const urlHomepage = verifyUrl(site.data.domain);
+  const urlHomepage = getUrlWithProtocol(site.data.domain);
 
   const page = await pageService.create({
     siteId: site.data.id,
