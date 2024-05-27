@@ -85,11 +85,20 @@ model Site {
   userId String
   user   User   @relation(fields: [userId], references: [id])
   pages  Page[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Page {
-  id     String @id @default(cuid())
-  url    String
-  siteId String
-  site   Site   @relation(fields: [siteId], references: [id])
+  id          String  @id @default(cuid())
+  url         String
+  siteId      String
+  site        Site    @relation(fields: [siteId], references: [id])
+  image       String?
+  title       String?
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

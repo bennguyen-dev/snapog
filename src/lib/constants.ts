@@ -24,3 +24,21 @@ export const DURATION_CACHE = [
   { label: "5 day", value: 5 },
   { label: "6 day", value: 6 },
 ];
+
+export const SNIPPET_HOW_TO_USE = `
+  <!-- Put in your <head> tag -->
+  <meta
+    property="og:image"
+    content="https://image.social/get?url=your.rentals/your/example/path"
+  />`;
+
+export const IMAGE_TYPES = Object.freeze({
+  PNG: {
+    MIME: "image/png",
+    EXTENSION: "png",
+  },
+  JPEG: {
+    MIME: "image/jpeg",
+    EXTENSION: "jpg",
+  },
+});

@@ -33,7 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_CACHE } from "@/lib/constants";
+import { DURATION_CACHE, SNIPPET_HOW_TO_USE } from "@/lib/constants";
 import { CodeSnippet } from "@/components/ui/code-snippet";
 
 interface IProps {}
@@ -155,7 +155,7 @@ export const CardSites = ({}: IProps) => {
 
                           <div className="flex flex-col">
                             <Label htmlFor="duration">Snippet</Label>
-                            <CodeSnippet />
+                            <CodeSnippet>{SNIPPET_HOW_TO_USE}</CodeSnippet>
                           </div>
                         </div>
                       </AccordionContent>

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { siteService } from "@/sevices/site";
 import { auth } from "@/auth";
+import { pageService } from "@/sevices/page";
+import { verifyUrl } from "@/lib/utils";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();
@@ -22,11 +24,36 @@ export const POST = auth(async function POST(req) {
     });
   }
 
-  const data = await siteService.create({
+  const site = await siteService.create({
     userId: req.auth.user.id,
     domain,
   });
-  return NextResponse.json(data, { status: data.status });
+
+  if (!site.data) {
+    return NextResponse.json(site, { status: site.status });
+  }
+
+  const urlHomepage = verifyUrl(site.data.domain);
+
+  const page = await pageService.create({
+    siteId: site.data.id,
+    url: urlHomepage,
+  });
+
+  if (!page.data) {
+    return NextResponse.json(page, { status: page.status });
+  }
+
+  const res = {
+    status: site.status,
+    data: {
+      ...site.data,
+      page: page.data,
+    },
+    message: site.message,
+  };
+
+  return NextResponse.json(res, { status: site.status });
 });
 
 export const GET = auth(async function GET(req) {

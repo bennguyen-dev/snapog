@@ -11,4 +11,7 @@ export interface ISiteDetail {
   id: string;
   domain: string;
   userId: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
