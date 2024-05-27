@@ -18,3 +18,13 @@ export function sanitizeFilename(url: string) {
     replacement: "_",
   });
 }
+
+export function getUrlWithoutProtocol(url: string) {
+  // Remove "https://" if present
+  let modifiedUrl = url.replace(/^https:\/\//i, "");
+
+  // Remove "http://" if present
+  modifiedUrl = modifiedUrl.replace(/^http:\/\//i, "");
+
+  return modifiedUrl;
+}

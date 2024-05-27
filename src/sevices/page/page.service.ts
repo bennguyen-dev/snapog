@@ -1,5 +1,9 @@
 import { ICreatePage, IPageDetail } from "@/sevices/page";
-import { sanitizeFilename, verifyUrl } from "@/lib/utils";
+import {
+  getUrlWithoutProtocol,
+  sanitizeFilename,
+  verifyUrl,
+} from "@/lib/utils";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 import { crawlService } from "@/sevices/crawl";
@@ -14,6 +18,7 @@ class PageService {
     siteId,
   }: ICreatePage): Promise<IResponse<IPageDetail | null>> {
     const verifiedUrl = verifyUrl(url);
+    const cleanProtocolUrl = getUrlWithoutProtocol(url);
 
     const site = await prisma.site.findUnique({
       where: {
@@ -51,7 +56,7 @@ class PageService {
     const uploadRes = await storageService.uploadImage({
       image: pageCrawlInfo.data?.screenShot,
       type: IMAGE_TYPES.PNG,
-      fileName: sanitizeFilename(url),
+      fileName: sanitizeFilename(cleanProtocolUrl),
       folder: sanitizeFilename(site.domain),
     });
 
@@ -66,7 +71,7 @@ class PageService {
     try {
       const page = await prisma.page.create({
         data: {
-          url: verifiedUrl,
+          url: cleanProtocolUrl,
           siteId,
           title: pageCrawlInfo.data.title,
           description: pageCrawlInfo.data.description,
