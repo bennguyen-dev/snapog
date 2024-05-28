@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
-import { pageService } from "@/sevices/page";
-import { siteService } from "@/sevices/site";
 import { imageService } from "@/sevices/image";
 
 const prisma = new PrismaClient();

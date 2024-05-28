@@ -33,6 +33,7 @@ export const POST = auth(async function POST(req) {
     return NextResponse.json(site, { status: site.status });
   }
 
+  // Create home page
   const urlHomepage = getUrlWithProtocol(site.data.domain);
 
   const page = await pageService.create({
@@ -65,8 +66,8 @@ export const GET = auth(async function GET(req) {
     });
   }
 
-  const sites = await siteService.getAllByUserId({
+  const sites = await siteService.getAllBy({
     userId: req.auth.user.id,
   });
-  return NextResponse.json(sites);
+  return NextResponse.json(sites, { status: sites.status });
 });

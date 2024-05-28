@@ -20,7 +20,7 @@ class ImageService {
 
     try {
       // Check if the domain exists in the Site table
-      const site = await siteService.getByDomain({ domain });
+      const site = await siteService.getBy({ domain });
 
       if (!site.data) {
         return {

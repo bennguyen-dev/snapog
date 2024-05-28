@@ -1,7 +1,7 @@
 import {
   ICreateSite,
-  IGetSiteByDomain,
-  IGetSitesByUserId,
+  IGetSiteBy,
+  IGetSitesBy,
   ISiteDetail,
 } from "@/sevices/site";
 import { PrismaClient } from "@prisma/client";
@@ -50,11 +50,15 @@ class SiteService {
     }
   }
 
-  async getByDomain({
+  async getBy({
     domain,
-  }: IGetSiteByDomain): Promise<IResponse<ISiteDetail | null>> {
+    userId,
+    id,
+  }: IGetSiteBy): Promise<IResponse<ISiteDetail | null>> {
     const site = await prisma.site.findFirst({
       where: {
+        id,
+        userId,
         domain,
       },
     });
@@ -74,9 +78,9 @@ class SiteService {
     };
   }
 
-  async getAllByUserId({
+  async getAllBy({
     userId,
-  }: IGetSitesByUserId): Promise<IResponse<ISiteDetail[] | null>> {
+  }: IGetSitesBy): Promise<IResponse<ISiteDetail[] | null>> {
     try {
       const sites = await prisma.site.findMany({
         where: {

@@ -3,12 +3,18 @@ export interface ICreateSite {
   domain: string;
 }
 
-export interface IGetSitesByUserId {
-  userId: string;
+export interface IGetSitesBy {
+  userId?: string;
+  domain?: string;
+
+  id?: string;
 }
 
-export interface IGetSiteByDomain {
-  domain: string;
+export interface IGetSiteBy {
+  userId?: string;
+  domain?: string;
+
+  id?: string;
 }
 
 export interface ISiteDetail {
