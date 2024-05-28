@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/select";
 import { DURATION_CACHE, SNIPPET_HOW_TO_USE } from "@/lib/constants";
 import { CodeSnippet } from "@/components/ui/code-snippet";
+import { getDomainName } from "@/lib/utils";
 
 interface IProps {}
 
@@ -191,7 +192,7 @@ export const CardSites = ({}: IProps) => {
               type="submit"
               disabled={!domain.trim()}
               loading={creating}
-              onClick={() => createSite({ domain })}
+              onClick={() => createSite({ domain: getDomainName(domain) })}
             >
               Add site
             </Button>

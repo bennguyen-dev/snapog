@@ -7,7 +7,6 @@ import {
 import { getUrlWithProtocol } from "@/lib/utils";
 import puppeteer from "puppeteer";
 import { IResponse } from "@/lib/type";
-import cheerio from "cheerio";
 
 class CrawlService {
   async getInfoByUrl({
@@ -105,26 +104,22 @@ class CrawlService {
     const homepage = getUrlWithProtocol(domain);
 
     try {
-      const response = await fetch(homepage);
-      const htmlContent = await response.text();
-      const $ = cheerio.load(htmlContent);
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(homepage, { waitUntil: "networkidle2", timeout: 30000 });
 
-      const internalLinksSet = new Set<string>(); // Using Set to store unique links
-
-      $("a").each((index, element) => {
-        const href = $(element).attr("href");
-        if (href && href.startsWith(homepage)) {
-          internalLinksSet.add(href); // Add link to the Set
-        }
+      const links = await page.evaluate(() => {
+        const anchorElements = document.querySelectorAll("a");
+        return Array.from(anchorElements).map((anchor) => anchor.href);
       });
 
-      let urls = Array.from(internalLinksSet);
+      await browser.close();
 
       return {
         status: 200,
         message: "Links fetched successfully",
         data: {
-          urls: this._selectImportantPages(urls, homepage).slice(0, limit),
+          urls: this._selectImportantPages(links, homepage).slice(0, limit),
         },
       };
     } catch (error) {
@@ -138,8 +133,6 @@ class CrawlService {
   }
 
   _selectImportantPages(links: string[], homepage: string) {
-    console.log("links 😋", { links }, "");
-
     const importantPages = new Set([homepage]);
     const priorityPages = [
       "about",
@@ -156,6 +149,9 @@ class CrawlService {
       "shipping",
       "pricing",
       "checkout",
+      "business",
+      "investor",
+      "newsroom",
     ];
 
     links.forEach((link) => {

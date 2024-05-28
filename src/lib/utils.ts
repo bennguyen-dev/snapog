@@ -37,3 +37,7 @@ export function getUrlWithoutProtocol(url: string) {
 
   return modifiedUrl;
 }
+
+export function getDomainName(url: string) {
+  return new URL(getUrlWithProtocol(url?.trim())).hostname;
+}
