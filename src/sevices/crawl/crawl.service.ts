@@ -1,7 +1,13 @@
-import { IGetInfoByUrl, IGetInfoByUrlResponse } from "@/sevices/crawl";
+import {
+  IGetAllUrlByDomain,
+  IGetAllUrlByDomainResponse,
+  IGetInfoByUrl,
+  IGetInfoByUrlResponse,
+} from "@/sevices/crawl";
 import { getUrlWithProtocol } from "@/lib/utils";
 import puppeteer from "puppeteer";
 import { IResponse } from "@/lib/type";
+import cheerio from "cheerio";
 
 class CrawlService {
   async getInfoByUrl({
@@ -88,6 +94,77 @@ class CrawlService {
         data: null,
       };
     }
+  }
+
+  async getAllUrlByDomain({
+    domain,
+    limit = 4,
+  }: IGetAllUrlByDomain): Promise<
+    IResponse<IGetAllUrlByDomainResponse | null>
+  > {
+    const homepage = getUrlWithProtocol(domain);
+
+    try {
+      const response = await fetch(homepage);
+      const htmlContent = await response.text();
+      const $ = cheerio.load(htmlContent);
+
+      const internalLinksSet = new Set<string>(); // Using Set to store unique links
+
+      $("a").each((index, element) => {
+        const href = $(element).attr("href");
+        if (href && href.startsWith(homepage)) {
+          internalLinksSet.add(href); // Add link to the Set
+        }
+      });
+
+      let urls = Array.from(internalLinksSet);
+
+      return {
+        status: 200,
+        message: "Links fetched successfully",
+        data: {
+          urls: this._selectImportantPages(urls, homepage).slice(0, limit),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching internal links:", error);
+      return {
+        status: 500,
+        message: "Internal Server Error",
+        data: null,
+      };
+    }
+  }
+
+  _selectImportantPages(links: string[], homepage: string) {
+    console.log("links 😋", { links }, "");
+
+    const importantPages = new Set([homepage]);
+    const priorityPages = [
+      "about",
+      "contact",
+      "services",
+      "products",
+      "blog",
+      "faq",
+      "sitemap",
+      "privacy",
+      "terms",
+      "refund",
+      "payment",
+      "shipping",
+      "pricing",
+      "checkout",
+    ];
+
+    links.forEach((link) => {
+      if (priorityPages.some((page) => link.includes(page))) {
+        importantPages.add(link);
+      }
+    });
+
+    return Array.from(importantPages);
   }
 }
 

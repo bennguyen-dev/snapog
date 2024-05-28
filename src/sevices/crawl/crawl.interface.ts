@@ -9,3 +9,12 @@ export interface IGetInfoByUrlResponse {
   description?: string;
   ogImage?: string;
 }
+
+export interface IGetAllUrlByDomain {
+  domain: string;
+  limit?: number;
+}
+
+export interface IGetAllUrlByDomainResponse {
+  urls: string[];
+}

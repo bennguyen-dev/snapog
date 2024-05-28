@@ -6,6 +6,9 @@ import { useMounted } from "@/hooks/useMouted";
 import { ItemPreviewOGImage } from "@/modules/demo/ItemPreviewOGImage";
 import DoneIcon from "@/assets/icons/done.svg";
 import CloseIcon from "@/assets/icons/close.svg";
+import { IGetDemo, IGetDemoResponse } from "@/sevices/demo";
+import { useCallApi } from "@/hooks/useCallApi";
+import { ISiteDetail } from "@/sevices/site";
 
 interface IProps {
   params: { domain: string };
@@ -13,20 +16,23 @@ interface IProps {
 
 export default function DemoDetail({ params: { domain } }: IProps) {
   const { mounted } = useMounted();
-  const [images, setImages] = useState<GetImagesDemoRes[]>([]);
 
-  const fetchData = useCallback(async () => {
-    const res = await fetch("/api/demo", {
-      method: "POST",
-      body: JSON.stringify({ domain }),
-    });
-
-    setImages(await res.json());
-  }, [domain]);
+  const queryApi = new URLSearchParams({ domain }).toString();
+  const {
+    data: pagesInfo,
+    loading: fetching,
+    setLetCall: getPagesInfo,
+  } = useCallApi<IGetDemoResponse[], {}, {}>({
+    url: `/api/demo?${queryApi}`,
+    options: {
+      method: "GET",
+    },
+    nonCallInit: true,
+  });
 
   useEffect(() => {
-    mounted && fetchData();
-  }, [mounted, fetchData]);
+    mounted && getPagesInfo(true);
+  }, [mounted, getPagesInfo]);
 
   return (
     <div className="max-w-screen-2xl">
@@ -82,24 +88,24 @@ export default function DemoDetail({ params: { domain } }: IProps) {
         </div>
       </div>
       <div className="flex flex-col gap-16 py-8">
-        {images &&
-          images?.map((image) => {
+        {pagesInfo &&
+          pagesInfo?.map((page) => {
             return (
               <div
                 className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
-                key={image.url}
+                key={page.url}
               >
                 <ItemPreviewOGImage
-                  url={image.url}
-                  image={image.imageOG}
-                  title={image.title}
-                  description={image.description}
+                  url={page.url}
+                  image={page.ogImage}
+                  title={page.title}
+                  description={page.description}
                 />
                 <ItemPreviewOGImage
-                  url={image.url}
-                  image={image.base64Image}
-                  title={image.title}
-                  description={image.description}
+                  url={page.url}
+                  image={page.smartOgImageBase64}
+                  title={page.title}
+                  description={page.description}
                 />
               </div>
             );

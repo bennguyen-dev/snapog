@@ -1,9 +1,24 @@
-import { getImagesDemo } from "@/sevices/get-images-demo";
+import { demoService } from "@/sevices/demo";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const body = await req.json();
+export async function GET(req: NextRequest) {
+  const params = req.nextUrl.searchParams;
 
-  const result = await getImagesDemo({ domain: body.domain });
+  let domain = params.get("domain");
+  let numberOfImages = params.get("numberOfImages");
 
-  return Response.json(result);
+  if (!domain) {
+    return NextResponse.json({
+      message: "Domain is required",
+      status: 400,
+      data: null,
+    });
+  }
+
+  const result = await demoService.getDemo({
+    domain: domain,
+    numberOfImages: numberOfImages ? parseInt(numberOfImages, 10) : 4,
+  });
+
+  return NextResponse.json(result);
 }
