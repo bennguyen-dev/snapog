@@ -1,14 +1,12 @@
 "use client";
 
-import { GetImagesDemoRes } from "@/sevices/get-images-demo";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMounted } from "@/hooks/useMouted";
 import { ItemPreviewOGImage } from "@/modules/demo/ItemPreviewOGImage";
 import DoneIcon from "@/assets/icons/done.svg";
 import CloseIcon from "@/assets/icons/close.svg";
-import { IGetDemo, IGetDemoResponse } from "@/sevices/demo";
+import { IGetDemoResponse } from "@/sevices/demo";
 import { useCallApi } from "@/hooks/useCallApi";
-import { ISiteDetail } from "@/sevices/site";
 
 interface IProps {
   params: { domain: string };
@@ -35,7 +33,7 @@ export default function DemoDetail({ params: { domain } }: IProps) {
   }, [mounted, getPagesInfo]);
 
   return (
-    <div className="max-w-screen-2xl">
+    <div className="w-full max-w-screen-2xl">
       <h1 className="mt-8 flex-col gap-2 py-8 text-center font-mono text-2xl font-bold md:text-4xl xl:text-5xl">
         Open-graph image review for{" "}
         <span className="underline">your.rentals</span>
@@ -88,28 +86,37 @@ export default function DemoDetail({ params: { domain } }: IProps) {
         </div>
       </div>
       <div className="flex flex-col gap-16 py-8">
-        {pagesInfo &&
-          pagesInfo?.map((page) => {
-            return (
+        {pagesInfo && !fetching
+          ? pagesInfo?.map((page) => {
+              return (
+                <div
+                  className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
+                  key={page.url}
+                >
+                  <ItemPreviewOGImage
+                    url={page.url}
+                    image={page.ogImage}
+                    title={page.title}
+                    description={page.description}
+                  />
+                  <ItemPreviewOGImage
+                    url={page.url}
+                    image={page.smartOgImageBase64}
+                    title={page.title}
+                    description={page.description}
+                  />
+                </div>
+              );
+            })
+          : Array.from({ length: 2 }).map((_, index) => (
               <div
                 className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
-                key={page.url}
+                key={index}
               >
-                <ItemPreviewOGImage
-                  url={page.url}
-                  image={page.ogImage}
-                  title={page.title}
-                  description={page.description}
-                />
-                <ItemPreviewOGImage
-                  url={page.url}
-                  image={page.smartOgImageBase64}
-                  title={page.title}
-                  description={page.description}
-                />
+                <ItemPreviewOGImage loading={true} />
+                <ItemPreviewOGImage loading={true} />
               </div>
-            );
-          })}
+            ))}
       </div>
     </div>
   );

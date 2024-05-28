@@ -35,7 +35,7 @@ export const Navbar = ({ session }: IProps) => {
             <Link href={route.path} legacyBehavior passHref>
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
-                active={pathname === route.path}
+                active={pathname.includes(route.path)}
               >
                 {route.name}
               </NavigationMenuLink>
