@@ -1,8 +1,7 @@
-import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
-import ReloadIcon from "@/assets/icons/reload.svg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUrlWithoutProtocol } from "@/lib/utils";
 import Image from "next/image";
+import { ArrowLeft, RotateCw } from "lucide-react";
 
 interface IProps {
   url?: string;
@@ -26,9 +25,9 @@ export const ItemPreviewOGImage = ({
   return (
     <div className={className}>
       <div className="mb-4 flex items-center justify-between gap-4 px-4">
-        <ArrowLeftIcon className="h-4 w-4" />
-        <ArrowLeftIcon className="h-4 w-4 rotate-180 text-neutral-300" />
-        <ReloadIcon className="h-4 w-4" />
+        <ArrowLeft className="h-5 w-5" />
+        <ArrowLeft className="h-5 w-5 rotate-180 text-neutral-300" />
+        <RotateCw className="h-5 w-5" />
         {loading ? (
           <Skeleton className="h-10 w-full rounded-full bg-slate-200" />
         ) : (

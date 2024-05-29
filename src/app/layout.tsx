@@ -12,8 +12,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Smart OG Image Generator",
-  description: "Smart OG Image Generator",
+  title: " Automate OG Social Images | Boost CTR with No Code",
+  description:
+    "Automate your open-graph social images effortlessly. Enhance your click-through rate (CTR) with engaging and fully automated OG images. No coding required",
 };
 
 export default function RootLayout({

@@ -1,8 +1,7 @@
-import CloseIcon from "@/assets/icons/close.svg";
-import DoneIcon from "@/assets/icons/done.svg";
 import { ItemPreviewOGImage } from "@/modules/demo";
 import { IGetDemoResponse } from "@/sevices/demo";
 import { Typography } from "@/components/ui/typography";
+import { Check, X } from "lucide-react";
 
 interface IProps {
   pagesInfo?: IGetDemoResponse[];
@@ -25,19 +24,19 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
           <div className="my-4 flex items-center justify-center">
             <ul className="font-medium text-red-500">
               <li className="flex items-center gap-1">
-                <CloseIcon className="mr-1 inline-block h-4 w-4 text-red-500" />
+                <X className="mr-1 inline-block h-5 w-5 stroke-2 text-red-500" />
                 Missing OG image on some pages
               </li>
               <li className="flex items-center gap-1">
-                <CloseIcon className="mr-1 inline-block h-4 w-4 text-red-500" />
+                <X className="mr-1 inline-block h-5 w-5 stroke-2 text-red-500" />
                 Manually update when the content changes
               </li>
               <li className="flex items-center gap-1">
-                <CloseIcon className="mr-1 inline-block h-4 w-4 text-red-500" />
+                <X className="mr-1 inline-block h-5 w-5 stroke-2 text-red-500" />
                 Takes time to design an OG image for every page
               </li>
               <li className="flex items-center gap-1">
-                <CloseIcon className="mr-1 inline-block h-4 w-4 text-red-500" />
+                <X className="mr-1 inline-block h-5 w-5 stroke-2 text-red-500" />
                 Complicated code to generate dynamic OG images
               </li>
             </ul>
@@ -51,15 +50,15 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
           <div className="my-4 flex items-center justify-center">
             <ul className="font-medium text-green-600">
               <li className="flex items-center gap-1">
-                <DoneIcon className="mr-1 inline-block h-4 w-4 text-green-500" />
+                <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 In-context OG image with page screenshot (better CTR)
               </li>
               <li className="flex items-center gap-1">
-                <DoneIcon className="mr-1 inline-block h-4 w-4 text-green-500" />
+                <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 Fully automated, generated for every page, save time.
               </li>
               <li className="flex items-center gap-1">
-                <DoneIcon className="mr-1 inline-block h-4 w-4 text-green-500" />
+                <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 Optimal size, high quality (retina scale), fast loading
               </li>
             </ul>

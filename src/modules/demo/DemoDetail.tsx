@@ -2,9 +2,7 @@
 
 import { useEffect } from "react";
 import { useMounted } from "@/hooks/useMouted";
-import { ItemPreviewOGImage } from "@/modules/demo/ItemPreviewOGImage";
-import DoneIcon from "@/assets/icons/done.svg";
-import CloseIcon from "@/assets/icons/close.svg";
+
 import { IGetDemoResponse } from "@/sevices/demo";
 import { useCallApi } from "@/hooks/useCallApi";
 import { BlockCompareOGImage } from "@/components/block";

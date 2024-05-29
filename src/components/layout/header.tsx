@@ -70,7 +70,7 @@ export const Header = async () => {
             <form
               action={async () => {
                 "use server";
-                redirect("./signin");
+                redirect("/signin");
               }}
             >
               <Button type="submit">Sign in</Button>
