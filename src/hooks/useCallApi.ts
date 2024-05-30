@@ -53,7 +53,7 @@ export const useCallApi = <T, E = {}, B = {}>({
       }
       if (status === 400) setError(response.data);
       if (status === 401) {
-        router.push("/login");
+        router.push("/signin");
       }
       if (status === 403) {
         router.replace("/403");
