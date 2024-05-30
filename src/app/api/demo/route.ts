@@ -5,7 +5,6 @@ export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
   let domain = params.get("domain");
-  let numberOfImages = params.get("numberOfImages");
 
   if (!domain) {
     return NextResponse.json({
@@ -17,7 +16,7 @@ export async function GET(req: NextRequest) {
 
   const result = await demoService.getDemo({
     domain: domain,
-    numberOfImages: numberOfImages ? parseInt(numberOfImages, 10) : 4,
+    numberOfImages: 3,
   });
 
   return NextResponse.json(result);

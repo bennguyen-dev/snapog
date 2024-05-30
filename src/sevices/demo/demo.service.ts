@@ -5,7 +5,7 @@ import { IResponse } from "@/lib/type";
 class DemoService {
   async getDemo({
     domain,
-    numberOfImages = 4,
+    numberOfImages = 3,
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
     try {
       const urls = await crawlService.getAllUrlByDomain({

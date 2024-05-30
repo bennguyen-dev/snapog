@@ -18,9 +18,11 @@ class CrawlService {
     const verifiedUrl = getUrlWithProtocol(url);
 
     const browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(
+        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
+      ),
       headless: true,
       ignoreHTTPSErrors: true,
     });
@@ -106,7 +108,7 @@ class CrawlService {
 
   async getAllUrlByDomain({
     domain,
-    limit = 4,
+    limit = 3,
   }: IGetAllUrlByDomain): Promise<
     IResponse<IGetAllUrlByDomainResponse | null>
   > {
@@ -140,17 +142,20 @@ class CrawlService {
 
       // Get all links and check if they contain any priority page keyword
       const links = await page.evaluate(
-        (priorityPages, homepage) => {
+        (priorityPages, homepage, limit) => {
           const anchorElements = document.querySelectorAll("a");
           const uniqueLinks = new Set<string>();
 
           // Add the homepage URL to the set
           uniqueLinks.add(homepage.toString());
 
-          // Process anchor elements
-          anchorElements.forEach((anchor) => {
-            const url = new URL(anchor.href);
+          for (let i = 0; i < anchorElements.length; i++) {
+            const url = new URL(anchorElements[i].href);
             url.search = ""; // Remove the query string
+
+            if (uniqueLinks.size === limit) {
+              break;
+            }
 
             // Check if the URL contains any priority page keyword
             for (const keyword of priorityPages) {
@@ -159,21 +164,21 @@ class CrawlService {
                 break;
               }
             }
-          });
+          }
 
           return Array.from(uniqueLinks);
         },
         PRIORITY_PAGES,
         homepage,
+        limit,
       );
-
       await browser.close();
 
       return {
         status: 200,
         message: "Links fetched successfully",
         data: {
-          urls: links.slice(0, limit),
+          urls: links,
         },
       };
     } catch (error) {
