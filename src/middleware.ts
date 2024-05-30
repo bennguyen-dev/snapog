@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { ROUTES } from "@/lib/constants";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export default auth((request) => {
   const checkRouteAuth = ROUTES.some((route) => {
