@@ -42,3 +42,23 @@ export const IMAGE_TYPES = Object.freeze({
     EXTENSION: "jpg",
   },
 });
+
+export const PRIORITY_PAGES = [
+  "about",
+  "contact",
+  "services",
+  "products",
+  "blog",
+  "faq",
+  "sitemap",
+  "privacy",
+  "terms",
+  "refund",
+  "payment",
+  "shipping",
+  "pricing",
+  "checkout",
+  "business",
+  "investor",
+  "newsroom",
+];

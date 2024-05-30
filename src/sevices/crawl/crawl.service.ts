@@ -5,8 +5,11 @@ import {
   IGetInfoByUrlResponse,
 } from "@/sevices/crawl";
 import { getUrlWithProtocol } from "@/lib/utils";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import { IResponse } from "@/lib/type";
+
+import chromium from "@sparticuz/chromium-min";
+import { PRIORITY_PAGES } from "@/lib/constants";
 
 class CrawlService {
   async getInfoByUrl({
@@ -14,8 +17,29 @@ class CrawlService {
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
     const verifiedUrl = getUrlWithProtocol(url);
 
+    const browser = await puppeteer.launch({
+      args: [
+        "--hide-scrollbars",
+        "--disable-web-security",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--no-zygote",
+        "--single-process",
+        "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--disable-dev-shm-usage",
+      ],
+      executablePath: await chromium.executablePath(
+        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
+      ),
+      ignoreHTTPSErrors: true,
+      headless: true,
+    });
+
     try {
-      const browser = await puppeteer.launch();
       const page = await browser.newPage();
 
       // Set viewport size
@@ -92,6 +116,8 @@ class CrawlService {
         message: "Internal Server Error",
         data: null,
       };
+    } finally {
+      await browser.close();
     }
   }
 
@@ -103,15 +129,60 @@ class CrawlService {
   > {
     const homepage = getUrlWithProtocol(domain);
 
+    const browser = await puppeteer.launch({
+      args: [
+        "--hide-scrollbars",
+        "--disable-web-security",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--no-zygote",
+        "--single-process",
+        "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--disable-dev-shm-usage",
+      ],
+      executablePath: await chromium.executablePath(
+        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
+      ),
+      ignoreHTTPSErrors: true,
+      headless: true,
+    });
+
     try {
-      const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.goto(homepage, { waitUntil: "networkidle2", timeout: 30000 });
 
-      const links = await page.evaluate(() => {
-        const anchorElements = document.querySelectorAll("a");
-        return Array.from(anchorElements).map((anchor) => anchor.href);
-      });
+      // Get all links and check if they contain any priority page keyword
+      const links = await page.evaluate(
+        (priorityPages, homepage) => {
+          const anchorElements = document.querySelectorAll("a");
+          const uniqueLinks = new Set<string>();
+
+          // Add the homepage URL to the set
+          uniqueLinks.add(homepage.toString());
+
+          // Process anchor elements
+          anchorElements.forEach((anchor) => {
+            const url = new URL(anchor.href);
+            url.search = ""; // Remove the query string
+
+            // Check if the URL contains any priority page keyword
+            for (const keyword of priorityPages) {
+              if (url.toString().includes(keyword)) {
+                uniqueLinks.add(url.toString());
+                break;
+              }
+            }
+          });
+
+          return Array.from(uniqueLinks);
+        },
+        PRIORITY_PAGES,
+        homepage,
+      );
 
       await browser.close();
 
@@ -119,7 +190,7 @@ class CrawlService {
         status: 200,
         message: "Links fetched successfully",
         data: {
-          urls: this._selectImportantPages(links, homepage).slice(0, limit),
+          urls: links.slice(0, limit),
         },
       };
     } catch (error) {
@@ -129,38 +200,9 @@ class CrawlService {
         message: "Internal Server Error",
         data: null,
       };
+    } finally {
+      await browser.close();
     }
-  }
-
-  _selectImportantPages(links: string[], homepage: string) {
-    const importantPages = new Set([homepage]);
-    const priorityPages = [
-      "about",
-      "contact",
-      "services",
-      "products",
-      "blog",
-      "faq",
-      "sitemap",
-      "privacy",
-      "terms",
-      "refund",
-      "payment",
-      "shipping",
-      "pricing",
-      "checkout",
-      "business",
-      "investor",
-      "newsroom",
-    ];
-
-    links.forEach((link) => {
-      if (priorityPages.some((page) => link.includes(page))) {
-        importantPages.add(link);
-      }
-    });
-
-    return Array.from(importantPages);
   }
 }
 
