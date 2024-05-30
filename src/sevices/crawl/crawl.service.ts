@@ -18,32 +18,15 @@ class CrawlService {
     const verifiedUrl = getUrlWithProtocol(url);
 
     const browser = await puppeteer.launch({
-      args: [
-        "--hide-scrollbars",
-        "--disable-web-security",
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--no-first-run",
-        "--no-zygote",
-        "--single-process",
-        "--disable-gpu",
-        "--disable-software-rasterizer",
-        "--disable-dev-shm-usage",
-      ],
-      executablePath: await chromium.executablePath(
-        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
-      ),
-      ignoreHTTPSErrors: true,
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
       headless: true,
+      ignoreHTTPSErrors: true,
     });
 
     try {
       const page = await browser.newPage();
-
-      // Set viewport size
-      await page.setViewport({ width: 1280, height: 800 });
 
       const response = await page.goto(verifiedUrl, {
         waitUntil: "networkidle2",
