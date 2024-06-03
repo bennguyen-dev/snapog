@@ -139,7 +139,6 @@ class PageService {
     id,
   }: IDeleteManyPageBy): Promise<IResponse<null>> {
     try {
-      // get page and includes site
       const pages = await prisma.page.findMany({
         where: {
           siteId,
