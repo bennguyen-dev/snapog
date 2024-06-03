@@ -169,7 +169,15 @@ export const CardSites = ({}: IProps) => {
         </CardContent>
       </Card>
       <Dialog open={openedDialog} onOpenChange={setOpenedDialog}>
-        <DialogContent className="sm:max-w-screen-xs">
+        <DialogContent
+          className="sm:max-w-screen-xs"
+          onPointerDownOutside={(e) => {
+            creating && e.preventDefault();
+          }}
+          onInteractOutside={(e) => {
+            creating && e.preventDefault();
+          }}
+        >
           <DialogHeader className="mb-4">
             <DialogTitle>Add new site</DialogTitle>
             <DialogDescription>
@@ -184,6 +192,7 @@ export const CardSites = ({}: IProps) => {
               id="domain"
               placeholder="www.yoursite.com"
               value={domain}
+              disabled={creating}
               onChange={(e) => setDomain(e.target.value)}
             />
           </div>
