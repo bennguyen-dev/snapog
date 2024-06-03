@@ -5,7 +5,11 @@ import {
   IGetImageByUrlResponse,
 } from "@/sevices/image";
 import { IResponse } from "@/lib/type";
-import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
+import {
+  getImageLinkFromAWS,
+  getUrlWithoutProtocol,
+  getUrlWithProtocol,
+} from "@/lib/utils";
 import { siteService } from "@/sevices/site";
 import { pageService } from "@/sevices/page";
 
@@ -32,10 +36,10 @@ class ImageService {
 
       // Check if the URL exists in the Page table for this site
       const page = await pageService.getBy({ url, siteId: site.data.id });
-      if (page.data && page.data.image) {
+      if (page.data?.OGImage) {
         // Get image data from S3 image link
         return await this.getImageByImageLink({
-          imageLink: page.data.image,
+          imageLink: getImageLinkFromAWS(page.data.OGImage),
         });
       } else {
         // If the URL doesn't exist in the Page table, create a new entry
@@ -44,7 +48,7 @@ class ImageService {
           url,
         });
 
-        if (!newPage.data || !newPage.data.image) {
+        if (!newPage.data || !newPage.data.OGImage) {
           return {
             message: newPage.message,
             status: newPage.status,
@@ -54,7 +58,7 @@ class ImageService {
 
         // Get image data from S3 image link
         return await this.getImageByImageLink({
-          imageLink: newPage.data.image,
+          imageLink: getImageLinkFromAWS(newPage.data.OGImage),
         });
       }
     } catch (error) {

@@ -1,11 +1,13 @@
 import {
   ICreateSite,
+  IDeleteAllSiteBy,
   IGetSiteBy,
   IGetSitesBy,
   ISiteDetail,
 } from "@/sevices/site";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
+import { pageService } from "@/sevices/page";
 
 const prisma = new PrismaClient();
 
@@ -92,6 +94,59 @@ class SiteService {
         message: "Sites fetched successfully",
         status: 200,
         data: sites,
+      };
+    } catch (error) {
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async deleteManyBy({
+    userId,
+    domain,
+    id,
+  }: IDeleteAllSiteBy): Promise<IResponse<null>> {
+    try {
+      const sites = await prisma.site.findMany({
+        where: {
+          id,
+          userId,
+          domain,
+        },
+      });
+
+      if (!sites) {
+        return {
+          message: "Sites not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      for (const site of sites) {
+        const deletePages = await pageService.deleteManyBy({ siteId: site.id });
+
+        if (deletePages.status !== 200) {
+          return deletePages;
+        }
+      }
+
+      // Delete site
+      await prisma.site.deleteMany({
+        where: {
+          id,
+          userId,
+          domain,
+        },
+      });
+
+      return {
+        message: "Sites deleted successfully",
+        status: 200,
+        data: null,
       };
     } catch (error) {
       return {
