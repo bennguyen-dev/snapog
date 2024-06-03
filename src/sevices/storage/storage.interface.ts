@@ -8,6 +8,10 @@ export interface IUploadImage {
   type: ValuesOf<typeof IMAGE_TYPES>;
 }
 
+export interface IDeleteImage {
+  key: string;
+}
+
 export interface IUploadImageResponse {
   url: string;
 }

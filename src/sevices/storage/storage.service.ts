@@ -1,6 +1,14 @@
 // Configure AWS SDK
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { IUploadImage, IUploadImageResponse } from "@/sevices/storage";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import {
+  IDeleteImage,
+  IUploadImage,
+  IUploadImageResponse,
+} from "@/sevices/storage";
 import { IResponse } from "@/lib/type";
 
 const s3Client = new S3Client({
@@ -31,14 +39,36 @@ class StorageService {
     try {
       await s3Client.send(command);
 
-      const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+      // const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 
       return {
         message: "Image uploaded successfully",
         status: 200,
         data: {
-          url,
+          url: key,
         },
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async deleteImage({ key }: IDeleteImage): Promise<IResponse<null>> {
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME as string,
+      Key: key,
+    });
+    try {
+      await s3Client.send(command);
+      return {
+        message: "Image deleted successfully",
+        status: 200,
+        data: null,
       };
     } catch (error) {
       console.error(error);

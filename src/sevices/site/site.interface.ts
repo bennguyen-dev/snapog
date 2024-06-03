@@ -17,6 +17,13 @@ export interface IGetSiteBy {
   id?: string;
 }
 
+export interface IDeleteAllSiteBy {
+  userId?: string;
+  domain?: string;
+
+  id?: string;
+}
+
 export interface ISiteDetail {
   id: string;
   domain: string;

@@ -1,4 +1,9 @@
-import { ICreatePage, IGetPageBy, IPageDetail } from "@/sevices/page";
+import {
+  ICreatePage,
+  IDeleteManyPageBy,
+  IGetPageBy,
+  IPageDetail,
+} from "@/sevices/page";
 import {
   getUrlWithoutProtocol,
   sanitizeFilename,
@@ -34,7 +39,7 @@ class PageService {
       };
     }
 
-    // TODO: Check if page already exists
+    // Check if page already exists
     const pageCrawlInfo = await crawlService.getInfoByUrl({ url: verifiedUrl });
     if (!pageCrawlInfo.data) {
       return {
@@ -73,9 +78,9 @@ class PageService {
         data: {
           url: cleanProtocolUrl,
           siteId,
-          title: pageCrawlInfo.data.title,
-          description: pageCrawlInfo.data.description,
-          image: uploadRes.data.url,
+          OGImage: uploadRes.data.url,
+          OGTitle: pageCrawlInfo.data.title,
+          OGDescription: pageCrawlInfo.data.description,
         },
       });
 
@@ -119,6 +124,55 @@ class PageService {
         message: "Page found",
         status: 200,
         data: page as IPageDetail,
+      };
+    } catch (error) {
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async deleteManyBy({
+    siteId,
+    id,
+  }: IDeleteManyPageBy): Promise<IResponse<null>> {
+    try {
+      // get page and includes site
+      const pages = await prisma.page.findMany({
+        where: {
+          siteId,
+          id,
+        },
+      });
+
+      if (!pages) {
+        return {
+          message: "Page not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      await prisma.page.deleteMany({
+        where: {
+          siteId,
+          id,
+        },
+      });
+
+      // delete image from storage
+      for (const page of pages) {
+        if (page.OGImage) {
+          await storageService.deleteImage({ key: page.OGImage });
+        }
+      }
+
+      return {
+        message: "Pages deleted successfully",
+        status: 200,
+        data: null,
       };
     } catch (error) {
       return {
