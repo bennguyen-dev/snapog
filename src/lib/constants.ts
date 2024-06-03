@@ -5,6 +5,11 @@ export const ROUTES = [
     auth: true,
   },
   {
+    name: "Site",
+    path: "/site",
+    auth: true,
+  },
+  {
     name: "Demo",
     path: "/demo",
     auth: false,

@@ -39,7 +39,7 @@ export function getUrlWithoutProtocol(url: string) {
 }
 
 export function getDomainName(url: string) {
-  return new URL(getUrlWithProtocol(url?.trim())).hostname;
+  return new URL(getUrlWithProtocol(url?.trim()))?.hostname;
 }
 
 export function getImageLinkFromAWS(key: string) {

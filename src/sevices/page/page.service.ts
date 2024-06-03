@@ -8,6 +8,7 @@ import {
   getUrlWithoutProtocol,
   sanitizeFilename,
   getUrlWithProtocol,
+  getImageLinkFromAWS,
 } from "@/lib/utils";
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
@@ -88,6 +89,37 @@ class PageService {
         message: "Page created successfully",
         status: 200,
         data: page as IPageDetail,
+      };
+    } catch (error) {
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async getAllBy({
+    siteId,
+  }: {
+    siteId: string;
+  }): Promise<IResponse<IPageDetail[] | null>> {
+    try {
+      const pages = await prisma.page.findMany({
+        where: {
+          siteId,
+        },
+      });
+
+      const data = pages.map((page) => ({
+        ...page,
+        OGImage: page?.OGImage ? getImageLinkFromAWS(page?.OGImage) : null,
+      }));
+
+      return {
+        message: "Pages found",
+        status: 200,
+        data: data as IPageDetail[],
       };
     } catch (error) {
       return {
