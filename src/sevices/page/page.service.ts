@@ -193,12 +193,12 @@ class PageService {
         },
       });
 
-      // delete image from storage
-      for (const page of pages) {
-        if (page.OGImage) {
-          await storageService.deleteImage({ key: page.OGImage });
-        }
-      }
+      // delete images from storage
+      await storageService.deleteImages({
+        keys: pages
+          .filter((page) => !!page.OGImage)
+          .map((page) => page.OGImage) as string[],
+      });
 
       return {
         message: "Pages deleted successfully",

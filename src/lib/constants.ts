@@ -6,7 +6,7 @@ export const ROUTES = [
   },
   {
     name: "Site",
-    path: "/site",
+    path: "/sites",
     auth: true,
   },
   {

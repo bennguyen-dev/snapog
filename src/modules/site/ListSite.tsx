@@ -4,7 +4,7 @@ import { Typography } from "@/components/ui/typography";
 import { ColumnDef } from "@tanstack/table-core";
 import { ISiteDetail } from "@/sevices/site";
 import { useMounted } from "@/hooks/useMouted";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCallApi } from "@/hooks/useCallApi";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
@@ -21,56 +21,14 @@ import { Input } from "@/components/ui/input";
 import { getDomainName } from "@/lib/utils";
 import Link from "next/link";
 import { Plus, TrashIcon } from "lucide-react";
-
-const columns: ColumnDef<ISiteDetail>[] = [
-  {
-    accessorKey: "id",
-    header: "No.",
-    cell: ({ row }) => {
-      return <Typography affects="small">{row.index + 1}</Typography>;
-    },
-  },
-  {
-    accessorKey: "domain",
-    header: "Domain",
-    cell: ({ row }) => {
-      return (
-        <Link
-          href={`/site/${row.original.id}`}
-          className="text-right font-medium underline hover:text-blue-500"
-        >
-          {row.original.domain}
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-  },
-  {
-    accessorKey: "updatedAt",
-    header: "Updated At",
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <Button variant="destructive">
-          <TrashIcon className="h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-];
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
+  const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
 
   const [domain, setDomain] = useState<string>("");
-  const [openedDialog, setOpenedDialog] = useState<boolean>(false);
+  const [openedDialogCreate, setOpenedDialogCreate] = useState<boolean>(false);
 
   const { data: sites, setLetCall: getSites } = useCallApi<
     ISiteDetail[],
@@ -97,14 +55,93 @@ export const ListSite = () => {
     handleSuccess() {
       getSites(true);
 
-      setOpenedDialog(false);
+      setOpenedDialogCreate(false);
       setDomain("");
+    },
+  });
+
+  const { promiseFunc: deleteSite, loading: deleting } = useCallApi<
+    {},
+    {},
+    null
+  >({
+    url: `/api/sites`,
+    options: {
+      method: "DELETE",
+    },
+    nonCallInit: true,
+    handleSuccess() {
+      getSites(true);
+
+      onCloseConfirm();
     },
   });
 
   useEffect(() => {
     mounted && getSites(true);
   }, [mounted, getSites]);
+
+  const columns: ColumnDef<ISiteDetail>[] = useMemo(() => {
+    return [
+      {
+        accessorKey: "id",
+        header: "No.",
+        cell: ({ row }) => {
+          return <Typography affects="small">{row.index + 1}</Typography>;
+        },
+      },
+      {
+        accessorKey: "domain",
+        header: "Domain",
+        cell: ({ row }) => {
+          return (
+            <Link
+              href={`/sites/${row.original.id}`}
+              className="text-right font-medium underline hover:text-blue-500"
+            >
+              {row.original.domain}
+            </Link>
+          );
+        },
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Created At",
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "Updated At",
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const site = row.original;
+
+          return (
+            <Button
+              variant="destructive"
+              size="icon"
+              onClick={() => {
+                confirmDialog({
+                  title: "Delete site",
+                  content: "Are you sure you want to delete this site?",
+                  onConfirm: () => {
+                    deleteSite(null, `/api/sites/${site.id}`);
+                  },
+                  type: "danger",
+                  onCancel: () => {},
+                });
+              }}
+              disabled={deleting}
+            >
+              <TrashIcon className="h-4 w-4" />
+            </Button>
+          );
+        },
+      },
+    ];
+  }, []);
 
   return (
     <div className="w-full py-8">
@@ -114,7 +151,7 @@ export const ListSite = () => {
           className="w-fit"
           onClick={() => {
             setDomain("");
-            setOpenedDialog(true);
+            setOpenedDialogCreate(true);
           }}
           icon={<Plus className="h-4 w-4" />}
         >
@@ -122,7 +159,7 @@ export const ListSite = () => {
         </Button>
       </div>
       <DataTable columns={columns} data={sites || []} />
-      <Dialog open={openedDialog} onOpenChange={setOpenedDialog}>
+      <Dialog open={openedDialogCreate} onOpenChange={setOpenedDialogCreate}>
         <DialogContent
           className="sm:max-w-screen-xs"
           onPointerDownOutside={(e) => {
@@ -162,6 +199,7 @@ export const ListSite = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <ConfirmDialog loading={deleting} />
     </div>
   );
 };

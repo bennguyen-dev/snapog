@@ -8,6 +8,8 @@ import {
 import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 import { pageService } from "@/sevices/page";
+import { storageService } from "@/sevices/storage";
+import { sanitizeFilename } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -134,13 +136,17 @@ class SiteService {
         }
       }
 
-      // Delete site
       await prisma.site.deleteMany({
         where: {
           id,
           userId,
           domain,
         },
+      });
+
+      // Delete folder from S3
+      await storageService.deleteFolders({
+        prefixes: sites.map((site) => sanitizeFilename(site.domain)),
       });
 
       return {

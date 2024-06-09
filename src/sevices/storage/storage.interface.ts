@@ -8,8 +8,12 @@ export interface IUploadImage {
   type: ValuesOf<typeof IMAGE_TYPES>;
 }
 
-export interface IDeleteImage {
-  key: string;
+export interface IDeleteImages {
+  keys: string[];
+}
+
+export interface IDeleteFolders {
+  prefixes: string[];
 }
 
 export interface IUploadImageResponse {

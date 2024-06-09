@@ -1,11 +1,12 @@
 // Configure AWS SDK
 import {
-  DeleteObjectCommand,
+  DeleteObjectsCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import {
-  IDeleteImage,
+  IDeleteFolders,
+  IDeleteImages,
   IUploadImage,
   IUploadImageResponse,
 } from "@/sevices/storage";
@@ -58,15 +59,43 @@ class StorageService {
     }
   }
 
-  async deleteImage({ key }: IDeleteImage): Promise<IResponse<null>> {
-    const command = new DeleteObjectCommand({
+  async deleteImages({ keys }: IDeleteImages): Promise<IResponse<null>> {
+    const command = new DeleteObjectsCommand({
       Bucket: process.env.AWS_BUCKET_NAME as string,
-      Key: key,
+      Delete: {
+        Objects: keys.map((key) => ({ Key: key })),
+        Quiet: false,
+      },
     });
     try {
       await s3Client.send(command);
       return {
-        message: "Image deleted successfully",
+        message: "Images deleted successfully",
+        status: 200,
+        data: null,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
+  async deleteFolders({ prefixes }: IDeleteFolders): Promise<IResponse<null>> {
+    const command = new DeleteObjectsCommand({
+      Bucket: process.env.AWS_BUCKET_NAME as string,
+      Delete: {
+        Objects: prefixes.map((prefix) => ({ Key: prefix })),
+        Quiet: false,
+      },
+    });
+    try {
+      await s3Client.send(command);
+      return {
+        message: "Folder deleted successfully",
         status: 200,
         data: null,
       };
