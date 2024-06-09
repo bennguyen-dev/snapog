@@ -20,6 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ISiteDetail } from "@/sevices/site";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface IProps {
   siteId: string;
@@ -35,6 +37,18 @@ export const ListPage = ({ siteId }: IProps) => {
     loading: fetching,
   } = useCallApi<IPageDetail[], {}, {}>({
     url: `/api/sites/${siteId}/pages`,
+    options: {
+      method: "GET",
+    },
+    nonCallInit: true,
+  });
+
+  const {
+    data: site,
+    setLetCall: getSite,
+    loading: fetchingSite,
+  } = useCallApi<ISiteDetail, {}, {}>({
+    url: `/api/sites/${siteId}`,
     options: {
       method: "GET",
     },
@@ -147,8 +161,11 @@ export const ListPage = ({ siteId }: IProps) => {
   );
 
   useEffect(() => {
-    mounted && getPages(true);
-  }, [mounted, getPages]);
+    if (mounted) {
+      getSite(true);
+      getPages(true);
+    }
+  }, [mounted, getPages, getSite]);
 
   return (
     <div className="w-full py-8">
@@ -165,7 +182,21 @@ export const ListPage = ({ siteId }: IProps) => {
       <Card>
         <CardHeader className="px-7">
           <CardTitle>Pages</CardTitle>
-          <CardDescription>List of pages for the site</CardDescription>
+          <CardDescription>
+            List of pages for the site{" "}
+            {site && (
+              <Link
+                href={getUrlWithProtocol(site.domain)}
+                target="_blank"
+                className="text-link"
+              >
+                {site.domain}
+              </Link>
+            )}
+            {fetchingSite && (
+              <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
+            )}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <DataTable columns={columns} data={pages || []} />
