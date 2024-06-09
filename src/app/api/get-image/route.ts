@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { imageService } from "@/sevices/image";
+import { getUrlWithProtocol } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +17,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const res = await imageService.getImageByUrl({ url });
+  const urlClean = new URL(getUrlWithProtocol(url));
+  urlClean.search = ""; // Remove the query string
+
+  const res = await imageService.getImageByUrl({ url: urlClean.toString() });
 
   if (!res.data) {
     return NextResponse.json(res, { status: res.status });

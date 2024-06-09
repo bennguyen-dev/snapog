@@ -45,3 +45,15 @@ export function getDomainName(url: string) {
 export function getImageLinkFromAWS(key: string) {
   return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 }
+
+export function getSnippetHowToUse(domain: string) {
+  return `  <!-- Put in your <head> tag -->
+  <meta
+    property="og:image"
+    content="https://${window.location.host}/api/get-image?url=${domain}/your/example/path"
+  />`;
+}
+
+export function getLinkSmartOGImage(url: string) {
+  return `https://${window.location.host}/api/get-image?url=${getUrlWithoutProtocol(url)}`;
+}

@@ -1,14 +1,22 @@
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { okaidia } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-interface IProps {
+interface IProps extends React.ComponentProps<typeof SyntaxHighlighter> {
   children: string;
 }
 
-const CodeSnippet = ({ children }: IProps) => {
+const CodeSnippet = ({ children, ...rest }: IProps) => {
   return (
-    <SyntaxHighlighter language="html" style={okaidia}>
+    <SyntaxHighlighter
+      language="html"
+      style={vscDarkPlus}
+      wrapLongLines
+      customStyle={{
+        margin: 0,
+      }}
+      {...rest}
+    >
       {children}
     </SyntaxHighlighter>
   );

@@ -18,10 +18,15 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { getDomainName } from "@/lib/utils";
+import {
+  getDomainName,
+  getLinkSmartOGImage,
+  getSnippetHowToUse,
+} from "@/lib/utils";
 import Link from "next/link";
 import { Plus, TrashIcon } from "lucide-react";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { CodeSnippet } from "@/components/ui/code-snippet";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
@@ -95,22 +100,34 @@ export const ListSite = () => {
         header: "Domain",
         cell: ({ row }) => {
           return (
-            <Link
-              href={`/sites/${row.original.id}`}
-              className="text-right font-medium underline hover:text-blue-500"
-            >
+            <Link href={`/sites/${row.original.id}`} className="text-link">
               {row.original.domain}
             </Link>
           );
         },
       },
       {
-        accessorKey: "createdAt",
-        header: "Created At",
+        header: "How to use?",
+        cell: ({ row }) => {
+          const site = row.original;
+          const urlExample = getLinkSmartOGImage(site.domain);
+
+          return (
+            <>
+              <Typography affects="small" className="mb-4">
+                Example URL:{" "}
+                <Link href={urlExample} target="_blank" className="text-link">
+                  {urlExample}
+                </Link>
+              </Typography>
+              <CodeSnippet>{getSnippetHowToUse(site.domain)}</CodeSnippet>
+            </>
+          );
+        },
       },
       {
-        accessorKey: "updatedAt",
-        header: "Updated At",
+        accessorKey: "createdAt",
+        header: "Created At",
       },
       {
         id: "actions",

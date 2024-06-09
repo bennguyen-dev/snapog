@@ -73,4 +73,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .text-link {
+    @apply cursor-pointer text-foreground underline hover:text-blue-500 active:text-blue-600 dark:text-foreground dark:hover:text-blue-400 dark:active:text-blue-500;
+  }
 }

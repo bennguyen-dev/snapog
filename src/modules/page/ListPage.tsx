@@ -11,6 +11,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import Link from "next/link";
+import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 
 interface IProps {
   siteId: string;
@@ -61,6 +63,17 @@ export const ListPage = ({ siteId }: IProps) => {
       {
         accessorKey: "url",
         header: "URL",
+        cell: ({ row }) => {
+          return (
+            <Link
+              href={getUrlWithProtocol(row.original.url)}
+              target="_blank"
+              className="text-link"
+            >
+              {row.original.url}
+            </Link>
+          );
+        },
       },
       {
         accessorKey: "OGImage",
@@ -70,13 +83,19 @@ export const ListPage = ({ siteId }: IProps) => {
             return null;
           }
           return (
-            <Image
-              src={row.original.OGImage}
-              width={120}
-              height={60}
-              className="aspect-[1200/628] max-w-40 rounded"
-              alt={row.original.OGImage}
-            />
+            <Link
+              href={getLinkSmartOGImage(row.original.url)}
+              target="_blank"
+              className="text-link"
+            >
+              <Image
+                src={row.original.OGImage}
+                width={120}
+                height={60}
+                className="aspect-[1200/628] max-w-40 rounded"
+                alt={row.original.OGImage}
+              />
+            </Link>
           );
         },
       },
