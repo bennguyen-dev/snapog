@@ -56,6 +56,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    console.log("className 😋", { className }, "");
+
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
@@ -64,7 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {loading && <Loader2 className="icon mr-2 animate-spin" />}
         {icon && !loading && <span className="mr-2">{icon}</span>}
         <Slottable>{children}</Slottable>
       </Comp>

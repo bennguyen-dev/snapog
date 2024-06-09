@@ -9,10 +9,17 @@ import { Typography } from "@/components/ui/typography";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
+import { Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import Link from "next/link";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface IProps {
   siteId: string;
@@ -22,11 +29,11 @@ export const ListPage = ({ siteId }: IProps) => {
   const { mounted } = useMounted();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
 
-  const { data: pages, setLetCall: getPages } = useCallApi<
-    IPageDetail[],
-    {},
-    {}
-  >({
+  const {
+    data: pages,
+    setLetCall: getPages,
+    loading: fetching,
+  } = useCallApi<IPageDetail[], {}, {}>({
     url: `/api/sites/${siteId}/pages`,
     options: {
       method: "GET",
@@ -130,13 +137,13 @@ export const ListPage = ({ siteId }: IProps) => {
               }}
               disabled={deleting}
             >
-              <TrashIcon className="h-4 w-4" />
+              <TrashIcon className="icon" />
             </Button>
           );
         },
       },
     ],
-    [],
+    [confirmDialog, deletePage, deleting, siteId],
   );
 
   useEffect(() => {
@@ -145,12 +152,26 @@ export const ListPage = ({ siteId }: IProps) => {
 
   return (
     <div className="w-full py-8">
-      <div className="mb-4 flex items-center justify-between">
-        <Typography variant="h2" className="mb-4">
-          Pages
-        </Typography>
+      <div className="mb-4 flex items-center justify-end space-x-4">
+        <Button
+          variant="outline"
+          onClick={() => getPages(true)}
+          icon={<RefreshCw className="icon" />}
+          loading={fetching}
+        >
+          Refresh
+        </Button>
       </div>
-      <DataTable columns={columns} data={pages || []} />
+      <Card>
+        <CardHeader className="px-7">
+          <CardTitle>Pages</CardTitle>
+          <CardDescription>List of pages for the site</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={pages || []} />
+        </CardContent>
+      </Card>
+
       <ConfirmDialog loading={deleting} />
     </div>
   );

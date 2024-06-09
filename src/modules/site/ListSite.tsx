@@ -24,9 +24,16 @@ import {
   getSnippetHowToUse,
 } from "@/lib/utils";
 import Link from "next/link";
-import { Plus, TrashIcon } from "lucide-react";
+import { Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { CodeSnippet } from "@/components/ui/code-snippet";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
@@ -35,11 +42,11 @@ export const ListSite = () => {
   const [domain, setDomain] = useState<string>("");
   const [openedDialogCreate, setOpenedDialogCreate] = useState<boolean>(false);
 
-  const { data: sites, setLetCall: getSites } = useCallApi<
-    ISiteDetail[],
-    {},
-    {}
-  >({
+  const {
+    data: sites,
+    setLetCall: getSites,
+    loading: fetching,
+  } = useCallApi<ISiteDetail[], {}, {}>({
     url: `/api/sites`,
     options: {
       method: "GET",
@@ -152,7 +159,7 @@ export const ListSite = () => {
               }}
               disabled={deleting}
             >
-              <TrashIcon className="h-4 w-4" />
+              <TrashIcon className="icon" />
             </Button>
           );
         },
@@ -162,20 +169,36 @@ export const ListSite = () => {
 
   return (
     <div className="w-full py-8">
-      <div className="mb-4 flex items-center justify-between">
-        <Typography variant="h2">Sites</Typography>
+      <div className="mb-4 flex items-center justify-end space-x-4">
         <Button
-          className="w-fit"
+          variant="outline"
+          onClick={() => getSites(true)}
+          icon={<RefreshCw className="icon" />}
+          loading={fetching}
+        >
+          Refresh
+        </Button>
+        <Button
           onClick={() => {
             setDomain("");
             setOpenedDialogCreate(true);
           }}
-          icon={<Plus className="h-4 w-4" />}
+          icon={<Plus className="icon" />}
         >
           Add site
         </Button>
       </div>
-      <DataTable columns={columns} data={sites || []} />
+      <Card>
+        <CardHeader className="px-7">
+          <CardTitle>Sites</CardTitle>
+          <CardDescription>
+            List of sites where you can use social images
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={sites || []} />
+        </CardContent>
+      </Card>
       <Dialog open={openedDialogCreate} onOpenChange={setOpenedDialogCreate}>
         <DialogContent
           className="sm:max-w-screen-xs"

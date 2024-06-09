@@ -38,7 +38,7 @@ export const BlockInputDemo = () => {
           value={domain}
           onChange={(e) => setDomain(e.target.value)}
         />
-        <Button onClick={handleSubmit} icon={<EyeIcon className="h-4 w-4" />}>
+        <Button onClick={handleSubmit} icon={<EyeIcon className="icon" />}>
           View Demo
         </Button>
       </div>

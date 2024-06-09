@@ -1,10 +1,5 @@
 export const ROUTES = [
   {
-    name: "Dashboard",
-    path: "/dashboard",
-    auth: true,
-  },
-  {
     name: "Site",
     path: "/sites",
     auth: true,
