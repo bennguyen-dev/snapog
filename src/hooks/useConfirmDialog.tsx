@@ -1,11 +1,19 @@
-import { ReactNode, useState } from "react";
-import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { ReactNode, useCallback, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface IConfig {
   opened: boolean;
   title: ReactNode;
   content: ReactNode;
-  type: "warning" | "error" | "info" | "success";
+  type: "danger" | "warning";
   onConfirm: () => void;
   confirmText?: string;
   onCancel: () => void;
@@ -16,26 +24,101 @@ const initConfig: IConfig = {
   opened: false,
   title: "",
   content: "",
-  type: "warning",
+  type: "danger",
   onConfirm: () => {},
-  confirmText: "Confirm",
   onCancel: () => {},
-  cancelText: "Cancel",
+};
+
+const buttonClassName = {
+  danger: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+  warning: "bg-warning text-warning-foreground hover:bg-warning/90",
 };
 
 export const useConfirmDialog = () => {
   const [config, setConfig] = useState<IConfig>(initConfig);
 
-  const onOpenConfirm = () => setConfig({ ...config, opened: true });
-  const onCloseConfirm = () => setConfig({ ...config, opened: false });
+  const {
+    opened,
+    title,
+    content,
+    type,
+    onConfirm,
+    confirmText,
+    onCancel,
+    cancelText,
+  } = config;
 
-  const ConfirmModal = ({ loading }: { loading?: boolean }) => (
-    <ConfirmDialog
-      onOpenChange={onCloseConfirm}
-      loading={loading}
-      {...config}
-    />
+  const confirmDialog = useCallback(
+    (config: Omit<IConfig, "opened">) => {
+      setConfig({ ...config, opened: true });
+    },
+    [setConfig],
   );
 
-  return { setConfig, onOpenConfirm, onCloseConfirm, ConfirmModal };
+  const onCloseConfirm = useCallback(() => {
+    setConfig({ ...config, opened: false });
+    onCancel?.();
+  }, [config, onCancel]);
+
+  const ConfirmDialog = useCallback(
+    ({ loading }: { loading?: boolean }) => {
+      return (
+        <Dialog open={opened} onOpenChange={onCloseConfirm}>
+          <DialogContent
+            className="sm:max-w-screen-xs"
+            onPointerDownOutside={(e) => {
+              loading && e.preventDefault();
+            }}
+            onInteractOutside={(e) => {
+              loading && e.preventDefault();
+            }}
+          >
+            <DialogHeader className="mb-4">
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription>{content}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-end">
+              <Button
+                loading={loading}
+                className={buttonClassName[type]}
+                onClick={() => {
+                  onConfirm();
+
+                  if (loading === undefined) {
+                    onCloseConfirm();
+                  }
+                }}
+                variant="default"
+              >
+                {confirmText || "Confirm"}
+              </Button>
+              <Button
+                variant="outline"
+                disabled={loading}
+                onClick={onCloseConfirm}
+              >
+                {cancelText || "Cancel"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      );
+    },
+    [
+      cancelText,
+      confirmText,
+      content,
+      onCloseConfirm,
+      onConfirm,
+      opened,
+      title,
+      type,
+    ],
+  );
+
+  return {
+    confirmDialog,
+    onCloseConfirm,
+    ConfirmDialog,
+  };
 };

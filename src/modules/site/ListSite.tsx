@@ -25,8 +25,7 @@ import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
-  const { setConfig, onCloseConfirm, onOpenConfirm, ConfirmModal } =
-    useConfirmDialog();
+  const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
 
   const [domain, setDomain] = useState<string>("");
   const [openedDialogCreate, setOpenedDialogCreate] = useState<boolean>(false);
@@ -97,7 +96,7 @@ export const ListSite = () => {
         cell: ({ row }) => {
           return (
             <Link
-              href={`/site/${row.original.id}`}
+              href={`/sites/${row.original.id}`}
               className="text-right font-medium underline hover:text-blue-500"
             >
               {row.original.domain}
@@ -124,14 +123,13 @@ export const ListSite = () => {
               variant="destructive"
               size="icon"
               onClick={() => {
-                setConfig({
-                  opened: true,
+                confirmDialog({
                   title: "Delete site",
                   content: "Are you sure you want to delete this site?",
                   onConfirm: () => {
                     deleteSite(null, `/api/sites/${site.id}`);
                   },
-                  type: "warning",
+                  type: "danger",
                   onCancel: () => {},
                 });
               }}
@@ -201,7 +199,7 @@ export const ListSite = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <ConfirmModal loading={deleting} />
+      <ConfirmDialog loading={deleting} />
     </div>
   );
 };
