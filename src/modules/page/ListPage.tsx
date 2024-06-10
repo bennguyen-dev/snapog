@@ -2,15 +2,14 @@
 
 import { ColumnDef } from "@tanstack/table-core";
 import { IPageDetail } from "@/sevices/page";
-import { useCallApi } from "@/hooks/useCallApi";
-import { useMounted } from "@/hooks/useMouted";
+import { useCallApi, useMounted } from "@/hooks";
 import { useEffect, useMemo } from "react";
 import { Typography } from "@/components/ui/typography";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, RefreshCw, TrashIcon } from "lucide-react";
-import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { RefreshCw, TrashIcon } from "lucide-react";
+import { useConfirmDialog } from "@/hooks";
 import Link from "next/link";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 import {

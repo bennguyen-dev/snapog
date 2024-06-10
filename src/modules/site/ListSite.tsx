@@ -3,9 +3,8 @@
 import { Typography } from "@/components/ui/typography";
 import { ColumnDef } from "@tanstack/table-core";
 import { ISiteDetail } from "@/sevices/site";
-import { useMounted } from "@/hooks/useMouted";
+import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { useCallApi } from "@/hooks/useCallApi";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +24,6 @@ import {
 } from "@/lib/utils";
 import Link from "next/link";
 import { Plus, RefreshCw, TrashIcon } from "lucide-react";
-import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { CodeSnippet } from "@/components/ui/code-snippet";
 import {
   Card,

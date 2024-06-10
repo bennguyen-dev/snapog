@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useMounted } from "@/hooks/useMouted";
+import { useMounted } from "@/hooks";
 
 export const useCallApi = <T, E = {}, B = {}>({
   url,

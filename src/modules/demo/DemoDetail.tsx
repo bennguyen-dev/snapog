@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { useMounted } from "@/hooks/useMouted";
+import { useCallApi, useMounted } from "@/hooks";
 
 import { IGetDemoResponse } from "@/sevices/demo";
-import { useCallApi } from "@/hooks/useCallApi";
 import { BlockCompareOGImage } from "@/components/block";
 
 interface IProps {
