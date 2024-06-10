@@ -32,6 +32,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
@@ -163,10 +171,21 @@ export const ListSite = () => {
         },
       },
     ];
-  }, []);
+  }, [confirmDialog, deleteSite, deleting]);
 
   return (
     <div className="w-full py-8">
+      <Breadcrumb className="mb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>All sites</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="mb-4 flex items-center justify-end space-x-4">
         <Button
           variant="outline"

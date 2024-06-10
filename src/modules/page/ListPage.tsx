@@ -21,6 +21,14 @@ import {
 } from "@/components/ui/card";
 import { ISiteDetail } from "@/sevices/site";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface IProps {
   siteId: string;
@@ -168,6 +176,23 @@ export const ListPage = ({ siteId }: IProps) => {
 
   return (
     <div className="w-full py-8">
+      <Breadcrumb className="mb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            {fetchingSite ? (
+              <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
+            ) : (
+              <BreadcrumbLink href={`/sites`}>{site?.domain}</BreadcrumbLink>
+            )}
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbPage>All pages</BreadcrumbPage>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="mb-4 flex items-center justify-end space-x-4">
         <Button
           variant="outline"
