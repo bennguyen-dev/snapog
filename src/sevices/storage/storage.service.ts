@@ -46,7 +46,7 @@ class StorageService {
         message: "Image uploaded successfully",
         status: 200,
         data: {
-          url: key,
+          src: key,
         },
       };
     } catch (error) {

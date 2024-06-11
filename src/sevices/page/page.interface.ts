@@ -1,3 +1,5 @@
+import { IOGImageDetail } from "@/sevices/ogImage";
+
 export interface ICreatePage {
   url: string;
   siteId: string;
@@ -20,7 +22,7 @@ export interface IPageDetail {
   id: string;
   url: string;
   siteId: string;
-  OGImage?: string;
+  OGImage?: IOGImageDetail;
   OGTitle?: string;
   OGDescription?: string;
 
