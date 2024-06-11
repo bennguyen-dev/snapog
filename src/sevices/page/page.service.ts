@@ -15,6 +15,8 @@ import { IResponse } from "@/lib/type";
 import { crawlService } from "@/sevices/crawl";
 import { storageService } from "@/sevices/storage";
 import { IMAGE_TYPES } from "@/lib/constants";
+import ogImageService from "@/sevices/ogImage/ogImage.service";
+import { IOGImageDetail } from "@/sevices/ogImage";
 
 const prisma = new PrismaClient();
 
@@ -75,13 +77,28 @@ class PageService {
     }
 
     try {
+      const ogImage = await ogImageService.create({
+        src: uploadRes.data.src,
+      });
+
+      if (!ogImage.data) {
+        return {
+          message: ogImage.message,
+          status: ogImage.status,
+          data: null,
+        };
+      }
+
       const page = await prisma.page.create({
         data: {
           url: cleanProtocolUrl,
           siteId,
-          OGImage: uploadRes.data.url,
+          OGImageId: ogImage.data.id,
           OGTitle: pageCrawlInfo.data.title,
           OGDescription: pageCrawlInfo.data.description,
+        },
+        include: {
+          OGImage: true,
         },
       });
 
@@ -109,17 +126,15 @@ class PageService {
         where: {
           siteId,
         },
+        include: {
+          OGImage: true,
+        },
       });
-
-      const data = pages.map((page) => ({
-        ...page,
-        OGImage: page?.OGImage ? getImageLinkFromAWS(page?.OGImage) : null,
-      }));
 
       return {
         message: "Pages found",
         status: 200,
-        data: data as IPageDetail[],
+        data: pages as IPageDetail[],
       };
     } catch (error) {
       return {
@@ -141,6 +156,9 @@ class PageService {
           url,
           siteId,
           id,
+        },
+        include: {
+          OGImage: true,
         },
       });
 
@@ -176,6 +194,9 @@ class PageService {
           siteId,
           id,
         },
+        include: {
+          OGImage: true,
+        },
       });
 
       if (!pages) {
@@ -193,12 +214,14 @@ class PageService {
         },
       });
 
-      // delete images from storage
-      await storageService.deleteImages({
-        keys: pages
-          .filter((page) => !!page.OGImage)
-          .map((page) => page.OGImage) as string[],
-      });
+      // delete OGImages
+      await Promise.all(
+        pages
+          .filter((page) => page.OGImageId)
+          .map((page) =>
+            ogImageService.deleteBy({ id: page.OGImageId as string }),
+          ),
+      );
 
       return {
         message: "Pages deleted successfully",

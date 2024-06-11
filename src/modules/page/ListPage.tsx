@@ -117,11 +117,11 @@ export const ListPage = ({ siteId }: IProps) => {
               className="text-link"
             >
               <Image
-                src={row.original.OGImage}
+                src={row.original.OGImage.src}
                 width={120}
                 height={60}
                 className="aspect-[1200/628] max-w-40 rounded"
-                alt={row.original.OGImage}
+                alt={row.original.OGImage.src}
               />
             </Link>
           );

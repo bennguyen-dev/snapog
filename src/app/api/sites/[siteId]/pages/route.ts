@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { pageService } from "@/sevices/page";
+import { getImageLinkFromAWS } from "@/lib/utils";
 
 export const GET = auth(async function GET(req, res) {
   if (!req.auth?.user?.id) {
@@ -23,5 +24,23 @@ export const GET = auth(async function GET(req, res) {
 
   const pages = await pageService.getAllBy({ siteId });
 
-  return NextResponse.json(pages, { status: pages.status });
+  if (!pages.data || pages.data.length === 0) {
+    return NextResponse.json(pages, { status: pages.status });
+  }
+
+  const data = pages.data.map((page) => ({
+    ...page,
+    OGImage: {
+      ...page.OGImage,
+      src: page.OGImage?.src ? getImageLinkFromAWS(page.OGImage?.src) : null,
+    },
+  }));
+
+  return NextResponse.json(
+    {
+      ...pages,
+      data: data,
+    },
+    { status: pages.status },
+  );
 });

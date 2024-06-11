@@ -17,5 +17,5 @@ export interface IDeleteFolders {
 }
 
 export interface IUploadImageResponse {
-  url: string;
+  src: string;
 }
