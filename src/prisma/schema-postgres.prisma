@@ -83,22 +83,35 @@ model Site {
   id     String @id @default(cuid())
   domain String
   userId String
-  user   User   @relation(fields: [userId], references: [id])
-  pages  Page[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id])
+  pages Page[]
 }
 
 model Page {
   id            String  @id @default(cuid())
   url           String
   siteId        String
-  site          Site    @relation(fields: [siteId], references: [id])
-  OGImage       String?
+  OGImageId     String? // Nullable foreign key
   OGTitle       String?
   OGDescription String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  site    Site     @relation(fields: [siteId], references: [id])
+  OGImage OGImage? @relation(fields: [OGImageId], references: [id])
+}
+
+model OGImage {
+  id  String @id @default(uuid())
+  src String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Page Page[]
 }
