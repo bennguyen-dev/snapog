@@ -6,19 +6,15 @@ import {
 } from "@/sevices/page";
 import {
   getUrlWithoutProtocol,
-  sanitizeFilename,
   getUrlWithProtocol,
-  getImageLinkFromAWS,
+  sanitizeFilename,
 } from "@/lib/utils";
-import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 import { crawlService } from "@/sevices/crawl";
 import { storageService } from "@/sevices/storage";
 import { IMAGE_TYPES } from "@/lib/constants";
 import ogImageService from "@/sevices/ogImage/ogImage.service";
-import { IOGImageDetail } from "@/sevices/ogImage";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 class PageService {
   async create({

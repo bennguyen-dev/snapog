@@ -5,8 +5,7 @@ import {
 } from "@/sevices/ogImage/ogImage.interface";
 import { IResponse } from "@/lib/type";
 import { storageService } from "@/sevices/storage";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 class OGImageService {
   async create({

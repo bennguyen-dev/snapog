@@ -5,13 +5,11 @@ import {
   IGetSitesBy,
   ISiteDetail,
 } from "@/sevices/site";
-import { PrismaClient } from "@prisma/client";
 import { IResponse } from "@/lib/type";
 import { pageService } from "@/sevices/page";
 import { storageService } from "@/sevices/storage";
 import { sanitizeFilename } from "@/lib/utils";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 class SiteService {
   async create({
