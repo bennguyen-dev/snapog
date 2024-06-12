@@ -223,7 +223,7 @@ export const ListPage = ({ siteId }: IProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={pages || []} />
+          <DataTable columns={columns} data={pages || []} loading={fetching} />
         </CardContent>
       </Card>
 
