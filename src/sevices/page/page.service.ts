@@ -89,6 +89,7 @@ class PageService {
         data: {
           url: cleanProtocolUrl,
           siteId,
+          cacheDurationDays: site.cacheDurationDays,
           OGImageId: ogImage.data.id,
           OGTitle: pageCrawlInfo.data.title,
           OGDescription: pageCrawlInfo.data.description,

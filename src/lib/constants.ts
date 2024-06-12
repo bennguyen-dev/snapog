@@ -55,3 +55,5 @@ export const PRIORITY_PAGES = [
   "investor",
   "newsroom",
 ];
+
+export const CACHE_DURATION_DAYS = 30;

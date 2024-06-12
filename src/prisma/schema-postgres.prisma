@@ -80,9 +80,10 @@ model Authenticator {
 }
 
 model Site {
-  id     String @id @default(cuid())
-  domain String
-  userId String
+  id                String @id @default(cuid())
+  domain            String
+  userId            String
+  cacheDurationDays Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -92,12 +93,13 @@ model Site {
 }
 
 model Page {
-  id            String  @id @default(cuid())
-  url           String
-  siteId        String
-  OGImageId     String? // Nullable foreign key
-  OGTitle       String?
-  OGDescription String?
+  id                String  @id @default(cuid())
+  url               String
+  siteId            String
+  OGImageId         String? // Nullable foreign key
+  OGTitle           String?
+  OGDescription     String?
+  cacheDurationDays Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

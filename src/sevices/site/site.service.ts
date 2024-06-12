@@ -10,6 +10,7 @@ import { pageService } from "@/sevices/page";
 import { storageService } from "@/sevices/storage";
 import { sanitizeFilename } from "@/lib/utils";
 import { prisma } from "@/lib/db";
+import { CACHE_DURATION_DAYS } from "@/lib/constants";
 
 class SiteService {
   async create({
@@ -19,6 +20,7 @@ class SiteService {
     try {
       const exists = await prisma.site.findFirst({
         where: {
+          userId,
           domain,
         },
       });
@@ -35,6 +37,7 @@ class SiteService {
         data: {
           domain,
           userId,
+          cacheDurationDays: CACHE_DURATION_DAYS,
         },
       });
 

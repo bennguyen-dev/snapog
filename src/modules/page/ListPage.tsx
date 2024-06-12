@@ -136,6 +136,10 @@ export const ListPage = ({ siteId }: IProps) => {
         header: "Description",
       },
       {
+        accessorKey: "cacheDurationDays",
+        header: "Cache duration (days)",
+      },
+      {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {

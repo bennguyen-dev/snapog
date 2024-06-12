@@ -139,8 +139,8 @@ export const ListSite = () => {
         },
       },
       {
-        accessorKey: "createdAt",
-        header: "Created At",
+        accessorKey: "cacheDurationDays",
+        header: "Cache duration (days)",
       },
       {
         id: "actions",

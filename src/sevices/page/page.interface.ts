@@ -22,6 +22,7 @@ export interface IPageDetail {
   id: string;
   url: string;
   siteId: string;
+  cacheDurationDays?: number;
   OGImage?: IOGImageDetail;
   OGTitle?: string;
   OGDescription?: string;

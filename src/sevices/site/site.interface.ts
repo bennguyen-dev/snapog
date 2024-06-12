@@ -28,6 +28,7 @@ export interface ISiteDetail {
   id: string;
   domain: string;
   userId: string;
+  cacheDurationDays?: number;
 
   createdAt: Date;
   updatedAt: Date;
