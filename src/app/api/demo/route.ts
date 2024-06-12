@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
-  let domain = params.get("domain");
+  const domain = params.get("domain");
 
   if (!domain) {
     return NextResponse.json({

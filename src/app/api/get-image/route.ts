@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { imageService } from "@/sevices/image";
 import { getUrlWithProtocol } from "@/lib/utils";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
-  let url = params.get("url");
+  const url = params.get("url");
 
   if (!url) {
     return NextResponse.json(

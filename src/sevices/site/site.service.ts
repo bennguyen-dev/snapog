@@ -44,7 +44,7 @@ class SiteService {
       return {
         message: "Site created successfully",
         status: 200,
-        data: site,
+        data: site as ISiteDetail,
       };
     } catch (error) {
       return {
@@ -79,7 +79,7 @@ class SiteService {
     return {
       message: "Site found",
       status: 200,
-      data: site,
+      data: site as ISiteDetail,
     };
   }
 
@@ -96,7 +96,7 @@ class SiteService {
       return {
         message: "Sites fetched successfully",
         status: 200,
-        data: sites,
+        data: sites as ISiteDetail[],
       };
     } catch (error) {
       return {
