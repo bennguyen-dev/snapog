@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/header";
 import { ReactNode } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
         )}
       >
         <Header />
+        <SpeedInsights />
         <main className="container flex min-h-screen flex-col items-center justify-between">
           {children}
         </main>
