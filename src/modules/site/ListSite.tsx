@@ -213,7 +213,7 @@ export const ListSite = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={sites || []} />
+          <DataTable columns={columns} data={sites || []} loading={fetching} />
         </CardContent>
       </Card>
       <Dialog open={openedDialogCreate} onOpenChange={setOpenedDialogCreate}>
