@@ -7,6 +7,7 @@ import { Inter as FontSans } from "next/font/google";
 import { headers } from "next/headers";
 
 import { Header } from "@/components/layout/header";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 import type { Metadata } from "next";
@@ -71,6 +72,7 @@ export default function RootLayout({
         <main className="container flex min-h-screen flex-col items-center justify-between">
           {children}
         </main>
+        <Toaster />
       </body>
     </html>
   );

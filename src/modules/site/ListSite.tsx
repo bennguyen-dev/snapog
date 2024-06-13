@@ -36,6 +36,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Typography } from "@/components/ui/typography";
+import { toast } from "@/components/ui/use-toast";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
 import {
   getDomainName,
@@ -64,6 +65,9 @@ export const ListSite = () => {
       method: "GET",
     },
     nonCallInit: true,
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
+    },
   });
 
   const { promiseFunc: createSite, loading: creating } = useCallApi<
@@ -81,6 +85,10 @@ export const ListSite = () => {
 
       setOpenedDialogCreate(false);
       setDomain("");
+      toast({ variant: "success", title: "Create successfully" });
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
     },
   });
 
@@ -98,6 +106,10 @@ export const ListSite = () => {
       getSites(true);
 
       onCloseConfirm();
+      toast({ variant: "success", title: "Delete successfully" });
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
     },
   });
 

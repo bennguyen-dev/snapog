@@ -27,6 +27,7 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
+import { toast } from "@/components/ui/use-toast";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 import {
@@ -55,6 +56,9 @@ export const ListPage = ({ siteId }: IProps) => {
       method: "GET",
     },
     nonCallInit: true,
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
+    },
   });
 
   const {
@@ -83,6 +87,10 @@ export const ListPage = ({ siteId }: IProps) => {
       getPages(true);
 
       onCloseConfirm();
+      toast({ variant: "success", title: "Delete successfully" });
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
     },
   });
 

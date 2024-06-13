@@ -64,11 +64,11 @@ export const useCallApi = <T, E = object, B = object>({
         router.replace("/404");
       }
       if (handleError && status !== 200) {
-        handleError(status, response.message);
+        handleError(status, response.message || "Internal server error");
       }
     } catch (err: any) {
       if (handleError) {
-        handleError(500, err.message);
+        handleError(500, err.message || "Internal server error");
       }
     } finally {
       setLoading(false);
