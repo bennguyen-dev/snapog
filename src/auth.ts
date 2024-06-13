@@ -9,7 +9,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { Pool } from "@neondatabase/serverless";
 
-const providers: Provider[] = [GitHub, Google];
+const providers: Provider[] = [
+  GitHub({ allowDangerousEmailAccountLinking: true }),
+  Google({ allowDangerousEmailAccountLinking: true }),
+];
 
 const neon = new Pool({
   connectionString: process.env.DATABASE_URL,
