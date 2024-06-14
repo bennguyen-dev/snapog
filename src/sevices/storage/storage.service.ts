@@ -40,8 +40,6 @@ class StorageService {
     try {
       await s3Client.send(command);
 
-      // const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-
       return {
         message: "Image uploaded successfully",
         status: 200,
