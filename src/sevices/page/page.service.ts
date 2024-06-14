@@ -23,6 +23,7 @@ class PageService {
   }: ICreatePage): Promise<IResponse<IPageDetail | null>> {
     const verifiedUrl = getUrlWithProtocol(url);
     const cleanProtocolUrl = getUrlWithoutProtocol(url);
+    const today = new Date();
 
     const site = await prisma.site.findUnique({
       where: {
@@ -72,9 +73,14 @@ class PageService {
       };
     }
 
+    const newExpiresAt = new Date();
+    const cacheDurationDays = site.cacheDurationDays ?? 0;
+    newExpiresAt.setDate(today.getDate() + cacheDurationDays);
+
     try {
       const ogImage = await ogImageService.create({
         src: uploadRes.data.src,
+        expiresAt: newExpiresAt,
       });
 
       if (!ogImage.data) {
