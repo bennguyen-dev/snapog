@@ -109,8 +109,9 @@ model Page {
 }
 
 model OGImage {
-  id  String @id @default(uuid())
-  src String
+  id        String    @id @default(uuid())
+  src       String
+  expiresAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
