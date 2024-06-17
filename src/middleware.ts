@@ -1,7 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default function middleware() {
-  return NextResponse.next();
+export default function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  response.headers.set("x-current-path", request.nextUrl.pathname);
+
+  return response;
 }
 
 // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
