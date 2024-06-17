@@ -7,7 +7,7 @@
   },
   "crons": [
     {
-      "path": "/api/cronjob/updateOGImage",
+      "path": "/api/cron/updateOGImage",
       "schedule": "0 0 * * *"
     }
   ]
