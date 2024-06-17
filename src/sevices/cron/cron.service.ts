@@ -33,9 +33,15 @@ class CronService {
         };
       }
 
+      console.log(
+        `found ${ogImages.length} need to update on ${today.toISOString()}`,
+        ogImages,
+      );
+
       for (const ogImage of ogImages) {
         const pages = ogImage.pages;
 
+        console.log("pages need to update", pages);
         if (!pages) {
           continue;
         }
@@ -47,21 +53,28 @@ class CronService {
           const cacheDurationDays = page.cacheDurationDays ?? 0;
 
           // fetch new image
+          console.log(`fetch new image ${page.url}`);
           const pageCrawlInfo = await crawlService.getInfoByUrl({
             url: page.url,
           });
+          console.log(`end fetch new image ${page.url}`, pageCrawlInfo);
 
           if (!pageCrawlInfo.data) {
             continue;
           }
 
           // Upload screenshot to S3
+          console.log(
+            `upload image ${page.url}`,
+            pageCrawlInfo.data?.screenShot,
+          );
           const uploadRes = await storageService.uploadImage({
             image: pageCrawlInfo.data?.screenShot,
             type: IMAGE_TYPES.PNG,
             fileName: sanitizeFilename(page.url),
             folder: sanitizeFilename(page.site.domain),
           });
+          console.log(`end upload image ${page.url}`, uploadRes);
 
           if (!uploadRes.data) {
             continue;
@@ -71,6 +84,7 @@ class CronService {
           newExpiresAt.setDate(today.getDate() + cacheDurationDays);
 
           // update og image
+          console.log(`update og image ${page.url}`);
           await prisma.oGImage.update({
             where: {
               id: ogImage.id,
@@ -81,6 +95,7 @@ class CronService {
               updatedAt: new Date(),
             },
           });
+          console.log(`end update og image ${page.url}`, uploadRes);
         }
       }
 
