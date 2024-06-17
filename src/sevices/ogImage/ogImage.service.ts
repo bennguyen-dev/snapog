@@ -116,6 +116,4 @@ class OGImageService {
   }
 }
 
-const ogImageService = new OGImageService();
-
-export default ogImageService;
+export const ogImageService = new OGImageService();

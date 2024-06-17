@@ -116,5 +116,5 @@ model OGImage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Page Page[]
+  pages Page[]
 }

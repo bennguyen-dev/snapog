@@ -13,7 +13,7 @@ import { IResponse } from "@/lib/type";
 import { crawlService } from "@/sevices/crawl";
 import { storageService } from "@/sevices/storage";
 import { IMAGE_TYPES } from "@/lib/constants";
-import ogImageService from "@/sevices/ogImage/ogImage.service";
+import { ogImageService } from "@/sevices/ogImage";
 import { prisma } from "@/lib/db";
 
 class PageService {
