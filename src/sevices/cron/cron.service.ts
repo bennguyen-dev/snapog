@@ -25,10 +25,26 @@ class CronService {
         },
       });
 
+      console.log("ogImages 😋", { ogImages }, "");
+
+      if (!ogImages) {
+        return {
+          message: "No OG Image found",
+          status: 404,
+          data: null,
+        };
+      }
+
       for (const ogImage of ogImages) {
         const pages = ogImage.pages;
 
+        console.log("pages 😋", { pages }, "");
+        if (!pages) {
+          continue;
+        }
+
         for (const page of pages) {
+          console.log("page 😋", { page }, "");
           if (!page) {
             continue;
           }
@@ -39,6 +55,7 @@ class CronService {
             url: page.url,
           });
 
+          console.log("pageCrawlInfo 😋", { pageCrawlInfo }, "");
           if (!pageCrawlInfo.data) {
             continue;
           }
@@ -51,6 +68,7 @@ class CronService {
             folder: sanitizeFilename(page.site.domain),
           });
 
+          console.log("uploadRes 😋", { uploadRes }, "");
           if (!uploadRes.data) {
             continue;
           }
