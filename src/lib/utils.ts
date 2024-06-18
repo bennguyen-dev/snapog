@@ -43,7 +43,7 @@ export function getDomainName(url: string) {
 }
 
 export function getImageLinkFromAWS(key: string) {
-  return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  return `https://${process.env.AWS_CDN_HOSTNAME}/${key}`;
 }
 
 export function getSnippetHowToUse(domain: string) {

@@ -75,7 +75,9 @@ class ImageService {
   }: IGetImageByImageLink): Promise<
     IResponse<IGetImageByImageLinkResponse | null>
   > {
+    console.time("start fetch image from link S3");
     const response = await fetch(imageLink);
+    console.timeEnd("start fetch image from link S3");
 
     if (!response.ok) {
       return {

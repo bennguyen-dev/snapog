@@ -22,7 +22,7 @@ class CrawlService {
       args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: { width: 1200, height: 630 },
       executablePath: await chromium.executablePath(
-        `https://og-image-dev.s3.ap-southeast-1.amazonaws.com/chromium/chromium-v123.0.1-pack.tar`,
+        `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
       ),
       headless: true,
       ignoreHTTPSErrors: true,
@@ -142,7 +142,7 @@ class CrawlService {
         "--disable-dev-shm-usage",
       ],
       executablePath: await chromium.executablePath(
-        `https://og-image-dev.s3.ap-southeast-1.amazonaws.com/chromium/chromium-v123.0.1-pack.tar`,
+        `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
       ),
       ignoreHTTPSErrors: true,
       headless: true,
