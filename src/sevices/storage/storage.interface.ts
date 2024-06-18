@@ -1,11 +1,6 @@
-import { ValuesOf } from "@/lib/type";
-import { IMAGE_TYPES } from "@/lib/constants";
-
 export interface IUploadImage {
   image: Buffer;
-  folder: string;
-  fileName: string;
-  type: ValuesOf<typeof IMAGE_TYPES>;
+  key: string; // `${folder}/${fileName}.${type.EXTENSION}`
 }
 
 export interface IDeleteImages {

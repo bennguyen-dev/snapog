@@ -11,6 +11,7 @@ import {
   IUploadImageResponse,
 } from "@/sevices/storage";
 import { IResponse } from "@/lib/type";
+import { IMAGE_TYPES } from "@/lib/constants";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,
@@ -23,17 +24,13 @@ const s3Client = new S3Client({
 class StorageService {
   async uploadImage({
     image,
-    folder,
-    fileName,
-    type,
+    key,
   }: IUploadImage): Promise<IResponse<IUploadImageResponse | null>> {
-    const key = `${folder}/${fileName}.${type.EXTENSION}`;
-
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME as string,
       Key: key,
       Body: image,
-      ContentType: type.MIME,
+      ContentType: IMAGE_TYPES.PNG.MIME,
     });
 
     // Upload image

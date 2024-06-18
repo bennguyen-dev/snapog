@@ -17,11 +17,7 @@ class CronService {
           },
         },
         include: {
-          pages: {
-            include: {
-              site: true,
-            },
-          },
+          pages: true,
         },
       });
 
@@ -70,9 +66,7 @@ class CronService {
           );
           const uploadRes = await storageService.uploadImage({
             image: pageCrawlInfo.data?.screenShot,
-            type: IMAGE_TYPES.PNG,
-            fileName: sanitizeFilename(page.url),
-            folder: sanitizeFilename(page.site.domain),
+            key: ogImage.src,
           });
           console.log(`end upload image ${page.url}`, uploadRes);
 

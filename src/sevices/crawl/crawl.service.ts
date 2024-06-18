@@ -15,25 +15,31 @@ class CrawlService {
   async getInfoByUrl({
     url,
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
-    const verifiedUrl = getUrlWithProtocol(url);
+    const urlWithProtocol = getUrlWithProtocol(url);
 
+    console.time("start browser");
     const browser = await puppeteer.launch({
       args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: { width: 1200, height: 630 },
       executablePath: await chromium.executablePath(
-        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
+        `https://og-image-dev.s3.ap-southeast-1.amazonaws.com/chromium/chromium-v123.0.1-pack.tar`,
       ),
       headless: true,
       ignoreHTTPSErrors: true,
     });
+    console.timeEnd("start browser");
 
     try {
+      console.time("start page");
       const page = await browser.newPage();
+      console.timeEnd("start page");
 
-      const response = await page.goto(verifiedUrl, {
+      console.time(`start goto ${url}`);
+      const response = await page.goto(urlWithProtocol, {
         waitUntil: "networkidle2",
         timeout: 60000,
       }); // Set timeout to 60 seconds
+      console.timeEnd(`start goto ${url}`);
 
       // Check if the response status is okay (2xx or 3xx)
       if (!response || !response.ok()) {
@@ -46,11 +52,13 @@ class CrawlService {
         };
       }
 
+      console.time("start evaluate");
       // Check for UI elements on the page (optional)
       const bodyContentExist = await page.evaluate(() => {
         // Check if the body contains any content
         return document.body && document.body.innerHTML.trim().length > 0;
       });
+      console.timeEnd("start evaluate");
 
       if (!bodyContentExist) {
         console.error(`No body content found on page: ${url}`);
@@ -62,9 +70,12 @@ class CrawlService {
         };
       }
 
+      console.time("start screenshot");
       // Capture screenshot
       const screenshot = await page.screenshot();
+      console.timeEnd("start screenshot");
 
+      console.time("start get info");
       // Get title and description, og:image
       const title = await page.title();
       const description = await page.evaluate(() => {
@@ -78,6 +89,7 @@ class CrawlService {
         const ogImage = document.querySelector('meta[property="og:image"]');
         return ogImage ? ogImage.getAttribute("content") : null;
       });
+      console.timeEnd("start get info");
 
       // Close page and browser after capturing screenshot
       await page.close();
@@ -87,7 +99,7 @@ class CrawlService {
         status: 200,
         message: "Info fetched successfully",
         data: {
-          url: verifiedUrl,
+          url: urlWithProtocol,
           screenShot: screenshot,
           title,
           description: description || undefined,
@@ -130,7 +142,7 @@ class CrawlService {
         "--disable-dev-shm-usage",
       ],
       executablePath: await chromium.executablePath(
-        `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`,
+        `https://og-image-dev.s3.ap-southeast-1.amazonaws.com/chromium/chromium-v123.0.1-pack.tar`,
       ),
       ignoreHTTPSErrors: true,
       headless: true,
