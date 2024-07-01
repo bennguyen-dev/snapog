@@ -1,21 +1,21 @@
+import { IMAGE_TYPES } from "@/lib/constants";
+import { prisma } from "@/lib/db";
+import { IResponse } from "@/lib/type";
 import {
-  ICreatePage,
-  IDeleteManyPageBy,
-  IGetPageBy,
-  IPageDetail,
-  IUpdateManyPageBy,
-} from "@/sevices/page";
-import {
-  getUrlWithoutProtocol,
   getUrlWithProtocol,
+  getUrlWithoutProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { IResponse } from "@/lib/type";
 import { crawlService } from "@/sevices/crawl";
-import { storageService } from "@/sevices/storage";
-import { IMAGE_TYPES } from "@/lib/constants";
 import { ogImageService } from "@/sevices/ogImage";
-import { prisma } from "@/lib/db";
+import {
+  ICreatePage,
+  IDeletePagesBy,
+  IGetPageBy,
+  IPageDetail,
+  IUpdatePagesBy,
+} from "@/sevices/page";
+import { storageService } from "@/sevices/storage";
 
 class PageService {
   async create({
@@ -194,7 +194,7 @@ class PageService {
     id,
     siteId,
     cacheDurationDays,
-  }: IUpdateManyPageBy): Promise<IResponse<IPageDetail[] | null>> {
+  }: IUpdatePagesBy): Promise<IResponse<IPageDetail[] | null>> {
     if (!id && !siteId) {
       return {
         message: "Missing id or siteId",
@@ -259,10 +259,7 @@ class PageService {
     }
   }
 
-  async deleteManyBy({
-    siteId,
-    id,
-  }: IDeleteManyPageBy): Promise<IResponse<null>> {
+  async deleteManyBy({ siteId, id }: IDeletePagesBy): Promise<IResponse<null>> {
     try {
       const pages = await prisma.page.findMany({
         where: {

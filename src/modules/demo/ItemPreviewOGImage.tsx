@@ -1,7 +1,9 @@
+import { ArrowLeft, RotateCw } from "lucide-react";
+
+import Image from "next/image";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUrlWithoutProtocol } from "@/lib/utils";
-import Image from "next/image";
-import { ArrowLeft, RotateCw } from "lucide-react";
 
 interface IProps {
   url?: string;
@@ -42,6 +44,7 @@ export const ItemPreviewOGImage = ({
         {image && !loading && (
           <div className="body">
             {image.startsWith("http") || image.startsWith("https") ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={image} className="aspect-[1200/628]" alt={url} />
             ) : (
               <Image

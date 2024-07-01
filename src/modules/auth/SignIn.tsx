@@ -1,4 +1,7 @@
+import GitHubIcon from "@/assets/icons/github.svg";
+import GoogleIcon from "@/assets/icons/google.svg";
 import { providerMap, signIn } from "@/auth";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,9 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import GitHubIcon from "@/assets/icons/github.svg";
-import GoogleIcon from "@/assets/icons/google.svg";
 
 const IconPlatforms: any = {
   GitHub: <GitHubIcon className="mr-2 h-5 w-5" />,

@@ -1,7 +1,8 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import { pageService } from "@/sevices/page";
+
+import { auth } from "@/auth";
 import { getImageLinkFromAWS } from "@/lib/utils";
+import { pageService } from "@/sevices/page";
 
 export const GET = auth(async function GET(req, res) {
   if (!req.auth?.user?.id) {

@@ -12,13 +12,13 @@ export interface IGetPageBy {
   id?: string;
 }
 
-export interface IUpdateManyPageBy {
+export interface IUpdatePagesBy {
   id?: string;
   siteId?: string;
   cacheDurationDays?: number;
 }
 
-export interface IDeleteManyPageBy {
+export interface IDeletePagesBy {
   siteId?: string;
 
   id?: string;

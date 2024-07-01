@@ -17,7 +17,14 @@ export interface IGetSiteBy {
   id?: string;
 }
 
-export interface IDeleteAllSiteBy {
+export interface IUpdateSiteBy {
+  id: string;
+
+  cacheDurationDays?: number;
+  overridePage?: boolean;
+}
+
+export interface IDeleteSitesBy {
   userId?: string;
   domain?: string;
 

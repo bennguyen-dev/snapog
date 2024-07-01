@@ -1,11 +1,11 @@
+import { prisma } from "@/lib/db";
+import { IResponse } from "@/lib/type";
 import {
   ICreateOGImage,
   IOGImageDetail,
   IUpdateOGImage,
 } from "@/sevices/ogImage/ogImage.interface";
-import { IResponse } from "@/lib/type";
 import { storageService } from "@/sevices/storage";
-import { prisma } from "@/lib/db";
 
 class OGImageService {
   async create({

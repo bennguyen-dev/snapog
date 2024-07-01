@@ -1,7 +1,8 @@
+import { Check, X } from "lucide-react";
+
+import { Typography } from "@/components/ui/typography";
 import { ItemPreviewOGImage } from "@/modules/demo";
 import { IGetDemoResponse } from "@/sevices/demo";
-import { Typography } from "@/components/ui/typography";
-import { Check, X } from "lucide-react";
 
 interface IProps {
   pagesInfo?: IGetDemoResponse[];

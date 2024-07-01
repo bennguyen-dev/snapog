@@ -1,5 +1,6 @@
-import { demoService } from "@/sevices/demo";
 import { NextRequest, NextResponse } from "next/server";
+
+import { demoService } from "@/sevices/demo";
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;

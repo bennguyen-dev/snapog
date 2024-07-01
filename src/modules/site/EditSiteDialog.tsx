@@ -3,10 +3,12 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -29,31 +31,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DURATION_CACHES } from "@/lib/constants";
-import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
+import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
 
 const formSchema = z.object({
-  url: z.string(),
+  domain: z.string(),
   cacheDurationDays: z.string(),
+  overridePage: z.boolean(),
 });
 
 interface IProps {
   loading?: boolean;
 }
 
-export interface IEditPageDialogRef {
-  open: (
-    item: IPageDetail | null,
-  ) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
+export interface IEditSiteDialogRef {
+  open: (item: ISiteDetail | null) => Promise<Omit<IUpdateSiteBy, "id">>;
   close: () => void;
 }
 
 interface IPromiseCallback {
-  resolve: (value: Omit<IUpdatePagesBy, "id" | "siteId">) => void;
+  resolve: (value: Omit<IUpdateSiteBy, "id">) => void;
   reject: (value: null) => void;
 }
 
-export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
+export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(
   (props, ref) => {
     const { loading } = props;
 
@@ -79,10 +86,11 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
     };
 
     useImperativeHandle(ref, () => ({
-      open: (item: IPageDetail | null = null) => {
+      open: (item: ISiteDetail | null = null) => {
         form.reset({
-          url: item?.url,
+          domain: item?.domain,
           cacheDurationDays: item?.cacheDurationDays?.toString(),
+          overridePage: false,
         });
         setOpened(true);
         return new Promise((resolve, reject) => {
@@ -109,7 +117,7 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
         >
           <Form {...form}>
             <DialogHeader className="mb-4">
-              <DialogTitle>{form.getValues("url")}</DialogTitle>
+              <DialogTitle>{form.getValues("domain")}</DialogTitle>
             </DialogHeader>
 
             <FormField
@@ -142,6 +150,46 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="overridePage"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      <div className="flex items-center gap-2">
+                        Override for all pages
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="icon cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
+                                <li>
+                                  If turned on, the settings will be applied to
+                                  all pages includes all customized pages.
+                                </li>
+                                <li>
+                                  If turned off, this parameter will apply to
+                                  pages created later.
+                                </li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
             <DialogFooter className="sm:justify-end">
               <Button variant="outline" disabled={loading} onClick={onCancel}>
                 Cancel
@@ -163,4 +211,4 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
   },
 );
 
-EditPageDialog.displayName = "EditPageDialog";
+EditSiteDialog.displayName = "EditSiteDialog";

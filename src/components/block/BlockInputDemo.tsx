@@ -1,12 +1,15 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { getDomainName } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Typography } from "@/components/ui/typography";
+
 import { EyeIcon } from "lucide-react";
+
+import { useRouter } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Typography } from "@/components/ui/typography";
+import { getDomainName } from "@/lib/utils";
 
 export const BlockInputDemo = () => {
   const router = useRouter();

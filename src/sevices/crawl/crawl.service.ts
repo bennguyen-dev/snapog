@@ -1,15 +1,15 @@
+import chromium from "@sparticuz/chromium-min";
+import puppeteer from "puppeteer-core";
+
+import { PRIORITY_PAGES } from "@/lib/constants";
+import { IResponse } from "@/lib/type";
+import { getUrlWithProtocol } from "@/lib/utils";
 import {
   IGetAllUrlByDomain,
   IGetAllUrlByDomainResponse,
   IGetInfoByUrl,
   IGetInfoByUrlResponse,
 } from "@/sevices/crawl";
-import { getUrlWithProtocol } from "@/lib/utils";
-import puppeteer from "puppeteer-core";
-import { IResponse } from "@/lib/type";
-
-import chromium from "@sparticuz/chromium-min";
-import { PRIORITY_PAGES } from "@/lib/constants";
 
 class CrawlService {
   async getInfoByUrl({

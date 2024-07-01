@@ -1,6 +1,6 @@
-import { IGetDemo, IGetDemoResponse } from "@/sevices/demo";
-import { crawlService } from "@/sevices/crawl";
 import { IResponse } from "@/lib/type";
+import { crawlService } from "@/sevices/crawl";
+import { IGetDemo, IGetDemoResponse } from "@/sevices/demo";
 
 class DemoService {
   async getDemo({

@@ -1,13 +1,17 @@
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
-
-import { cn } from "@/lib/utils";
-import { Header } from "@/components/layout/header";
 import { ReactNode } from "react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
+import { Inter as FontSans } from "next/font/google";
 import { headers } from "next/headers";
+
+import { Header } from "@/components/layout/header";
+import { cn } from "@/lib/utils";
+
+import type { Metadata } from "next";
+
+import "./globals.css";
 
 const fontSans = FontSans({
   subsets: ["latin"],

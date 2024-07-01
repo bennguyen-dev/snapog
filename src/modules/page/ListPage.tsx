@@ -1,26 +1,13 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/table-core";
-import { IPageDetail } from "@/sevices/page";
-import { useCallApi, useMounted } from "@/hooks";
 import { useEffect, useMemo, useRef } from "react";
-import { Typography } from "@/components/ui/typography";
-import { DataTable } from "@/components/ui/data-table";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+
+import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
-import { useConfirmDialog } from "@/hooks";
+
+import Image from "next/image";
 import Link from "next/link";
-import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ISiteDetail } from "@/sevices/site";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,10 +16,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DataTable } from "@/components/ui/data-table";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Typography } from "@/components/ui/typography";
+import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
+import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
+import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
+import { ISiteDetail } from "@/sevices/site";
 
 interface IProps {
   siteId: string;
@@ -47,7 +49,7 @@ export const ListPage = ({ siteId }: IProps) => {
     data: pages,
     setLetCall: getPages,
     loading: fetching,
-  } = useCallApi<IPageDetail[], {}, {}>({
+  } = useCallApi<IPageDetail[], object, object>({
     url: `/api/sites/${siteId}/pages`,
     options: {
       method: "GET",
@@ -59,7 +61,7 @@ export const ListPage = ({ siteId }: IProps) => {
     data: site,
     setLetCall: getSite,
     loading: fetchingSite,
-  } = useCallApi<ISiteDetail, {}, {}>({
+  } = useCallApi<ISiteDetail, object, object>({
     url: `/api/sites/${siteId}`,
     options: {
       method: "GET",
@@ -68,8 +70,8 @@ export const ListPage = ({ siteId }: IProps) => {
   });
 
   const { promiseFunc: deletePage, loading: deleting } = useCallApi<
-    {},
-    {},
+    object,
+    object,
     null
   >({
     url: `/api/pages`,
@@ -85,9 +87,9 @@ export const ListPage = ({ siteId }: IProps) => {
   });
 
   const { promiseFunc: updatePage, loading: updating } = useCallApi<
-    {},
+    object,
     null,
-    { cacheDurationDays: number }
+    Omit<IUpdatePagesBy, "id" | "siteId">
   >({
     url: `/api/pages`,
     options: {
@@ -193,10 +195,7 @@ export const ListPage = ({ siteId }: IProps) => {
                   const data = await editPageRef.current?.open(page);
 
                   if (data) {
-                    updatePage(
-                      { cacheDurationDays: data.cacheDurationDays },
-                      `/api/pages/${page.id}`,
-                    );
+                    updatePage(data, `/api/pages/${page.id}`);
                   }
                 }}
               >
@@ -207,7 +206,7 @@ export const ListPage = ({ siteId }: IProps) => {
         },
       },
     ],
-    [confirmDialog, deletePage, deleting, siteId],
+    [confirmDialog, deletePage, deleting, updatePage],
   );
 
   useEffect(() => {

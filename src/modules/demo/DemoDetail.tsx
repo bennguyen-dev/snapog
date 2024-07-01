@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useCallApi, useMounted } from "@/hooks";
 
-import { IGetDemoResponse } from "@/sevices/demo";
 import { BlockCompareOGImage } from "@/components/block";
+import { useCallApi, useMounted } from "@/hooks";
+import { IGetDemoResponse } from "@/sevices/demo";
 
 interface IProps {
   params: { domain: string };
@@ -18,7 +18,7 @@ export default function DemoDetail({ params: { domain } }: IProps) {
     data: pagesInfo,
     loading: fetching,
     setLetCall: getPagesInfo,
-  } = useCallApi<IGetDemoResponse[], {}, {}>({
+  } = useCallApi<IGetDemoResponse[], object, object>({
     url: `/api/demo?${queryApi}`,
     options: {
       method: "GET",

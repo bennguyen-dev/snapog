@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/db";
 import { crawlService } from "@/sevices/crawl";
 import { storageService } from "@/sevices/storage";
-import { IMAGE_TYPES } from "@/lib/constants";
-import { sanitizeFilename } from "@/lib/utils";
 
 class CronService {
   async updateOGImage() {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { imageService } from "@/sevices/image";
+
 import { getUrlWithProtocol } from "@/lib/utils";
+import { imageService } from "@/sevices/image";
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
