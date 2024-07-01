@@ -2,9 +2,9 @@
 
 import { Typography } from "@/components/ui/typography";
 import { ColumnDef } from "@tanstack/table-core";
-import { ISiteDetail } from "@/sevices/site";
+import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,7 @@ import {
   getSnippetHowToUse,
 } from "@/lib/utils";
 import Link from "next/link";
-import { Plus, RefreshCw, TrashIcon } from "lucide-react";
+import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { CodeSnippet } from "@/components/ui/code-snippet";
 import {
   Card,
@@ -40,6 +40,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { EditSiteDialog, IEditSiteDialogRef } from "@/modules/site";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
@@ -47,6 +48,8 @@ export const ListSite = () => {
 
   const [domain, setDomain] = useState<string>("");
   const [openedDialogCreate, setOpenedDialogCreate] = useState<boolean>(false);
+
+  const editSiteRef = useRef<IEditSiteDialogRef>(null);
 
   const {
     data: sites,
@@ -92,6 +95,23 @@ export const ListSite = () => {
       getSites(true);
 
       onCloseConfirm();
+    },
+  });
+
+  const { promiseFunc: updateSite, loading: updating } = useCallApi<
+    {},
+    null,
+    Omit<IUpdateSiteBy, "id">
+  >({
+    url: `/api/sites`,
+    options: {
+      method: "PUT",
+    },
+    nonCallInit: true,
+    handleSuccess() {
+      getSites(true);
+
+      editSiteRef.current?.close();
     },
   });
 
@@ -149,29 +169,49 @@ export const ListSite = () => {
           const site = row.original;
 
           return (
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={() => {
-                confirmDialog({
-                  title: "Delete site",
-                  content: "Are you sure you want to delete this site?",
-                  onConfirm: () => {
-                    deleteSite(null, `/api/sites/${site.id}`);
-                  },
-                  type: "danger",
-                  onCancel: () => {},
-                });
-              }}
-              disabled={deleting}
-            >
-              <TrashIcon className="icon" />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  confirmDialog({
+                    title: "Delete site",
+                    content: "Are you sure you want to delete this site?",
+                    onConfirm: () => {
+                      deleteSite(null, `/api/sites/${site.id}`);
+                    },
+                    type: "danger",
+                    onCancel: () => {},
+                  });
+                }}
+                disabled={deleting}
+              >
+                <TrashIcon className="icon" />
+              </Button>
+              <Button
+                size="icon"
+                onClick={async () => {
+                  const data = await editSiteRef.current?.open(site);
+
+                  if (data) {
+                    updateSite(
+                      {
+                        cacheDurationDays: data.cacheDurationDays,
+                        overridePage: data.overridePage,
+                      },
+                      `/api/sites/${site.id}`,
+                    );
+                  }
+                }}
+              >
+                <Pencil className="icon" />
+              </Button>
+            </div>
           );
         },
       },
     ];
-  }, [confirmDialog, deleteSite, deleting]);
+  }, [confirmDialog, deleteSite, deleting, updateSite]);
 
   return (
     <div className="w-full py-8">
@@ -257,6 +297,7 @@ export const ListSite = () => {
         </DialogContent>
       </Dialog>
       <ConfirmDialog loading={deleting} />
+      <EditSiteDialog ref={editSiteRef} loading={updating} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/table-core";
-import { IPageDetail } from "@/sevices/page";
+import { IPageDetail, IUpdateManyPageBy } from "@/sevices/page";
 import { useCallApi, useMounted } from "@/hooks";
 import { useEffect, useMemo, useRef } from "react";
 import { Typography } from "@/components/ui/typography";
@@ -87,7 +87,7 @@ export const ListPage = ({ siteId }: IProps) => {
   const { promiseFunc: updatePage, loading: updating } = useCallApi<
     {},
     null,
-    { cacheDurationDays: number }
+    IUpdateManyPageBy
   >({
     url: `/api/pages`,
     options: {
@@ -207,7 +207,7 @@ export const ListPage = ({ siteId }: IProps) => {
         },
       },
     ],
-    [confirmDialog, deletePage, deleting, siteId],
+    [confirmDialog, deletePage, deleting, updatePage],
   );
 
   useEffect(() => {
