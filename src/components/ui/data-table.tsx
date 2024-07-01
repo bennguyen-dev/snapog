@@ -1,11 +1,14 @@
 "use client";
 
+import * as React from "react";
+
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Loader2 } from "lucide-react";
 
 import {
   Table,
@@ -15,8 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2 } from "lucide-react";
-import * as React from "react";
 import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {

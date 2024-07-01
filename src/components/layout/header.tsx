@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import HamburgerIcon from "@/assets/icons/hamburger.svg";
-import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Navbar } from "@/components/layout/navbar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 const Hamburger = () => {
   return (

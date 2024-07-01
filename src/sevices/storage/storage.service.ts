@@ -1,17 +1,17 @@
-// Configure AWS SDK
 import {
   DeleteObjectsCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+
+import { IMAGE_TYPES } from "@/lib/constants";
+import { IResponse } from "@/lib/type";
 import {
   IDeleteFolders,
   IDeleteImages,
   IUploadImage,
   IUploadImageResponse,
 } from "@/sevices/storage";
-import { IResponse } from "@/lib/type";
-import { IMAGE_TYPES } from "@/lib/constants";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,

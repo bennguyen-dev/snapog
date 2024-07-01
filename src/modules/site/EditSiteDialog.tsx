@@ -1,6 +1,14 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Info } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,9 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
   SelectContent,
@@ -27,16 +31,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_CACHES } from "@/lib/constants";
-import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DURATION_CACHES } from "@/lib/constants";
+import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
 
 const formSchema = z.object({
   domain: z.string(),

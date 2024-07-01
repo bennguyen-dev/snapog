@@ -1,13 +1,11 @@
+import { Provider } from "@auth/core/providers";
+import Google from "@auth/core/providers/google";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Pool } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
-import Google from "@auth/core/providers/google";
-
-import { Provider } from "@auth/core/providers";
-
-import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { Pool } from "@neondatabase/serverless";
 
 const providers: Provider[] = [
   GitHub({ allowDangerousEmailAccountLinking: true }),

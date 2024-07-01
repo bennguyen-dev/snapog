@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useCallApi, useMounted } from "@/hooks";
 
-import { IGetDemoResponse } from "@/sevices/demo";
 import { BlockCompareOGImage } from "@/components/block";
+import { useCallApi, useMounted } from "@/hooks";
+import { IGetDemoResponse } from "@/sevices/demo";
 
 interface IProps {
   params: { domain: string };

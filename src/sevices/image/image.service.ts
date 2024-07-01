@@ -1,17 +1,17 @@
+import { IResponse } from "@/lib/type";
+import {
+  getImageLinkFromAWS,
+  getUrlWithProtocol,
+  getUrlWithoutProtocol,
+} from "@/lib/utils";
 import {
   IGetImageByImageLink,
   IGetImageByImageLinkResponse,
   IGetImageByUrl,
   IGetImageByUrlResponse,
 } from "@/sevices/image";
-import { IResponse } from "@/lib/type";
-import {
-  getImageLinkFromAWS,
-  getUrlWithoutProtocol,
-  getUrlWithProtocol,
-} from "@/lib/utils";
-import { siteService } from "@/sevices/site";
 import { pageService } from "@/sevices/page";
+import { siteService } from "@/sevices/site";
 
 class ImageService {
   async getImageByUrl({

@@ -1,5 +1,6 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
+
+import { auth } from "@/auth";
 import { siteService } from "@/sevices/site";
 
 export const GET = auth(async function GET(req, res) {
