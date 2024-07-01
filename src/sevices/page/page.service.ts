@@ -195,6 +195,14 @@ class PageService {
     siteId,
     cacheDurationDays,
   }: IUpdateManyPageBy): Promise<IResponse<IPageDetail[] | null>> {
+    if (!id && !siteId) {
+      return {
+        message: "Missing id or siteId",
+        status: 400,
+        data: null,
+      };
+    }
+
     try {
       // Retrieve updated pages to update `expiresAt` in `OGImage`
       const updatedPages = await prisma.page.findMany({

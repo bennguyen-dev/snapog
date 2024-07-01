@@ -138,7 +138,7 @@ export const ListPage = ({ siteId }: IProps) => {
               target="_blank"
               className="text-link"
             >
-              <img
+              <Image
                 src={row.original.OGImage.src}
                 width={120}
                 height={60}
