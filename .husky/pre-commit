@@ -1,1 +1,28 @@
-npx lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing and building your project before committing'
+
+# Check Prettier standards
+yarn check-format ||
+(
+    echo '🤢🤮🤢🤮 Failed to check the format 🤢🤮🤢🤮';
+    false;
+)
+
+# Check ESLint Standards
+yarn check-lint ||
+(
+    echo '😤🏀👋😤 Failed to check the lint 😤🏀👋😤'
+    false;
+)
+
+# Check tsconfig standards
+yarn check-types ||
+(
+    echo '🤡😂❌🤡 Failed to check the types 🤡😂❌🤡'
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '✅✅✅✅ Yo you got this... I am committing this now. ✅✅✅✅'

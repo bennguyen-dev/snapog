@@ -18,7 +18,7 @@ export default function DemoDetail({ params: { domain } }: IProps) {
     data: pagesInfo,
     loading: fetching,
     setLetCall: getPagesInfo,
-  } = useCallApi<IGetDemoResponse[], {}, {}>({
+  } = useCallApi<IGetDemoResponse[], object, object>({
     url: `/api/demo?${queryApi}`,
     options: {
       method: "GET",

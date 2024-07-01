@@ -2,14 +2,13 @@
 
 import { ColumnDef } from "@tanstack/table-core";
 import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
-import { useCallApi, useMounted } from "@/hooks";
+import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
 import { useEffect, useMemo, useRef } from "react";
 import { Typography } from "@/components/ui/typography";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
-import { useConfirmDialog } from "@/hooks";
 import Link from "next/link";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 import {
@@ -47,7 +46,7 @@ export const ListPage = ({ siteId }: IProps) => {
     data: pages,
     setLetCall: getPages,
     loading: fetching,
-  } = useCallApi<IPageDetail[], {}, {}>({
+  } = useCallApi<IPageDetail[], object, object>({
     url: `/api/sites/${siteId}/pages`,
     options: {
       method: "GET",
@@ -59,7 +58,7 @@ export const ListPage = ({ siteId }: IProps) => {
     data: site,
     setLetCall: getSite,
     loading: fetchingSite,
-  } = useCallApi<ISiteDetail, {}, {}>({
+  } = useCallApi<ISiteDetail, object, object>({
     url: `/api/sites/${siteId}`,
     options: {
       method: "GET",
@@ -68,8 +67,8 @@ export const ListPage = ({ siteId }: IProps) => {
   });
 
   const { promiseFunc: deletePage, loading: deleting } = useCallApi<
-    {},
-    {},
+    object,
+    object,
     null
   >({
     url: `/api/pages`,
@@ -85,7 +84,7 @@ export const ListPage = ({ siteId }: IProps) => {
   });
 
   const { promiseFunc: updatePage, loading: updating } = useCallApi<
-    {},
+    object,
     null,
     Omit<IUpdatePagesBy, "id" | "siteId">
   >({

@@ -42,6 +42,7 @@ export const ItemPreviewOGImage = ({
         {image && !loading && (
           <div className="body">
             {image.startsWith("http") || image.startsWith("https") ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={image} className="aspect-[1200/628]" alt={url} />
             ) : (
               <Image

@@ -55,7 +55,7 @@ export const ListSite = () => {
     data: sites,
     setLetCall: getSites,
     loading: fetching,
-  } = useCallApi<ISiteDetail[], {}, {}>({
+  } = useCallApi<ISiteDetail[], object, object>({
     url: `/api/sites`,
     options: {
       method: "GET",
@@ -64,8 +64,8 @@ export const ListSite = () => {
   });
 
   const { promiseFunc: createSite, loading: creating } = useCallApi<
-    {},
-    {},
+    object,
+    object,
     { domain: string }
   >({
     url: `/api/sites`,
@@ -82,8 +82,8 @@ export const ListSite = () => {
   });
 
   const { promiseFunc: deleteSite, loading: deleting } = useCallApi<
-    {},
-    {},
+    object,
+    object,
     null
   >({
     url: `/api/sites`,
@@ -99,7 +99,7 @@ export const ListSite = () => {
   });
 
   const { promiseFunc: updateSite, loading: updating } = useCallApi<
-    {},
+    object,
     null,
     Omit<IUpdateSiteBy, "id">
   >({

@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMounted } from "@/hooks";
 
-export const useCallApi = <T, E = {}, B = {}>({
+export const useCallApi = <T, E = object, B = object>({
   url,
   options,
   handleError,
@@ -80,6 +80,7 @@ export const useCallApi = <T, E = {}, B = {}>({
       setLoading(true);
       getData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [letCall, mounted]);
 
   const handleReset = () => {
