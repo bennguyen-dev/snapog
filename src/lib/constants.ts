@@ -16,14 +16,9 @@ export const ROUTES = [
   },
 ];
 
-export const DURATION_CACHE = [
-  { label: "1 day", value: 1 },
-  { label: "2 days", value: 2 },
-  { label: "3 day", value: 3 },
-  { label: "4 day", value: 4 },
-  { label: "5 day", value: 5 },
-  { label: "6 day", value: 6 },
-];
+export const DURATION_CACHES = Array(30)
+  .fill(null)
+  .map((_, i) => ({ value: `${i + 1}`, label: `${i + 1} days` }));
 
 export const IMAGE_TYPES = Object.freeze({
   PNG: {

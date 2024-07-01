@@ -74,8 +74,9 @@ class CronService {
             continue;
           }
 
-          const newExpiresAt = new Date(today);
-          newExpiresAt.setDate(today.getDate() + cacheDurationDays);
+          const newExpiresAt = new Date(
+            today.getTime() + cacheDurationDays * 24 * 60 * 60 * 1000,
+          );
 
           // update og image
           console.log(`update og image ${page.url}`);

@@ -3,12 +3,12 @@
 import { ColumnDef } from "@tanstack/table-core";
 import { IPageDetail } from "@/sevices/page";
 import { useCallApi, useMounted } from "@/hooks";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Typography } from "@/components/ui/typography";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, TrashIcon } from "lucide-react";
+import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
 import { useConfirmDialog } from "@/hooks";
 import Link from "next/link";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
@@ -29,6 +29,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  EditPageDialog,
+  IEditPageDialogRef,
+} from "@/modules/page/EditPageDialog";
 
 interface IProps {
   siteId: string;
@@ -37,6 +41,7 @@ interface IProps {
 export const ListPage = ({ siteId }: IProps) => {
   const { mounted } = useMounted();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
+  const editPageRef = useRef<IEditPageDialogRef>(null);
 
   const {
     data: pages,
@@ -67,7 +72,7 @@ export const ListPage = ({ siteId }: IProps) => {
     {},
     null
   >({
-    url: `/api/sites/${siteId}/pages`,
+    url: `/api/pages`,
     options: {
       method: "DELETE",
     },
@@ -76,6 +81,23 @@ export const ListPage = ({ siteId }: IProps) => {
       getPages(true);
 
       onCloseConfirm();
+    },
+  });
+
+  const { promiseFunc: updatePage, loading: updating } = useCallApi<
+    {},
+    null,
+    { cacheDurationDays: number }
+  >({
+    url: `/api/pages`,
+    options: {
+      method: "PUT",
+    },
+    nonCallInit: true,
+    handleSuccess() {
+      getPages(true);
+
+      editPageRef.current?.close();
     },
   });
 
@@ -116,7 +138,7 @@ export const ListPage = ({ siteId }: IProps) => {
               target="_blank"
               className="text-link"
             >
-              <Image
+              <img
                 src={row.original.OGImage.src}
                 width={120}
                 height={60}
@@ -146,24 +168,41 @@ export const ListPage = ({ siteId }: IProps) => {
           const page = row.original;
 
           return (
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={() => {
-                confirmDialog({
-                  title: "Delete page",
-                  content: "Are you sure you want to delete this page?",
-                  onConfirm: () => {
-                    deletePage(null, `/api/sites/${siteId}/pages/${page.id}`);
-                  },
-                  type: "danger",
-                  onCancel: () => {},
-                });
-              }}
-              disabled={deleting}
-            >
-              <TrashIcon className="icon" />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  confirmDialog({
+                    title: "Delete page",
+                    content: "Are you sure you want to delete this page?",
+                    onConfirm: () => {
+                      deletePage(null, `/api/pages/${page.id}`);
+                    },
+                    type: "danger",
+                    onCancel: () => {},
+                  });
+                }}
+                disabled={deleting}
+              >
+                <TrashIcon className="icon" />
+              </Button>
+              <Button
+                size="icon"
+                onClick={async () => {
+                  const data = await editPageRef.current?.open(page);
+
+                  if (data) {
+                    updatePage(
+                      { cacheDurationDays: data.cacheDurationDays },
+                      `/api/pages/${page.id}`,
+                    );
+                  }
+                }}
+              >
+                <Pencil className="icon" />
+              </Button>
+            </div>
           );
         },
       },
@@ -232,6 +271,7 @@ export const ListPage = ({ siteId }: IProps) => {
       </Card>
 
       <ConfirmDialog loading={deleting} />
+      <EditPageDialog ref={editPageRef} loading={updating} />
     </div>
   );
 };

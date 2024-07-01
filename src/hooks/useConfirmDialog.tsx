@@ -79,6 +79,13 @@ export const useConfirmDialog = () => {
             </DialogHeader>
             <DialogFooter className="sm:justify-end">
               <Button
+                variant="outline"
+                disabled={loading}
+                onClick={onCloseConfirm}
+              >
+                {cancelText || "Cancel"}
+              </Button>
+              <Button
                 loading={loading}
                 className={buttonClassName[type]}
                 onClick={() => {
@@ -91,13 +98,6 @@ export const useConfirmDialog = () => {
                 variant="default"
               >
                 {confirmText || "Confirm"}
-              </Button>
-              <Button
-                variant="outline"
-                disabled={loading}
-                onClick={onCloseConfirm}
-              >
-                {cancelText || "Cancel"}
               </Button>
             </DialogFooter>
           </DialogContent>

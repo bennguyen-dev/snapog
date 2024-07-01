@@ -3,6 +3,7 @@ import {
   IDeleteManyPageBy,
   IGetPageBy,
   IPageDetail,
+  IUpdateManyPageBy,
 } from "@/sevices/page";
 import {
   getUrlWithoutProtocol,
@@ -186,6 +187,67 @@ class PageService {
         status: 500,
         data: null,
       };
+    }
+  }
+
+  async updateManyBy({
+    id,
+    siteId,
+    cacheDurationDays,
+  }: IUpdateManyPageBy): Promise<IResponse<IPageDetail[] | null>> {
+    try {
+      // Retrieve updated pages to update `expiresAt` in `OGImage`
+      const updatedPages = await prisma.page.findMany({
+        where: {
+          id,
+          siteId,
+        },
+        include: { OGImage: true },
+      });
+
+      const updatePromises = updatedPages.map((page) => {
+        if (
+          cacheDurationDays &&
+          page.cacheDurationDays &&
+          page.OGImageId &&
+          page?.OGImage?.expiresAt
+        ) {
+          const extendTime =
+            (cacheDurationDays - page.cacheDurationDays) * 24 * 60 * 60 * 1000;
+
+          const expiresAt = new Date(
+            page.OGImage.expiresAt.getTime() + extendTime,
+          );
+
+          return prisma.oGImage.update({
+            where: { id: page.OGImageId },
+            data: { expiresAt },
+          });
+        }
+        return Promise.resolve();
+      });
+
+      await prisma.page.updateMany({
+        where: {
+          id,
+          siteId,
+        },
+        data: {
+          cacheDurationDays,
+          updatedAt: new Date(),
+        },
+      });
+
+      await Promise.all(updatePromises);
+
+      return {
+        message: "Pages updated successfully",
+        status: 200,
+        data: updatedPages as IPageDetail[],
+      };
+    } catch (error) {
+      console.error("Error updating pages:", error);
+      throw error;
     }
   }
 
