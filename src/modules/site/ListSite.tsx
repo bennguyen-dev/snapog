@@ -194,13 +194,7 @@ export const ListSite = () => {
                   const data = await editSiteRef.current?.open(site);
 
                   if (data) {
-                    updateSite(
-                      {
-                        cacheDurationDays: data.cacheDurationDays,
-                        overridePage: data.overridePage,
-                      },
-                      `/api/sites/${site.id}`,
-                    );
+                    updateSite(data, `/api/sites/${site.id}`);
                   }
                 }}
               >

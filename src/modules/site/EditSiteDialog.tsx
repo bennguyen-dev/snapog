@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DURATION_CACHES } from "@/lib/constants";
-import { ISiteDetail } from "@/sevices/site";
+import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Info } from "lucide-react";
 import {
@@ -50,15 +50,13 @@ interface IProps {
 }
 
 export interface IEditSiteDialogRef {
-  open: (
-    item: ISiteDetail | null,
-  ) => Promise<{ cacheDurationDays: number; overridePage: boolean }>;
+  open: (item: ISiteDetail | null) => Promise<Omit<IUpdateSiteBy, "id">>;
   close: () => void;
 }
 
 interface IPromiseCallback {
-  resolve: (value: any) => void;
-  reject: (value: any) => void;
+  resolve: (value: Omit<IUpdateSiteBy, "id">) => void;
+  reject: (value: null) => void;
 }
 
 export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(

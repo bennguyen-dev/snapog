@@ -24,7 +24,7 @@ export interface IUpdateSiteBy {
   overridePage?: boolean;
 }
 
-export interface IDeleteAllSiteBy {
+export interface IDeleteSitesBy {
   userId?: string;
   domain?: string;
 

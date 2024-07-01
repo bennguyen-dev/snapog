@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/table-core";
-import { IPageDetail, IUpdateManyPageBy } from "@/sevices/page";
+import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
 import { useCallApi, useMounted } from "@/hooks";
 import { useEffect, useMemo, useRef } from "react";
 import { Typography } from "@/components/ui/typography";
@@ -87,7 +87,7 @@ export const ListPage = ({ siteId }: IProps) => {
   const { promiseFunc: updatePage, loading: updating } = useCallApi<
     {},
     null,
-    IUpdateManyPageBy
+    Omit<IUpdatePagesBy, "id" | "siteId">
   >({
     url: `/api/pages`,
     options: {
@@ -193,10 +193,7 @@ export const ListPage = ({ siteId }: IProps) => {
                   const data = await editPageRef.current?.open(page);
 
                   if (data) {
-                    updatePage(
-                      { cacheDurationDays: data.cacheDurationDays },
-                      `/api/pages/${page.id}`,
-                    );
+                    updatePage(data, `/api/pages/${page.id}`);
                   }
                 }}
               >

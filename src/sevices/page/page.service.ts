@@ -1,9 +1,9 @@
 import {
   ICreatePage,
-  IDeleteManyPageBy,
+  IDeletePagesBy,
   IGetPageBy,
   IPageDetail,
-  IUpdateManyPageBy,
+  IUpdatePagesBy,
 } from "@/sevices/page";
 import {
   getUrlWithoutProtocol,
@@ -194,7 +194,7 @@ class PageService {
     id,
     siteId,
     cacheDurationDays,
-  }: IUpdateManyPageBy): Promise<IResponse<IPageDetail[] | null>> {
+  }: IUpdatePagesBy): Promise<IResponse<IPageDetail[] | null>> {
     if (!id && !siteId) {
       return {
         message: "Missing id or siteId",
@@ -259,10 +259,7 @@ class PageService {
     }
   }
 
-  async deleteManyBy({
-    siteId,
-    id,
-  }: IDeleteManyPageBy): Promise<IResponse<null>> {
+  async deleteManyBy({ siteId, id }: IDeletePagesBy): Promise<IResponse<null>> {
     try {
       const pages = await prisma.page.findMany({
         where: {

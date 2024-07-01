@@ -1,9 +1,10 @@
 import {
   ICreateSite,
-  IDeleteAllSiteBy,
+  IDeleteSitesBy,
   IGetSiteBy,
   IGetSitesBy,
   ISiteDetail,
+  IUpdateSiteBy,
 } from "@/sevices/site";
 import { IResponse } from "@/lib/type";
 import { pageService } from "@/sevices/page";
@@ -107,11 +108,60 @@ class SiteService {
     }
   }
 
+  async updateManyBy({
+    id,
+    cacheDurationDays,
+    overridePage,
+  }: IUpdateSiteBy): Promise<IResponse<ISiteDetail | null>> {
+    try {
+      if (!id) {
+        return {
+          message: "Id is required",
+          status: 400,
+          data: null,
+        };
+      }
+
+      if (overridePage) {
+        await pageService.updateManyBy({ siteId: id, cacheDurationDays });
+      }
+
+      const site = await prisma.site.update({
+        where: {
+          id,
+        },
+        data: {
+          cacheDurationDays,
+        },
+      });
+
+      if (!site) {
+        return {
+          message: "Site not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      return {
+        message: "Sites updated successfully",
+        status: 200,
+        data: site as ISiteDetail,
+      };
+    } catch (error) {
+      return {
+        message: "Internal Server Error",
+        status: 500,
+        data: null,
+      };
+    }
+  }
+
   async deleteManyBy({
     userId,
     domain,
     id,
-  }: IDeleteAllSiteBy): Promise<IResponse<null>> {
+  }: IDeleteSitesBy): Promise<IResponse<null>> {
     try {
       const sites = await prisma.site.findMany({
         where: {

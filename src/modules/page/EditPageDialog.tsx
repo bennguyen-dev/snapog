@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { IPageDetail } from "@/sevices/page";
+import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
 import {
   Form,
   FormControl,
@@ -40,13 +40,15 @@ interface IProps {
 }
 
 export interface IEditPageDialogRef {
-  open: (item: IPageDetail | null) => Promise<{ cacheDurationDays: number }>;
+  open: (
+    item: IPageDetail | null,
+  ) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
   close: () => void;
 }
 
 interface IPromiseCallback {
-  resolve: (value: any) => void;
-  reject: (value: any) => void;
+  resolve: (value: Omit<IUpdatePagesBy, "id" | "siteId">) => void;
+  reject: (value: null) => void;
 }
 
 export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
