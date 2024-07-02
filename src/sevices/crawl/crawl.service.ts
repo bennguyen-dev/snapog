@@ -191,7 +191,10 @@ class CrawlService {
 
             // Check if the URL contains any priority page keyword
             for (const keyword of priorityPages) {
-              if (url.toString().includes(keyword)) {
+              if (
+                url.toString().startsWith(homepage) &&
+                url.toString().includes(keyword)
+              ) {
                 uniqueLinks.add(url.toString());
                 break;
               }

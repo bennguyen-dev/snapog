@@ -147,19 +147,16 @@ export const ListPage = ({ siteId }: IProps) => {
             return null;
           }
           return (
-            <Link
-              href={getLinkSmartOGImage(row.original.url)}
-              target="_blank"
-              className="text-link"
-            >
-              <Image
-                src={row.original.OGImage.src}
-                width={120}
-                height={60}
-                className="aspect-[1200/628] max-w-40 rounded"
-                alt={row.original.OGImage.src}
-              />
-            </Link>
+            <Image
+              onClick={() => {
+                window.open(getLinkSmartOGImage(row.original.url), "_blank");
+              }}
+              src={row.original.OGImage.src}
+              width={120}
+              height={60}
+              className="aspect-[1200/628] max-w-40 cursor-pointer rounded"
+              alt={row.original.OGImage.src}
+            />
           );
         },
       },

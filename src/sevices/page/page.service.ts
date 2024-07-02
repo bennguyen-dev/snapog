@@ -22,8 +22,8 @@ class PageService {
     url,
     siteId,
   }: ICreatePage): Promise<IResponse<IPageDetail | null>> {
-    const verifiedUrl = getUrlWithProtocol(url);
-    const cleanProtocolUrl = getUrlWithoutProtocol(url);
+    const urlWithProtocol = getUrlWithProtocol(url);
+    const urlWithoutProtocol = getUrlWithoutProtocol(url);
     const today = new Date();
 
     const site = await prisma.site.findUnique({
@@ -40,8 +40,25 @@ class PageService {
       };
     }
 
+    const existedPage = await prisma.page.findFirst({
+      where: {
+        siteId: siteId,
+        url: urlWithoutProtocol,
+      },
+    });
+
+    if (existedPage) {
+      return {
+        message: "Page already exists",
+        status: 400,
+        data: null,
+      };
+    }
+
     // Check if page already exists
-    const pageCrawlInfo = await crawlService.getInfoByUrl({ url: verifiedUrl });
+    const pageCrawlInfo = await crawlService.getInfoByUrl({
+      url: urlWithProtocol,
+    });
     if (!pageCrawlInfo.data) {
       return {
         message: pageCrawlInfo.message,
@@ -60,7 +77,7 @@ class PageService {
 
     // Upload screenshot to S3
     const folderName = sanitizeFilename(site.domain);
-    const fileName = `${sanitizeFilename(cleanProtocolUrl)}.${IMAGE_TYPES.PNG.EXTENSION}`;
+    const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
     const key = `${folderName}/${fileName}`;
 
     const uploadRes = await storageService.uploadImage({
@@ -96,7 +113,7 @@ class PageService {
 
       const page = await prisma.page.create({
         data: {
-          url: cleanProtocolUrl,
+          url: urlWithoutProtocol,
           siteId,
           cacheDurationDays: site.cacheDurationDays,
           OGImageId: ogImage.data.id,
