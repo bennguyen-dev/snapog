@@ -17,6 +17,7 @@ class SiteService {
   async create({
     userId,
     domain,
+    cacheDurationDays = CACHE_DURATION_DAYS,
   }: ICreateSite): Promise<IResponse<ISiteDetail | null>> {
     try {
       const exists = await prisma.site.findFirst({
@@ -38,7 +39,7 @@ class SiteService {
         data: {
           domain,
           userId,
-          cacheDurationDays: CACHE_DURATION_DAYS,
+          cacheDurationDays,
         },
       });
 

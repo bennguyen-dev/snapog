@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -29,31 +31,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_CACHES } from "@/lib/constants";
-import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
-
-const formSchema = z.object({
-  url: z.string(),
-  cacheDurationDays: z.string(),
-});
+import { CACHE_DURATION_DAYS, DURATION_CACHES } from "@/lib/constants";
+import { ICreateSite } from "@/sevices/site";
 
 interface IProps {
   loading?: boolean;
 }
 
-export interface IEditPageDialogRef {
-  open: (
-    item: IPageDetail | null,
-  ) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
+export interface IAddSiteDialogRef {
+  open: () => Promise<Omit<ICreateSite, "userId">>;
   close: () => void;
 }
 
 interface IPromiseCallback {
-  resolve: (value: Omit<IUpdatePagesBy, "id" | "siteId">) => void;
+  resolve: (value: any) => void;
   reject: (value: null) => void;
 }
 
-export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
+const formSchema = z.object({
+  domain: z.string().min(1, {
+    message: "Domain is required",
+  }),
+  cacheDurationDays: z.string(),
+});
+
+const defaultValues = {
+  domain: "",
+  cacheDurationDays: CACHE_DURATION_DAYS.toString(),
+};
+
+export const AddSiteDialog = forwardRef<IAddSiteDialogRef, IProps>(
   (props, ref) => {
     const { loading } = props;
 
@@ -63,7 +70,8 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
-      defaultValues: {},
+      defaultValues,
+      mode: "onChange",
     });
 
     const onSave = (data: z.infer<typeof formSchema>) => {
@@ -76,28 +84,24 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
     const onCancel = () => {
       promiseCallback?.reject(null);
       setOpened(false);
+
+      form.reset(defaultValues);
     };
 
     useImperativeHandle(ref, () => ({
-      open: (item: IPageDetail | null = null) => {
-        form.reset({
-          url: item?.url,
-          cacheDurationDays: item?.cacheDurationDays?.toString(),
-        });
+      open: () => {
         setOpened(true);
         return new Promise((resolve, reject) => {
           setPromiseCallback({ resolve, reject });
         });
       },
-      close: () => {
-        form.reset({});
-        setOpened(false);
-        setPromiseCallback(null);
-      },
+      close: () => onCancel(),
     }));
 
+    console.log("form 😋", { form, err: form.formState.errors }, "");
+
     return (
-      <Dialog open={opened} onOpenChange={setOpened}>
+      <Dialog open={opened} onOpenChange={onCancel}>
         <DialogContent
           className="sm:max-w-screen-xs"
           onPointerDownOutside={(e) => {
@@ -109,9 +113,29 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
         >
           <Form {...form}>
             <DialogHeader className="mb-4">
-              <DialogTitle>{form.getValues("url")}</DialogTitle>
+              <DialogTitle>Add new site</DialogTitle>
+              <DialogDescription>
+                This is the website where you want to use the social images on.
+              </DialogDescription>
             </DialogHeader>
 
+            <FormField
+              control={form.control}
+              name="domain"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Domain</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="www.yoursite.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="cacheDurationDays"
@@ -122,7 +146,6 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
                     <Select
                       disabled={loading}
                       onValueChange={field.onChange}
-                      defaultValue={field.value?.toString()}
                       value={field.value?.toString()}
                     >
                       <SelectTrigger>
@@ -143,18 +166,18 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
                 </FormItem>
               )}
             />
+
             <DialogFooter className="sm:justify-end">
               <Button variant="outline" disabled={loading} onClick={onCancel}>
                 Cancel
               </Button>
               <Button
-                variant="default"
                 type="submit"
                 loading={loading}
+                disabled={!form.formState.isValid}
                 onClick={form.handleSubmit(onSave)}
-                disabled={!form.formState.isDirty}
               >
-                Save
+                Add site
               </Button>
             </DialogFooter>
           </Form>
@@ -164,4 +187,4 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
   },
 );
 
-EditPageDialog.displayName = "EditPageDialog";
+AddSiteDialog.displayName = "AddSiteDialog";

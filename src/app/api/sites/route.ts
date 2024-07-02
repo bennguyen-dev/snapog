@@ -7,7 +7,9 @@ import { siteService } from "@/sevices/site";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();
-  const { domain } = body;
+
+  const domain = body?.domain;
+  const cacheDurationDays = body?.cacheDurationDays;
 
   if (!req.auth?.user?.id) {
     return NextResponse.json({
@@ -28,6 +30,7 @@ export const POST = auth(async function POST(req) {
   const site = await siteService.create({
     userId: req.auth.user.id,
     domain,
+    cacheDurationDays,
   });
 
   if (!site.data) {
@@ -43,6 +46,10 @@ export const POST = auth(async function POST(req) {
   });
 
   if (!page.data) {
+    await siteService.deleteManyBy({
+      id: site.data.id,
+    });
+
     return NextResponse.json(page, { status: page.status });
   }
 

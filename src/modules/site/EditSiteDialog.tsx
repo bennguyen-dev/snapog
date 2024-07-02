@@ -81,6 +81,7 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(
     };
 
     const onCancel = () => {
+      form.reset({});
       promiseCallback?.reject(null);
       setOpened(false);
     };
@@ -97,15 +98,11 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(
           setPromiseCallback({ resolve, reject });
         });
       },
-      close: () => {
-        form.reset({});
-        setOpened(false);
-        setPromiseCallback(null);
-      },
+      close: () => onCancel(),
     }));
 
     return (
-      <Dialog open={opened} onOpenChange={setOpened}>
+      <Dialog open={opened} onOpenChange={onCancel}>
         <DialogContent
           className="sm:max-w-screen-xs"
           onPointerDownOutside={(e) => {
@@ -128,6 +125,7 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(
                   <FormLabel>Cache duration (days)</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={loading}
                       onValueChange={field.onChange}
                       defaultValue={field.value?.toString()}
                       value={field.value?.toString()}
@@ -157,6 +155,7 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef, IProps>(
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
                     <Checkbox
+                      disabled={loading}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />

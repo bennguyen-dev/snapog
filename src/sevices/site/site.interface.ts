@@ -1,6 +1,8 @@
 export interface ICreateSite {
   userId: string;
   domain: string;
+
+  cacheDurationDays?: number;
 }
 
 export interface IGetSitesBy {

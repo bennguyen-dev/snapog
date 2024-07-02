@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
@@ -25,34 +25,23 @@ import {
 } from "@/components/ui/card";
 import { CodeSnippet } from "@/components/ui/code-snippet";
 import { DataTable } from "@/components/ui/data-table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
+import { getLinkSmartOGImage, getSnippetHowToUse } from "@/lib/utils";
 import {
-  getDomainName,
-  getLinkSmartOGImage,
-  getSnippetHowToUse,
-} from "@/lib/utils";
-import { EditSiteDialog, IEditSiteDialogRef } from "@/modules/site";
-import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
+  AddSiteDialog,
+  EditSiteDialog,
+  IAddSiteDialogRef,
+  IEditSiteDialogRef,
+} from "@/modules/site";
+import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
 
 export const ListSite = () => {
   const { mounted } = useMounted();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
 
-  const [domain, setDomain] = useState<string>("");
-  const [openedDialogCreate, setOpenedDialogCreate] = useState<boolean>(false);
-
+  const addSiteRef = useRef<IAddSiteDialogRef>(null);
   const editSiteRef = useRef<IEditSiteDialogRef>(null);
 
   const {
@@ -73,7 +62,7 @@ export const ListSite = () => {
   const { promiseFunc: createSite, loading: creating } = useCallApi<
     object,
     object,
-    { domain: string }
+    Omit<ICreateSite, "userId">
   >({
     url: `/api/sites`,
     options: {
@@ -83,8 +72,7 @@ export const ListSite = () => {
     handleSuccess() {
       getSites(true);
 
-      setOpenedDialogCreate(false);
-      setDomain("");
+      addSiteRef.current?.close();
       toast({ variant: "success", title: "Create successfully" });
     },
     handleError(_, message) {
@@ -182,6 +170,20 @@ export const ListSite = () => {
         header: "Cache duration (days)",
       },
       {
+        accessorKey: "createdAt",
+        header: "Created at",
+        cell: ({ row }) => {
+          if (!row.original?.createdAt) {
+            return null;
+          }
+          return (
+            <Typography affects="muted">
+              {new Date(row.original?.createdAt).toLocaleString()}
+            </Typography>
+          );
+        },
+      },
+      {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {
@@ -249,9 +251,11 @@ export const ListSite = () => {
           Refresh
         </Button>
         <Button
-          onClick={() => {
-            setDomain("");
-            setOpenedDialogCreate(true);
+          onClick={async () => {
+            const data = await addSiteRef.current?.open();
+            if (data) {
+              createSite(data, "/api/sites");
+            }
           }}
           icon={<Plus className="icon" />}
         >
@@ -269,48 +273,10 @@ export const ListSite = () => {
           <DataTable columns={columns} data={sites || []} loading={fetching} />
         </CardContent>
       </Card>
-      <Dialog open={openedDialogCreate} onOpenChange={setOpenedDialogCreate}>
-        <DialogContent
-          className="sm:max-w-screen-xs"
-          onPointerDownOutside={(e) => {
-            creating && e.preventDefault();
-          }}
-          onInteractOutside={(e) => {
-            creating && e.preventDefault();
-          }}
-        >
-          <DialogHeader className="mb-4">
-            <DialogTitle>Add new site</DialogTitle>
-            <DialogDescription>
-              This is the website where you want to use the social images on.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mb-4 flex flex-col">
-            <Label htmlFor="domain" className="mb-2 text-left">
-              Domain
-            </Label>
-            <Input
-              id="domain"
-              placeholder="www.yoursite.com"
-              value={domain}
-              disabled={creating}
-              onChange={(e) => setDomain(e.target.value)}
-            />
-          </div>
-          <DialogFooter className="sm:justify-end">
-            <Button
-              type="submit"
-              disabled={!domain.trim()}
-              loading={creating}
-              onClick={() => createSite({ domain: getDomainName(domain) })}
-            >
-              Add site
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <ConfirmDialog loading={deleting} />
+
+      <AddSiteDialog ref={addSiteRef} loading={creating} />
       <EditSiteDialog ref={editSiteRef} loading={updating} />
+      <ConfirmDialog loading={deleting} />
     </div>
   );
 };
