@@ -12,6 +12,7 @@ export interface IUpdateOGImage {
 export interface IOGImageDetail {
   id: string;
   src: string;
+  expiresAt: Date;
 
   createdAt: Date;
   updatedAt: Date;

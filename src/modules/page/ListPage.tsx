@@ -108,6 +108,10 @@ export const ListPage = ({ siteId }: IProps) => {
       getPages(true);
 
       editPageRef.current?.close();
+      toast({ variant: "success", title: "Update successfully" });
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
     },
   });
 
@@ -170,6 +174,20 @@ export const ListPage = ({ siteId }: IProps) => {
       {
         accessorKey: "cacheDurationDays",
         header: "Cache duration (days)",
+      },
+      {
+        accessorKey: "expiredAt",
+        header: "Expired at",
+        cell: ({ row }) => {
+          if (!row.original?.OGImage?.expiresAt) {
+            return null;
+          }
+          return (
+            <Typography affects="muted">
+              {new Date(row.original?.OGImage?.expiresAt).toLocaleString()}
+            </Typography>
+          );
+        },
       },
       {
         id: "actions",

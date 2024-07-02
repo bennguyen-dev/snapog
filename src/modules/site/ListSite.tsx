@@ -127,6 +127,10 @@ export const ListSite = () => {
       getSites(true);
 
       editSiteRef.current?.close();
+      toast({ variant: "success", title: "Update successfully" });
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
     },
   });
 

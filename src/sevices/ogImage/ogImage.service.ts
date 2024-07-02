@@ -22,7 +22,7 @@ class OGImageService {
       return {
         message: "OG Image created successfully",
         status: 200,
-        data: ogImage,
+        data: ogImage as IOGImageDetail,
       };
     } catch (error) {
       console.error(error);
@@ -61,7 +61,7 @@ class OGImageService {
       return {
         message: "OG Image updated successfully",
         status: 200,
-        data: ogImage,
+        data: ogImage as IOGImageDetail,
       };
     } catch (error) {
       console.error(error);
