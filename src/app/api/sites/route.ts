@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
+import { inngest } from "@/lib/inngest";
 import { getUrlWithProtocol } from "@/lib/utils";
 import { pageService } from "@/sevices/page";
 import { siteService } from "@/sevices/site";
@@ -52,6 +53,12 @@ export const POST = auth(async function POST(req) {
 
     return NextResponse.json(page, { status: page.status });
   }
+
+  // send event to inngest
+  await inngest.send({
+    name: "event/create.pages",
+    data: { siteId: site.data.id, cacheDurationDays },
+  });
 
   const res = {
     status: site.status,

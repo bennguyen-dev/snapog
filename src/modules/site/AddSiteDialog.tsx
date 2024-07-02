@@ -98,8 +98,6 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef, IProps>(
       close: () => onCancel(),
     }));
 
-    console.log("form 😋", { form, err: form.formState.errors }, "");
-
     return (
       <Dialog open={opened} onOpenChange={onCancel}>
         <DialogContent

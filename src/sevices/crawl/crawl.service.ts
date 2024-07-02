@@ -1,5 +1,5 @@
 import chromium from "@sparticuz/chromium-min";
-import puppeteer from "puppeteer-core";
+import puppeteer, { Browser } from "puppeteer-core";
 
 import { PRIORITY_PAGES } from "@/lib/constants";
 import { IResponse } from "@/lib/type";
@@ -17,19 +17,29 @@ class CrawlService {
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
     const urlWithProtocol = getUrlWithProtocol(url);
 
-    console.time("start browser");
-    const browser = await puppeteer.launch({
-      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: { width: 1200, height: 630 },
-      executablePath: await chromium.executablePath(
-        `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
-      ),
-      headless: true,
-      ignoreHTTPSErrors: true,
-    });
-    console.timeEnd("start browser");
+    let browser: Browser | null = null;
 
     try {
+      console.time("start browser");
+      browser = await puppeteer.launch({
+        args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+        defaultViewport: { width: 1200, height: 630 },
+        executablePath: await chromium.executablePath(
+          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
+        ),
+        headless: true,
+        ignoreHTTPSErrors: true,
+      });
+      console.timeEnd("start browser");
+
+      if (!browser) {
+        return {
+          status: 500,
+          message: "Failed to launch browser",
+          data: null,
+        };
+      }
+
       console.time("start page");
       const page = await browser.newPage();
       console.timeEnd("start page");
@@ -114,7 +124,7 @@ class CrawlService {
         data: null,
       };
     } finally {
-      await browser.close();
+      await browser?.close();
     }
   }
 
@@ -126,29 +136,39 @@ class CrawlService {
   > {
     const homepage = getUrlWithProtocol(domain);
 
-    const browser = await puppeteer.launch({
-      args: [
-        "--hide-scrollbars",
-        "--disable-web-security",
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--no-first-run",
-        "--no-zygote",
-        "--single-process",
-        "--disable-gpu",
-        "--disable-software-rasterizer",
-        "--disable-dev-shm-usage",
-      ],
-      executablePath: await chromium.executablePath(
-        `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
-      ),
-      ignoreHTTPSErrors: true,
-      headless: true,
-    });
+    let browser: Browser | null = null;
 
     try {
+      browser = await puppeteer.launch({
+        args: [
+          "--hide-scrollbars",
+          "--disable-web-security",
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--single-process",
+          "--disable-gpu",
+          "--disable-software-rasterizer",
+          "--disable-dev-shm-usage",
+        ],
+        executablePath: await chromium.executablePath(
+          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
+        ),
+        ignoreHTTPSErrors: true,
+        headless: true,
+      });
+
+      if (!browser) {
+        return {
+          status: 500,
+          message: "Failed to launch browser",
+          data: null,
+        };
+      }
+
       const page = await browser.newPage();
       await page.goto(homepage, { waitUntil: "networkidle2", timeout: 30000 });
 
@@ -201,7 +221,7 @@ class CrawlService {
         data: null,
       };
     } finally {
-      await browser.close();
+      await browser?.close();
     }
   }
 }
