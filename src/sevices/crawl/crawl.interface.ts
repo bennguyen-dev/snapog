@@ -10,11 +10,11 @@ export interface IGetInfoByUrlResponse {
   ogImage?: string;
 }
 
-export interface IGetAllUrlByDomain {
+export interface ISearchSiteLinks {
   domain: string;
   limit?: number;
 }
 
-export interface IGetAllUrlByDomainResponse {
+export interface ISearchSiteLinksResponse {
   urls: string[];
 }

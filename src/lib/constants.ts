@@ -16,7 +16,9 @@ export const ROUTES = [
   },
 ];
 
-export const DURATION_CACHES = Array(30)
+export const CACHE_DURATION_DAYS = 30;
+
+export const DURATION_CACHES = Array(CACHE_DURATION_DAYS)
   .fill(null)
   .map((_, i) => ({ value: `${i + 1}`, label: `${i + 1} days` }));
 
@@ -30,25 +32,3 @@ export const IMAGE_TYPES = Object.freeze({
     EXTENSION: "jpg",
   },
 });
-
-export const PRIORITY_PAGES = [
-  "about",
-  "contact",
-  "services",
-  "products",
-  "blog",
-  "faq",
-  "sitemap",
-  "privacy",
-  "terms",
-  "refund",
-  "payment",
-  "shipping",
-  "pricing",
-  "checkout",
-  "business",
-  "investor",
-  "newsroom",
-];
-
-export const CACHE_DURATION_DAYS = 30;
