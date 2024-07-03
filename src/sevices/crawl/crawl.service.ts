@@ -227,6 +227,124 @@ class CrawlService {
       await browser?.close();
     }
   }
+
+  async searchSiteLinks({ domain, limit = 30 }: IGetAllUrlByDomain) {
+    let browser: Browser | null = null;
+
+    try {
+      browser = await puppeteer.launch({
+        args: [
+          "--hide-scrollbars",
+          "--disable-web-security",
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--single-process",
+          "--disable-gpu",
+          "--disable-software-rasterizer",
+          "--disable-dev-shm-usage",
+        ],
+        executablePath: await chromium.executablePath(
+          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
+        ),
+        ignoreHTTPSErrors: true,
+        headless: true,
+      });
+
+      if (!browser) {
+        return {
+          status: 500,
+          message: "Failed to launch browser",
+          data: null,
+        };
+      }
+
+      const page = await browser.newPage();
+
+      const homepage = getUrlWithProtocol(domain);
+      const query = `site:${domain}`;
+      let currentPage = 1;
+      let urls = new Set<string>();
+
+      const COUNT_OF_LINKS_PER_PAGE = 10;
+      const limitPages = Math.ceil(limit / COUNT_OF_LINKS_PER_PAGE);
+
+      console.time("get all links");
+      while (currentPage <= limitPages) {
+        const searchUrl =
+          currentPage === 1
+            ? `https://www.google.com/search?q=${encodeURIComponent(query)}`
+            : `https://www.google.com/search?q=${encodeURIComponent(query)}&start=${(currentPage - 1) * 10}`;
+
+        console.time("Search time");
+        await page.goto(searchUrl, { waitUntil: "networkidle0" });
+        console.timeEnd("Search time");
+
+        // Wait for search results to load
+        console.time("Wait for search results");
+        const searchResults = await page.waitForSelector(".yuRUbf");
+        console.timeEnd("Wait for search results");
+
+        if (!searchResults) {
+          console.error(
+            "Failed to load search results, please check UI rendering of Google search results",
+          );
+          break;
+        }
+
+        console.time(`Get links for page ${currentPage}`);
+        const links = await page.evaluate((homepage) => {
+          const uniqueLinks = new Set<string>();
+
+          document.querySelectorAll(".yuRUbf").forEach((element) => {
+            const linkElement = element.querySelector("a");
+
+            if (linkElement?.href) {
+              const url = new URL(linkElement?.href);
+              url.search = ""; // Remove the query string
+
+              if (url.toString().startsWith(homepage)) {
+                uniqueLinks.add(url.toString());
+              }
+            }
+          });
+
+          return Array.from(uniqueLinks);
+        }, homepage);
+        console.timeEnd(`Get links for page ${currentPage}`);
+
+        urls = new Set([...Array.from(urls), ...links]);
+        console.log(
+          `Page ${currentPage} links for ${domain}: has ${links.length} links`,
+        );
+
+        currentPage++;
+      }
+      console.timeEnd("get all links");
+
+      await browser.close();
+
+      return {
+        status: 200,
+        message: "Links fetched successfully",
+        data: {
+          urls: Array.from(urls),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching internal links:", error);
+      return {
+        status: 500,
+        message: "Internal Server Error",
+        data: null,
+      };
+    } finally {
+      await browser?.close();
+    }
+  }
 }
 
 export const crawlService = new CrawlService();
