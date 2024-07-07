@@ -6,12 +6,12 @@ import { getUrlWithProtocol } from "@/lib/utils";
 import {
   IGetInfoByUrl,
   IGetInfoByUrlResponse,
-  ISearchSiteLinks,
-  ISearchSiteLinksResponse,
+  IGetLinksByDomain,
+  IGetLinksByDomainResponse,
 } from "@/sevices/crawl";
 
 class CrawlService {
-  async getInfoByUrl({
+  public async getInfoByUrl({
     url,
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
     console.time(`Total execution time crawl info for url: ${url}`);
@@ -121,10 +121,160 @@ class CrawlService {
     }
   }
 
-  async searchSiteLinks({
+  private async crawlLinksInPage({
     domain,
     limit = 10,
-  }: ISearchSiteLinks): Promise<IResponse<ISearchSiteLinksResponse | null>> {
+  }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
+    const homepage = getUrlWithProtocol(domain);
+    let browser: Browser | null = null;
+
+    console.time(`Total execution time crawl links for domain: ${domain}`);
+    try {
+      browser = await puppeteer.launch({
+        args: [
+          "--hide-scrollbars",
+          "--disable-web-security",
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--single-process",
+          "--disable-gpu",
+          "--disable-software-rasterizer",
+          "--disable-dev-shm-usage",
+        ],
+        executablePath: await chromium.executablePath(
+          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
+        ),
+        ignoreHTTPSErrors: true,
+        headless: true,
+      });
+
+      if (!browser) {
+        return {
+          status: 500,
+          message: "Failed to launch browser",
+          data: null,
+        };
+      }
+
+      const page = await browser.newPage();
+
+      // Disable image loading
+      await page.setRequestInterception(true);
+      page.on("request", (req) => {
+        if (
+          ["image", "stylesheet", "font", "media"].includes(req.resourceType())
+        ) {
+          req.abort();
+        } else {
+          req.continue();
+        }
+      });
+
+      const response = await page.goto(homepage, {
+        waitUntil: "domcontentloaded",
+        timeout: 60000, // 60 seconds timeout for page load
+      });
+
+      if (!response || !response.ok()) {
+        await browser.close();
+        return {
+          status: 500,
+          message: "Failed to load page",
+          data: null,
+        };
+      }
+
+      console.time(`Link extraction for site: ${homepage}`);
+      const internalLinks = await page.evaluate(
+        (homepage, limit) => {
+          const links = new Set<string>();
+          const urlObj = new URL(homepage);
+
+          const addLink = (href: string) => {
+            try {
+              const linkUrl = new URL(href, homepage);
+              if (
+                linkUrl.hostname === urlObj.hostname &&
+                !links.has(linkUrl.href)
+              ) {
+                links.add(linkUrl.href);
+              }
+            } catch (e) {
+              // Invalid URL, skip
+            }
+          };
+
+          // Select links based on their location and attributes
+          const selectors = [
+            "nav a", // Navigation links
+            "header a", // Header links
+            "footer a", // Footer links
+            "a.important-link", // Links with 'important-link' class
+            "a#main-menu", // Links with 'main-menu' id
+            "a.main-nav", // Links with 'main-nav' class
+            'a[href^="/"]', // Internal links starting with /
+            'a[role="button"]', // Links that act as buttons
+            ".sidebar a", // Sidebar links
+            "main a", // Links in the main content area
+          ];
+
+          document
+            .querySelectorAll<HTMLAnchorElement>(selectors.join(","))
+            .forEach((el) => addLink(el.href));
+
+          if (links.size <= limit) {
+            document
+              .querySelectorAll<HTMLAnchorElement>("a[href]")
+              .forEach((element) => {
+                if (links.size >= limit) return;
+                if (
+                  element.querySelector("img") ||
+                  element.innerText.trim().length > 20 ||
+                  element.getAttribute("target") === "_blank"
+                ) {
+                  addLink(element.href);
+                }
+              });
+          }
+
+          return Array.from(links);
+        },
+        homepage,
+        limit,
+      );
+      console.timeEnd(`Link extraction for site: ${homepage}`);
+
+      console.log(`Found ${internalLinks.length} important internal links`);
+      return {
+        status: 200,
+        message: "Links fetched successfully",
+        data: {
+          urls: Array.from(internalLinks).slice(0, limit),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching internal links:", error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
+    } finally {
+      browser?.close();
+
+      console.timeEnd(`Total execution time for domain: ${domain}`);
+    }
+  }
+
+  private async searchSiteLinks({
+    domain,
+    limit = 10,
+  }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
     let browser: Browser | null = null;
 
     console.time(
@@ -244,6 +394,35 @@ class CrawlService {
         `Total execution time search site links for domain: ${domain}`,
       );
     }
+  }
+
+  public async getLinksByDomain({
+    domain,
+    limit,
+  }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
+    const [searchResult, crawlResult] = await Promise.allSettled([
+      this.searchSiteLinks({ domain, limit }),
+      this.crawlLinksInPage({ domain, limit }),
+    ]);
+
+    // filter duplicated links
+    const urls = new Set<string>();
+
+    if (searchResult.status === "fulfilled" && searchResult.value?.data) {
+      searchResult.value.data.urls.forEach((url) => urls.add(url));
+    }
+
+    if (crawlResult.status === "fulfilled" && crawlResult.value?.data) {
+      crawlResult.value.data.urls.forEach((url) => urls.add(url));
+    }
+
+    return {
+      status: 200,
+      message: "Links fetched successfully",
+      data: {
+        urls: Array.from(urls).slice(0, limit),
+      },
+    };
   }
 }
 

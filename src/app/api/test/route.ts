@@ -25,6 +25,6 @@ export const POST = auth(async function POST(req) {
     });
   }
 
-  const links = await crawlService.searchSiteLinks({ domain, limit });
+  const links = await crawlService.getLinksByDomain({ domain, limit });
   return NextResponse.json(links, { status: links.status });
 });

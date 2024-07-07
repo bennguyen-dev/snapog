@@ -8,7 +8,7 @@ class DemoService {
     numberOfImages = 3,
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
     try {
-      const urls = await crawlService.searchSiteLinks({
+      const urls = await crawlService.getLinksByDomain({
         domain,
         limit: numberOfImages,
       });

@@ -19,7 +19,7 @@ class InngestService {
       const urls = await step.run(
         `getUrlByDomain ${site.data.domain}`,
         async () =>
-          crawlService.searchSiteLinks({
+          crawlService.getLinksByDomain({
             domain: site.data?.domain as string,
             limit: 20,
           }),
