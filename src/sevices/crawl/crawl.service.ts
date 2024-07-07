@@ -4,10 +4,14 @@ import puppeteer, { Browser } from "puppeteer-core";
 import { IResponse } from "@/lib/type";
 import { getUrlWithProtocol } from "@/lib/utils";
 import {
+  ICrawlLinksInPage,
+  ICrawlLinksInPageResponse,
   IGetInfoByUrl,
   IGetInfoByUrlResponse,
   IGetLinksByDomain,
   IGetLinksByDomainResponse,
+  ISearchSiteLinks,
+  ISearchSiteLinksResponse,
 } from "@/sevices/crawl";
 
 class CrawlService {
@@ -131,42 +135,12 @@ class CrawlService {
   private async crawlLinksInPage({
     domain,
     limit = 10,
-  }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
+    browser,
+  }: ICrawlLinksInPage): Promise<IResponse<ICrawlLinksInPageResponse | null>> {
     const homepage = getUrlWithProtocol(domain);
-    let browser: Browser | null = null;
 
     console.time(`Total execution time crawl links for domain: ${domain}`);
     try {
-      browser = await puppeteer.launch({
-        args: [
-          "--hide-scrollbars",
-          "--disable-web-security",
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-accelerated-2d-canvas",
-          "--no-first-run",
-          "--no-zygote",
-          "--single-process",
-          "--disable-gpu",
-          "--disable-software-rasterizer",
-          "--disable-dev-shm-usage",
-        ],
-        executablePath: await chromium.executablePath(
-          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
-        ),
-        ignoreHTTPSErrors: true,
-        headless: true,
-      });
-
-      if (!browser) {
-        return {
-          status: 500,
-          message: "Failed to launch browser",
-          data: null,
-        };
-      }
-
       const page = await browser.newPage();
 
       // Disable image loading
@@ -200,6 +174,8 @@ class CrawlService {
         (homepage, limit) => {
           const links = new Set<string>();
           const urlObj = new URL(homepage);
+
+          links.add(homepage);
 
           const addLink = (href: string) => {
             try {
@@ -274,56 +250,27 @@ class CrawlService {
     } finally {
       browser?.close();
 
-      console.timeEnd(`Total execution time for domain: ${domain}`);
+      console.timeEnd(`Total execution time crawl links for domain: ${domain}`);
     }
   }
 
   private async searchSiteLinks({
     domain,
     limit = 10,
-  }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
-    let browser: Browser | null = null;
-
+    browser,
+  }: ISearchSiteLinks): Promise<IResponse<ISearchSiteLinksResponse | null>> {
     console.time(
       `Total execution time search site links for domain: ${domain}`,
     );
     try {
-      browser = await puppeteer.launch({
-        args: [
-          "--hide-scrollbars",
-          "--disable-web-security",
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-accelerated-2d-canvas",
-          "--no-first-run",
-          "--no-zygote",
-          "--single-process",
-          "--disable-gpu",
-          "--disable-software-rasterizer",
-          "--disable-dev-shm-usage",
-        ],
-        executablePath: await chromium.executablePath(
-          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
-        ),
-        ignoreHTTPSErrors: true,
-        headless: true,
-      });
-
-      if (!browser) {
-        return {
-          status: 500,
-          message: "Failed to launch browser",
-          data: null,
-        };
-      }
-
       const page = await browser.newPage();
 
       const homepage = getUrlWithProtocol(domain);
       const query = `site:${domain}`;
       let currentPage = 1;
       let urls = new Set<string>();
+
+      urls.add(homepage);
 
       while (urls.size < limit) {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&start=${(currentPage - 1) * 10}`;
@@ -407,48 +354,92 @@ class CrawlService {
     domain,
     limit,
   }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
-    const [searchResult, crawlResult] = await Promise.allSettled([
-      this.searchSiteLinks({ domain, limit }),
-      this.crawlLinksInPage({ domain, limit }),
-    ]);
+    let browser: Browser | null = null;
 
-    // filter duplicated links
-    let urls = new Set<string>();
+    try {
+      browser = await puppeteer.launch({
+        args: [
+          "--hide-scrollbars",
+          "--disable-web-security",
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--single-process",
+          "--disable-gpu",
+          "--disable-software-rasterizer",
+          "--disable-dev-shm-usage",
+        ],
+        executablePath: await chromium.executablePath(
+          `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
+        ),
+        ignoreHTTPSErrors: true,
+        headless: true,
+      });
 
-    if (searchResult.status === "fulfilled" && searchResult.value?.data) {
-      console.log(
-        `Search result found ${searchResult.value.data.urls.length} links`,
-      );
-      urls = new Set([...Array.from(urls), ...searchResult.value.data.urls]);
-    }
+      if (!browser) {
+        return {
+          status: 500,
+          message: "Failed to launch browser",
+          data: null,
+        };
+      }
 
-    if (crawlResult.status === "fulfilled" && crawlResult.value?.data) {
-      console.log(
-        `Crawl result found ${crawlResult.value.data.urls.length} links`,
-      );
-      urls = new Set([...Array.from(urls), ...crawlResult.value.data.urls]);
-    }
+      const [searchResult, crawlResult] = await Promise.allSettled([
+        this.searchSiteLinks({ domain, limit, browser }),
+        this.crawlLinksInPage({ domain, limit, browser }),
+      ]);
 
-    if (
-      searchResult.status === "fulfilled" &&
-      !searchResult.value?.data &&
-      crawlResult.status === "fulfilled" &&
-      !crawlResult.value?.data
-    ) {
+      // filter duplicated links
+      let urls = new Set<string>();
+
+      if (searchResult.status === "fulfilled" && searchResult.value?.data) {
+        console.log(
+          `Search result found ${searchResult.value.data.urls.length} links`,
+        );
+        urls = new Set([...Array.from(urls), ...searchResult.value.data.urls]);
+      }
+
+      if (crawlResult.status === "fulfilled" && crawlResult.value?.data) {
+        console.log(
+          `Crawl result found ${crawlResult.value.data.urls.length} links`,
+        );
+        urls = new Set([...Array.from(urls), ...crawlResult.value.data.urls]);
+      }
+
+      if (
+        searchResult.status === "fulfilled" &&
+        !searchResult.value?.data &&
+        crawlResult.status === "fulfilled" &&
+        !crawlResult.value?.data
+      ) {
+        return {
+          status: 500,
+          message: `Get links failed - search: ${searchResult?.value?.message} - crawl: ${crawlResult?.value?.message}`,
+          data: null,
+        };
+      }
+
+      return {
+        status: 200,
+        message: "Links fetched successfully",
+        data: {
+          urls: Array.from(urls).slice(0, limit),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching internal links:", error);
       return {
         status: 500,
-        message: `Get links failed - search: ${searchResult?.value?.message} - crawl: ${crawlResult?.value?.message}`,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
+    } finally {
+      await browser?.close();
     }
-
-    return {
-      status: 200,
-      message: "Links fetched successfully",
-      data: {
-        urls: Array.from(urls).slice(0, limit),
-      },
-    };
   }
 }
 
