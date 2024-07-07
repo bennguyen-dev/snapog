@@ -413,14 +413,33 @@ class CrawlService {
     ]);
 
     // filter duplicated links
-    const urls = new Set<string>();
+    let urls = new Set<string>();
 
     if (searchResult.status === "fulfilled" && searchResult.value?.data) {
-      searchResult.value.data.urls.forEach((url) => urls.add(url));
+      console.log(
+        `Search result found ${searchResult.value.data.urls.length} links`,
+      );
+      urls = new Set([...Array.from(urls), ...searchResult.value.data.urls]);
     }
 
     if (crawlResult.status === "fulfilled" && crawlResult.value?.data) {
-      crawlResult.value.data.urls.forEach((url) => urls.add(url));
+      console.log(
+        `Crawl result found ${crawlResult.value.data.urls.length} links`,
+      );
+      urls = new Set([...Array.from(urls), ...crawlResult.value.data.urls]);
+    }
+
+    if (
+      searchResult.status === "fulfilled" &&
+      !searchResult.value?.data &&
+      crawlResult.status === "fulfilled" &&
+      !crawlResult.value?.data
+    ) {
+      return {
+        status: 500,
+        message: `Get links failed - search: ${searchResult?.value?.message} - crawl: ${crawlResult?.value?.message}`,
+        data: null,
+      };
     }
 
     return {
