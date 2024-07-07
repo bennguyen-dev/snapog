@@ -11,6 +11,10 @@ import {
 } from "@/sevices/crawl";
 
 class CrawlService {
+  private async timeout(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   public async getInfoByUrl({
     url,
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
@@ -80,6 +84,9 @@ class CrawlService {
           data: null,
         };
       }
+
+      // wait for 2 seconds to let the page load, because some page elements take time to load
+      await this.timeout(2000);
 
       const [screenshot, title, description, ogImage] = await Promise.all([
         page.screenshot(),
