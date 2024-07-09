@@ -1,9 +1,9 @@
 import { EventSchemas, Inngest } from "inngest";
 
-import { IEventCreatePages } from "@/sevices/inngest";
+import { IBackgroundCreateSite } from "@/sevices/inngest";
 
 type Events = {
-  "event/create.pages": IEventCreatePages;
+  "background/create.site": IBackgroundCreateSite;
 };
 
 // Create a client to send and receive events

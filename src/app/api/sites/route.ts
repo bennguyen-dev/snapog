@@ -56,7 +56,7 @@ export const POST = auth(async function POST(req) {
 
   // send event to inngest
   await inngest.send({
-    name: "event/create.pages",
+    name: "background/create.site",
     data: { siteId: site.data.id, cacheDurationDays },
   });
 

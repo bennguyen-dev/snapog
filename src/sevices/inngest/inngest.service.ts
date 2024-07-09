@@ -4,12 +4,12 @@ import { pageService } from "@/sevices/page";
 import { siteService } from "@/sevices/site";
 
 class InngestService {
-  public processCreateSite = inngest.createFunction(
-    { id: "event/create.pages" },
-    { event: "event/create.pages" },
+  public backgroundCreateSite = inngest.createFunction(
+    { id: "background/create.site" },
+    { event: "background/create.site" },
     async ({ event, step }) => {
       const site = await step.run(
-        `getSiteById ${event.data.siteId}`,
+        `Get site by id: ${event.data.siteId}`,
         async () => siteService.getBy({ id: event.data.siteId }),
       );
       if (!site || !site.data) {
@@ -17,7 +17,7 @@ class InngestService {
       }
 
       const urls = await step.run(
-        `getUrlByDomain ${site.data.domain}`,
+        `Get internal links by domain: ${site.data.domain} - limit: 20`,
         async () =>
           crawlService.getLinksByDomain({
             domain: site.data?.domain as string,
@@ -31,7 +31,7 @@ class InngestService {
 
       const operations = urls.data?.urls.map(async (link) => {
         if (site.data?.id && link) {
-          return await step.run(`pageCreate ${link}`, async () =>
+          return await step.run(`Create page for url: ${link}`, async () =>
             pageService.create({
               siteId: site.data?.id as string,
               url: link,
@@ -42,11 +42,11 @@ class InngestService {
 
       const results = await Promise.allSettled(operations);
 
-      return results.filter((result) => {
+      return results.map((result) => {
         if (result.status === "rejected") {
           console.error(result.reason);
         }
-        return result.status === "fulfilled";
+        return result;
       });
     },
   );
