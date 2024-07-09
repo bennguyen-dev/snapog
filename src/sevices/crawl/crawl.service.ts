@@ -172,19 +172,21 @@ class CrawlService {
       console.time(`Link extraction for site: ${homepage}`);
       const internalLinks = await page.evaluate(
         (homepage, limit) => {
-          const links = new Set<string>();
-          const urlObj = new URL(homepage);
+          const uniqueLinks = new Set<string>();
+          const homepageUrlObj = new URL(homepage);
 
-          links.add(homepage);
+          uniqueLinks.add(homepage);
 
           const addLink = (href: string) => {
             try {
               const linkUrl = new URL(href, homepage);
+              linkUrl.search = ""; // Remove the query string
+
               if (
-                linkUrl.hostname === urlObj.hostname &&
-                !links.has(linkUrl.href)
+                linkUrl.hostname === homepageUrlObj.hostname &&
+                !uniqueLinks.has(linkUrl.href)
               ) {
-                links.add(linkUrl.href);
+                uniqueLinks.add(linkUrl.href);
               }
             } catch (e) {
               // Invalid URL, skip
@@ -209,11 +211,11 @@ class CrawlService {
             .querySelectorAll<HTMLAnchorElement>(selectors.join(","))
             .forEach((el) => addLink(el.href));
 
-          if (links.size <= limit) {
+          if (uniqueLinks.size <= limit) {
             document
               .querySelectorAll<HTMLAnchorElement>("a[href]")
               .forEach((element) => {
-                if (links.size >= limit) return;
+                if (uniqueLinks.size >= limit) return;
                 if (
                   element.querySelector("img") ||
                   element.innerText.trim().length > 20 ||
@@ -224,7 +226,7 @@ class CrawlService {
               });
           }
 
-          return Array.from(links);
+          return Array.from(uniqueLinks);
         },
         homepage,
         limit,
@@ -283,6 +285,7 @@ class CrawlService {
         const links = await page.evaluate(
           (homepage, currentLimit) => {
             const uniqueLinks = new Set<string>();
+            const homepageObj = new URL(homepage);
 
             document.querySelectorAll(".yuRUbf").forEach((element) => {
               if (uniqueLinks.size >= currentLimit) return;
@@ -290,9 +293,13 @@ class CrawlService {
               const linkElement = element.querySelector("a");
               if (linkElement?.href) {
                 const url = new URL(linkElement.href);
+
                 url.search = ""; // Remove the query string
 
-                if (url.toString().startsWith(homepage)) {
+                if (
+                  url.hostname === homepageObj.hostname &&
+                  !uniqueLinks.has(url.toString())
+                ) {
                   uniqueLinks.add(url.toString());
                 }
               }
