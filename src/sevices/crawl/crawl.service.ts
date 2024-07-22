@@ -10,15 +10,12 @@ import {
   IGetInfoByUrlResponse,
   IGetLinksByDomain,
   IGetLinksByDomainResponse,
+  IScreenshotByScreenshotmachine,
   ISearchSiteLinks,
   ISearchSiteLinksResponse,
 } from "@/sevices/crawl";
 
 class CrawlService {
-  private async timeout(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   public async getInfoByUrl({
     url,
   }: IGetInfoByUrl): Promise<IResponse<IGetInfoByUrlResponse | null>> {
@@ -57,27 +54,6 @@ class CrawlService {
 
       const page = await browser.newPage();
 
-      await page.setRequestInterception(true);
-      page.on("request", (req) => {
-        if (["image", "stylesheet", "font"].includes(req.resourceType())) {
-          req.abort();
-        } else {
-          req.continue();
-        }
-      });
-
-      // Inject CSS to disable animations or speed them up
-      await page.evaluateOnNewDocument(() => {
-        const style = document.createElement("style");
-        style.textContent = `
-          *, *::before, *::after {
-            animation: none !important;
-            transition: none !important;
-          }
-        `;
-        document.head.appendChild(style);
-      });
-
       // Optional: Set a custom user agent to avoid mobile redirects
       await page.setUserAgent(
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -102,7 +78,7 @@ class CrawlService {
 
       // Wait for any remaining animations to complete
       await page.evaluate(
-        () => new Promise((resolve) => setTimeout(resolve, 500)),
+        () => new Promise((resolve) => setTimeout(resolve, 2000)),
       );
 
       // Check for UI elements on the page (optional)
@@ -123,11 +99,7 @@ class CrawlService {
 
       console.time(`Total execution time screenshot: ${url}`);
       const [screenshot, title, description, ogImage] = await Promise.all([
-        page.screenshot({
-          fullPage: false,
-          optimizeForSpeed: true,
-          captureBeyondViewport: true,
-        }),
+        this.screenshotByScreenshotmachine({ url }),
         page.title(),
         page
           .$eval('meta[name="description"]', (el) => el.getAttribute("content"))
@@ -147,7 +119,7 @@ class CrawlService {
         message: "Info fetched successfully",
         data: {
           url: urlWithProtocol,
-          screenShot: screenshot,
+          screenShot: screenshot?.data || null,
           title,
           description: description || undefined,
           ogImage: ogImage || undefined,
@@ -481,6 +453,93 @@ class CrawlService {
       };
     } finally {
       await browser?.close();
+    }
+  }
+
+  public async screenshotByScreenshotmachine({
+    url,
+    config,
+  }: IScreenshotByScreenshotmachine): Promise<IResponse<Buffer | null>> {
+    const apiUrl = "https://www.screenshotmachine.com/capture.php";
+    const defaultOptions = {
+      device: "desktop",
+      width: 1366,
+      height: 840,
+      zoom: 100,
+      format: "png",
+      timeout: 4000,
+      cacheLimit: 0,
+    };
+
+    const params = new URLSearchParams({
+      ...defaultOptions,
+      config,
+      url: url,
+    } as unknown as Record<string, string>);
+
+    try {
+      console.time(`execute screenshotmachine api for ${url}`);
+      const screenshotmachineRes = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          accept: "*/*",
+          "accept-language": "en-US,en;q=0.9",
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          origin: "https://www.screenshotmachine.com",
+          referer:
+            "https://www.screenshotmachine.com/website-screenshot-generator.php",
+          "user-agent":
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+          "x-requested-with": "XMLHttpRequest",
+        },
+        body: params,
+      });
+      console.timeEnd(`execute screenshotmachine api for ${url}`);
+
+      if (!screenshotmachineRes.ok) {
+        return {
+          message: `Failed to fetch screenshot: ${screenshotmachineRes.status}`,
+          status: 500,
+          data: null,
+        };
+      }
+
+      const apiResponse = await screenshotmachineRes.json();
+
+      if (apiResponse.status !== "success") {
+        return {
+          message: apiResponse.message,
+          status: 500,
+          data: null,
+        };
+      }
+
+      console.log("apiResponse 😋", { apiResponse }, "");
+
+      const imageUrl = `https://www.screenshotmachine.com/${apiResponse.link}`;
+      const imageResponse = await fetch(imageUrl);
+
+      if (!imageResponse.ok) {
+        return {
+          message: `Failed to fetch screenshot: ${imageResponse.status}`,
+          status: 500,
+          data: null,
+        };
+      }
+
+      return {
+        message: "Screenshot fetched successfully",
+        status: 200,
+        data: Buffer.from(await imageResponse.arrayBuffer()),
+      };
+    } catch (error) {
+      console.error("Error fetching screenshot:", error);
+      return {
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        status: 500,
+        data: null,
+      };
     }
   }
 }

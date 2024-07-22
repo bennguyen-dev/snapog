@@ -6,7 +6,7 @@ export interface IGetInfoByUrl {
 
 export interface IGetInfoByUrlResponse {
   url: string;
-  screenShot: Buffer;
+  screenShot: Buffer | null;
   title?: string;
   description?: string;
   ogImage?: string;
@@ -29,4 +29,17 @@ export interface IGetLinksByDomain {
 
 export interface IGetLinksByDomainResponse {
   urls: string[];
+}
+
+export interface IScreenshotByScreenshotmachine {
+  url: string;
+  config?: {
+    device: "desktop" | "tablet" | "mobile";
+    width: number;
+    height: number;
+    zoom: number;
+    format: "png" | "jpeg" | "gif";
+    timeout: number;
+    cacheLimit: number;
+  };
 }
