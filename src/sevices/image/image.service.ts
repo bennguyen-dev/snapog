@@ -70,7 +70,7 @@ class ImageService {
     }
   }
 
-  async getImageByImageLink({
+  private async getImageByImageLink({
     imageLink,
   }: IGetImageByImageLink): Promise<
     IResponse<IGetImageByImageLinkResponse | null>
