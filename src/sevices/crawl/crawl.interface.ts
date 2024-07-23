@@ -1,4 +1,4 @@
-import { Browser } from "puppeteer-core";
+import { Page } from "puppeteer-core";
 
 export interface IGetInfoByUrl {
   url: string;
@@ -6,20 +6,22 @@ export interface IGetInfoByUrl {
 
 export interface IGetInfoByUrlResponse {
   url: string;
-  screenShot: Buffer | null;
+  screenShot: Buffer;
   title?: string;
   description?: string;
   ogImage?: string;
 }
 
 export interface ICrawlLinksInPage extends IGetLinksByDomain {
-  browser: Browser;
+  page: Page;
 }
+
 export interface ICrawlLinksInPageResponse extends IGetLinksByDomainResponse {}
 
 export interface ISearchSiteLinks extends IGetLinksByDomain {
-  browser: Browser;
+  page: Page;
 }
+
 export interface ISearchSiteLinksResponse extends IGetLinksByDomainResponse {}
 
 export interface IGetLinksByDomain {
@@ -35,11 +37,10 @@ export interface IScreenshotByScreenshotmachine {
   url: string;
   config?: {
     device: "desktop" | "tablet" | "mobile";
-    width: number;
-    height: number;
+    dimension: string;
     zoom: number;
     format: "png" | "jpeg" | "gif";
-    timeout: number;
-    cacheLimit: number;
+    delay: number;
+    cacheLimit: number; // If you prefer fresh screenshot for every API call, please use cacheLimit=0 parameter.
   };
 }

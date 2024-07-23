@@ -21,7 +21,7 @@ class InngestService {
         async () =>
           crawlService.getLinksByDomain({
             domain: site.data?.domain as string,
-            limit: 20,
+            limit: 3,
           }),
       );
 

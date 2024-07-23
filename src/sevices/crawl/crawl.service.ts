@@ -99,7 +99,7 @@ class CrawlService {
 
       console.time(`Total execution time screenshot: ${url}`);
       const [screenshot, title, description, ogImage] = await Promise.all([
-        this.screenshotByScreenshotmachine({ url }),
+        this.screenshotByScreenshotMachine({ url }),
         page.title(),
         page
           .$eval('meta[name="description"]', (el) => el.getAttribute("content"))
@@ -119,7 +119,7 @@ class CrawlService {
         message: "Info fetched successfully",
         data: {
           url: urlWithProtocol,
-          screenShot: screenshot?.data || null,
+          screenShot: screenshot,
           title,
           description: description || undefined,
           ogImage: ogImage || undefined,
@@ -142,14 +142,12 @@ class CrawlService {
   private async crawlLinksInPage({
     domain,
     limit = 10,
-    browser,
+    page,
   }: ICrawlLinksInPage): Promise<IResponse<ICrawlLinksInPageResponse | null>> {
     const homepage = getUrlWithProtocol(domain);
 
     console.time(`Total execution time crawl links for domain: ${domain}`);
     try {
-      const page = await browser.newPage();
-
       // Disable image loading
       await page.setRequestInterception(true);
       page.on("request", (req) => {
@@ -168,7 +166,6 @@ class CrawlService {
       });
 
       if (!response || !response.ok()) {
-        await browser.close();
         return {
           status: 500,
           message: "Failed to load page",
@@ -180,20 +177,32 @@ class CrawlService {
       const internalLinks = await page.evaluate(
         (homepage, limit) => {
           const uniqueLinks = new Set<string>();
-          const homepageUrlObj = new URL(homepage);
-
-          uniqueLinks.add(homepage);
+          const homepageObj = new URL(homepage);
 
           const addLink = (href: string) => {
             try {
-              const linkUrl = new URL(href, homepage);
-              linkUrl.search = ""; // Remove the query string
+              // Remove trailing slash from href
+              if (href.endsWith("/")) {
+                href = href.slice(0, -1);
+              }
+
+              const url = new URL(href, homepage);
+              url.search = "";
+
+              if (url.pathname.endsWith("/")) {
+                url.pathname = url.pathname.slice(0, -1);
+              }
+
+              let cleanedHref = url.href;
+              if (cleanedHref.endsWith("/")) {
+                cleanedHref = cleanedHref.slice(0, -1);
+              }
 
               if (
-                linkUrl.hostname === homepageUrlObj.hostname &&
-                !uniqueLinks.has(linkUrl.href)
+                url.hostname === homepageObj.hostname &&
+                !uniqueLinks.has(cleanedHref)
               ) {
-                uniqueLinks.add(linkUrl.href);
+                uniqueLinks.add(cleanedHref);
               }
             } catch (e) {
               // Invalid URL, skip
@@ -257,8 +266,6 @@ class CrawlService {
         data: null,
       };
     } finally {
-      browser?.close();
-
       console.timeEnd(`Total execution time crawl links for domain: ${domain}`);
     }
   }
@@ -266,49 +273,66 @@ class CrawlService {
   private async searchSiteLinks({
     domain,
     limit = 10,
-    browser,
+    page,
   }: ISearchSiteLinks): Promise<IResponse<ISearchSiteLinksResponse | null>> {
+    const homepage = getUrlWithProtocol(domain);
+
     console.time(
       `Total execution time search site links for domain: ${domain}`,
     );
     try {
-      const page = await browser.newPage();
-
-      const homepage = getUrlWithProtocol(domain);
       const query = `site:${domain}`;
       let currentPage = 1;
-      let urls = new Set<string>();
+      let uniqueLinks = new Set<string>();
 
-      urls.add(homepage);
-
-      while (urls.size < limit) {
+      while (uniqueLinks.size < limit) {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&start=${(currentPage - 1) * 10}`;
         console.log(`Navigating to page ${currentPage}: ${searchUrl}`);
 
         console.time(`Page ${currentPage} navigation and processing`);
         await page.goto(searchUrl, { waitUntil: "networkidle0" });
-        console.log(`Page ${currentPage} loaded`);
 
         const links = await page.evaluate(
           (homepage, currentLimit) => {
             const uniqueLinks = new Set<string>();
             const homepageObj = new URL(homepage);
 
+            const addLink = (href: string) => {
+              try {
+                // Remove trailing slash from href
+                if (href.endsWith("/")) {
+                  href = href.slice(0, -1);
+                }
+
+                const url = new URL(href, homepage);
+                url.search = "";
+
+                if (url.pathname.endsWith("/")) {
+                  url.pathname = url.pathname.slice(0, -1);
+                }
+
+                let cleanedHref = url.href;
+                if (cleanedHref.endsWith("/")) {
+                  cleanedHref = cleanedHref.slice(0, -1);
+                }
+
+                if (
+                  url.hostname === homepageObj.hostname &&
+                  !uniqueLinks.has(cleanedHref)
+                ) {
+                  uniqueLinks.add(cleanedHref);
+                }
+              } catch (e) {
+                // Invalid URL, skip
+              }
+            };
+
             document.querySelectorAll(".yuRUbf").forEach((element) => {
               if (uniqueLinks.size >= currentLimit) return;
 
               const linkElement = element.querySelector("a");
               if (linkElement?.href) {
-                const url = new URL(linkElement.href);
-
-                url.search = ""; // Remove the query string
-
-                if (
-                  url.hostname === homepageObj.hostname &&
-                  !uniqueLinks.has(url.toString())
-                ) {
-                  uniqueLinks.add(url.toString());
-                }
+                addLink(linkElement.href);
               }
             });
 
@@ -316,19 +340,19 @@ class CrawlService {
             return Array.from(uniqueLinks);
           },
           homepage,
-          limit - urls.size,
+          limit - uniqueLinks.size,
         );
 
         console.timeEnd(`Page ${currentPage} navigation and processing`);
 
         const newLinksCount = links.length;
-        urls = new Set([...Array.from(urls), ...links]);
+        uniqueLinks = new Set([...Array.from(uniqueLinks), ...links]);
 
         console.log(`Page ${currentPage} results:`);
         console.log(`- Found ${newLinksCount} new links`);
-        console.log(`- Total unique links so far: ${urls.size}`);
+        console.log(`- Total unique links so far: ${uniqueLinks.size}`);
         console.log(
-          `- Remaining links to fetch: ${Math.max(0, limit - urls.size)}`,
+          `- Remaining links to fetch: ${Math.max(0, limit - uniqueLinks.size)}`,
         );
 
         if (newLinksCount === 0) {
@@ -339,13 +363,11 @@ class CrawlService {
         currentPage++;
       }
 
-      await browser.close();
-
       return {
         status: 200,
         message: "Links fetched successfully",
         data: {
-          urls: Array.from(urls).slice(0, limit),
+          urls: Array.from(uniqueLinks).slice(0, limit),
         },
       };
     } catch (error) {
@@ -357,7 +379,6 @@ class CrawlService {
         data: null,
       };
     } finally {
-      await browser?.close();
       console.timeEnd(
         `Total execution time search site links for domain: ${domain}`,
       );
@@ -401,9 +422,12 @@ class CrawlService {
         };
       }
 
+      const pageSearch = await browser.newPage();
+      const pageCrawl = await browser.newPage();
+
       const [searchResult, crawlResult] = await Promise.allSettled([
-        this.searchSiteLinks({ domain, limit, browser }),
-        this.crawlLinksInPage({ domain, limit, browser }),
+        this.searchSiteLinks({ domain, limit, page: pageSearch }),
+        this.crawlLinksInPage({ domain, limit, page: pageCrawl }),
       ]);
 
       // filter duplicated links
@@ -456,90 +480,47 @@ class CrawlService {
     }
   }
 
-  public async screenshotByScreenshotmachine({
+  private async screenshotByScreenshotMachine({
     url,
     config,
-  }: IScreenshotByScreenshotmachine): Promise<IResponse<Buffer | null>> {
-    const apiUrl = "https://www.screenshotmachine.com/capture.php";
+  }: IScreenshotByScreenshotmachine): Promise<Buffer> {
     const defaultOptions = {
       device: "desktop",
-      width: 1366,
-      height: 840,
+      dimension: "1366x715",
       zoom: 100,
       format: "png",
-      timeout: 4000,
-      cacheLimit: 0,
+      delay: 2000,
     };
 
     const params = new URLSearchParams({
       ...defaultOptions,
       config,
       url: url,
+      key: process.env.SCREENSHOT_MACHINE_KEY,
     } as unknown as Record<string, string>);
+
+    const apiUrl = `https://api.screenshotmachine.com?${params.toString()}`;
 
     try {
       console.time(`execute screenshotmachine api for ${url}`);
-      const screenshotmachineRes = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          origin: "https://www.screenshotmachine.com",
-          referer:
-            "https://www.screenshotmachine.com/website-screenshot-generator.php",
-          "user-agent":
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-          "x-requested-with": "XMLHttpRequest",
-        },
-        body: params,
-      });
+      const screenshotmachineRes = await fetch(apiUrl);
       console.timeEnd(`execute screenshotmachine api for ${url}`);
 
       if (!screenshotmachineRes.ok) {
-        return {
-          message: `Failed to fetch screenshot: ${screenshotmachineRes.status}`,
-          status: 500,
-          data: null,
-        };
+        throw new Error(
+          `Failed to fetch screenshot: ${screenshotmachineRes.status}`,
+        );
       }
 
-      const apiResponse = await screenshotmachineRes.json();
-
-      if (apiResponse.status !== "success") {
-        return {
-          message: apiResponse.message,
-          status: 500,
-          data: null,
-        };
-      }
-
-      console.log("apiResponse 😋", { apiResponse }, "");
-
-      const imageUrl = `https://www.screenshotmachine.com/${apiResponse.link}`;
-      const imageResponse = await fetch(imageUrl);
-
-      if (!imageResponse.ok) {
-        return {
-          message: `Failed to fetch screenshot: ${imageResponse.status}`,
-          status: 500,
-          data: null,
-        };
-      }
-
-      return {
-        message: "Screenshot fetched successfully",
-        status: 200,
-        data: Buffer.from(await imageResponse.arrayBuffer()),
-      };
+      return Buffer.from(await screenshotmachineRes.arrayBuffer());
     } catch (error) {
       console.error("Error fetching screenshot:", error);
-      return {
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        status: 500,
-        data: null,
-      };
+
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("Failed to fetch screenshot");
+      }
     }
   }
 }
