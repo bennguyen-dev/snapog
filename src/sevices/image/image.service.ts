@@ -76,7 +76,7 @@ class ImageService {
     IResponse<IGetImageByImageLinkResponse | null>
   > {
     console.time("start fetch image from link S3");
-    const response = await fetch(imageLink);
+    const response = await fetch(imageLink, { cache: "no-store" });
     console.timeEnd("start fetch image from link S3");
 
     if (!response.ok) {

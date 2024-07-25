@@ -34,6 +34,14 @@ class CrawlService {
           "--disable-web-security",
           "--no-sandbox",
           "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--single-process",
+          "--disable-gpu",
+          "--disable-software-rasterizer",
+          "--disable-dev-shm-usage",
         ],
         defaultViewport: { width: 1200, height: 628 },
         executablePath: await chromium.executablePath(
@@ -53,16 +61,24 @@ class CrawlService {
       }
 
       const page = await browser.newPage();
-
-      // Optional: Set a custom user agent to avoid mobile redirects
-      await page.setUserAgent(
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      );
+      // Optimize page load
+      await page.setRequestInterception(true);
+      page.on("request", (req) => {
+        if (
+          ["image", "stylesheet", "font", "script", "media"].includes(
+            req.resourceType(),
+          )
+        ) {
+          req.abort();
+        } else {
+          req.continue();
+        }
+      });
 
       console.time(`Total execution time goto url: ${url}`);
       const response = await page.goto(urlWithProtocol, {
-        waitUntil: "networkidle0",
-        timeout: 30000, // 30 seconds timeout for page load
+        waitUntil: "domcontentloaded",
+        timeout: 10000,
       });
       console.timeEnd(`Total execution time goto url: ${url}`);
 
@@ -75,11 +91,6 @@ class CrawlService {
           data: null,
         };
       }
-
-      // Wait for any remaining animations to complete
-      await page.evaluate(
-        () => new Promise((resolve) => setTimeout(resolve, 2000)),
-      );
 
       // Check for UI elements on the page (optional)
       const bodyContentExist = await page.evaluate(() => {
