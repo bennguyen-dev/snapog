@@ -75,12 +75,12 @@ class CrawlService {
         }
       });
 
-      console.time(`Total execution time goto url: ${url}`);
+      console.time(`Total execution time goto url: ${urlWithProtocol}`);
       const response = await page.goto(urlWithProtocol, {
         waitUntil: "domcontentloaded",
         timeout: 10000,
       });
-      console.timeEnd(`Total execution time goto url: ${url}`);
+      console.timeEnd(`Total execution time goto url: ${urlWithProtocol}`);
 
       if (!response || !response.ok()) {
         await browser.close();
@@ -108,6 +108,14 @@ class CrawlService {
         };
       }
 
+      const getAbsoluteUrl = (relativeUrl: string) => {
+        try {
+          return new URL(relativeUrl, urlWithProtocol).href;
+        } catch (error) {
+          return relativeUrl;
+        }
+      };
+
       console.time(`Total execution time screenshot: ${url}`);
       const [screenshot, title, description, ogImage] = await Promise.all([
         this.screenshotByScreenshotMachine({ url }),
@@ -125,6 +133,11 @@ class CrawlService {
 
       await page.close();
 
+      // Convert ogImage to absolute URL if it's relative
+      const absoluteOgImage = ogImage?.startsWith("http")
+        ? ogImage
+        : getAbsoluteUrl(ogImage as string);
+
       return {
         status: 200,
         message: "Info fetched successfully",
@@ -133,7 +146,7 @@ class CrawlService {
           screenShot: screenshot,
           title,
           description: description || undefined,
-          ogImage: ogImage || undefined,
+          ogImage: absoluteOgImage || undefined,
         },
       };
     } catch (error) {

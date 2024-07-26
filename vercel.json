@@ -4,11 +4,5 @@
       "memory": 1024,
       "maxDuration": 60
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/updateOGImage",
-      "schedule": "0 0 * * *"
-    }
-  ]
+  }
 }
