@@ -1,3 +1,4 @@
+import { cx } from "class-variance-authority";
 import { ArrowLeft, RotateCw } from "lucide-react";
 
 import Image from "next/image";
@@ -25,8 +26,13 @@ export const ItemPreviewOGImage = ({
   const domain = url && new URL(url).hostname;
 
   return (
-    <div className={className}>
-      <div className="mb-4 flex items-center justify-between gap-4 px-4">
+    <div
+      className={cx(
+        "rounded-md border border-border/50 bg-background/40 p-1 pt-0 backdrop-blur-sm supports-[backdrop-filter]:bg-background/40",
+        className,
+      )}
+    >
+      <div className="my-2 flex items-center justify-between gap-4 px-2">
         <ArrowLeft className="h-5 w-5" />
         <ArrowLeft className="h-5 w-5 rotate-180 text-neutral-300" />
         <RotateCw className="h-5 w-5" />

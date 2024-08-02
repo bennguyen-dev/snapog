@@ -27,11 +27,13 @@ export const Header = async () => {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+    <header className="sticky top-0 z-50 w-full bg-transparent backdrop-blur">
+      <div className="container mx-auto flex h-14 items-center justify-between">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
-            <span className="hidden font-bold sm:inline-block">Smart OG</span>
+            <span className="hidden text-xl font-bold sm:inline-block">
+              Smart OG
+            </span>
           </Link>
         </div>
 
@@ -73,7 +75,9 @@ export const Header = async () => {
                 redirect("/signin");
               }}
             >
-              <Button type="submit">Sign in</Button>
+              <Button type="submit" className="rounded-full">
+                Sign in
+              </Button>
             </form>
           </div>
         )}

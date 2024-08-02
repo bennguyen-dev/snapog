@@ -25,7 +25,9 @@ export const BlockInputDemo = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:px-8 xl:px-16">
+    <div className="container relative grid grid-cols-1 gap-8 py-8 sm:grid-cols-2">
+      <div className="bg-gradient absolute -right-12 -top-20 -z-10 h-full w-3/5 rounded-full from-indigo-200 blur-3xl" />
+      <div className="bg-gradient absolute bottom-0 left-0 -z-10 h-96 w-96 rounded-full from-indigo-200 blur-3xl" />
       <div className="flex flex-col justify-center align-middle">
         <Typography variant="h1" className="">
           Automate your open-graph social images with screenshots!
