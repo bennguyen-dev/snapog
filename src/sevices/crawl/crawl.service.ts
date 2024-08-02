@@ -514,6 +514,8 @@ class CrawlService {
       zoom: 100,
       format: "png",
       delay: 2000,
+      "accept-language": "en-US,en;q=0.9",
+      click: "[class*='close'],[class*='accept']", // click on the close button
     };
 
     const params = new URLSearchParams({

@@ -12,7 +12,7 @@ interface IProps {
 
 export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
   return (
-    <div className="py-8">
+    <div className="container py-8">
       {domain && (
         <Typography variant="h1" className="py-8 text-center font-mono">
           Open-graph image review for{" "}

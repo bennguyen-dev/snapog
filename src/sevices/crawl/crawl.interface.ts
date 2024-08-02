@@ -40,7 +40,8 @@ export interface IScreenshotByScreenshotmachine {
     dimension: string;
     zoom: number;
     format: "png" | "jpeg" | "gif";
-    delay: number;
-    cacheLimit: number; // If you prefer fresh screenshot for every API call, please use cacheLimit=0 parameter.
+    delay?: number;
+    cacheLimit?: number; // If you prefer fresh screenshot for every API call, please use cacheLimit=0 parameter.
+    click?: string; // https://www.w3schools.com/cssref/css_selectors.php, use '' not ""
   };
 }

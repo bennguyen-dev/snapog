@@ -4,40 +4,28 @@ import { IGetDemoResponse } from "@/sevices/demo";
 export default function Home() {
   const initPageInfo: IGetDemoResponse[] = [
     {
-      url: "https://www.uber.com",
-      smartOgImageBase64: "/demo/uber-home.png",
-      title: "Explore the Uber Platform | Uber United States",
+      url: "https://stripe.com",
+      smartOgImageBase64: "/demo/stripe-home.png",
+      title: "Stripe | Financial Infrastructure to Grow Your Revenue",
       description:
-        "Learn how you can leverage the Uber platform and apps to earn more, eat, commute, get a ride, simplify business travel, and more.",
-      ogImage:
-        "https://d3i4yxtzktqr9n.cloudfront.net/uber-sites/f452c7aefd72a6f52b36705c8015464e.jpg",
+        "Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes. Accept payments, send payouts, and automate financial processes with a suite of APIs and no-code tools.",
+      ogImage: "/demo/default-stripe-home.png",
     },
     {
-      url: "https://www.uber.com/us/en/business/getting-started/",
-      smartOgImageBase64: "/demo/uber-business-started.png",
-      title: "Getting started with Uber for Business",
+      url: "https://stripe.com/payments",
+      smartOgImageBase64: "/demo/stripe-payments.png",
+      title: "Stripe Payments | Global Payment Processing Platform",
       description:
-        "Easily manage business travel, employee meals and local deliveries. Simplify how your business moves with automatic billing, expensing, and reporting.",
-      ogImage:
-        "https://d3i4yxtzktqr9n.cloudfront.net/uber-sites/f452c7aefd72a6f52b36705c8015464e.jpg",
+        "Capture more revenue with a unified payments solution that eliminates the need for one-off merchant account, payment gateway, and processor integrations.",
+      ogImage: "/demo/default-stripe-payments.png",
     },
     {
-      url: "https://www.uber.com/us/en/business/",
-      smartOgImageBase64: "/demo/uber-business.png",
-      title: "Business Travel and Meals | Uber for Business",
+      url: "https://stripe.com/pricing",
+      smartOgImageBase64: "/demo/stripe-pricing.png",
+      title: "Pricing & Fees | Stripe Official Site",
       description:
-        "Manage corporate rides and meals from one platform built for businesses. More than 170,000 companies worldwide use/choose Uber for Business.",
-      ogImage:
-        "https://d3i4yxtzktqr9n.cloudfront.net/uber-sites/f452c7aefd72a6f52b36705c8015464e.jpg",
-    },
-    {
-      url: "https://www.uber.com/us/en/about/",
-      smartOgImageBase64: "/demo/uber-about.png",
-      title: "About Us | Uber",
-      description:
-        "Want to learn more about Uber? Read about our leadership, customers, the Uber platform, the communities we serve, and more!",
-      ogImage:
-        "https://d3i4yxtzktqr9n.cloudfront.net/uber-sites/f452c7aefd72a6f52b36705c8015464e.jpg",
+        "Find Stripe fees and pricing information. Find our processing fees for credit cards, pricing models and pay-as-you-go fees for businesses.",
+      ogImage: "/demo/default-stripe-pricing.jpg",
     },
   ];
 
