@@ -28,7 +28,7 @@ export const ItemPreviewOGImage = ({
   return (
     <div
       className={cx(
-        "rounded-md border border-border/50 bg-background/40 p-1 pt-0 backdrop-blur-sm supports-[backdrop-filter]:bg-background/40",
+        "bg-blur-transparent rounded-md border border-border/50 p-1 pt-0 shadow-md",
         className,
       )}
     >

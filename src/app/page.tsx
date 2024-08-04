@@ -1,7 +1,17 @@
-import { BlockCompareOGImage, BlockInputDemo } from "@/components/block";
+import { headers } from "next/headers";
+
+import {
+  BlockCompareOGImage,
+  BlockHowItWorks,
+  BlockInputDemo,
+} from "@/components/block";
 import { IGetDemoResponse } from "@/sevices/demo";
 
 export default function Home() {
+  const headersList = headers();
+
+  const host = headersList.get("host");
+
   const initPageInfo: IGetDemoResponse[] = [
     {
       url: "https://stripe.com",
@@ -33,6 +43,7 @@ export default function Home() {
     <>
       <BlockInputDemo />
       <BlockCompareOGImage pagesInfo={initPageInfo} loading={false} />
+      <BlockHowItWorks host={host} />
     </>
   );
 }

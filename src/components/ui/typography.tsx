@@ -12,7 +12,7 @@ export const typographyVariants = cva("text-base", {
       h3: "scroll-m-20 text-2xl font-bold leading-snug tracking-normal md:text-3xl lg:text-4xl",
       h4: "scroll-m-20 text-xl font-semibold leading-snug tracking-normal md:text-2xl lg:text-3xl",
       p: "leading-7 [&:not(:first-child)]:mt-6",
-      code: "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+      code: "relative rounded bg-muted px-1 py-0.5 font-mono text-sm border",
     },
     affects: {
       default: "",

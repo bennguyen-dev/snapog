@@ -150,7 +150,13 @@ export const ListPage = ({ siteId }: IProps) => {
             <Image
               unoptimized
               onClick={() => {
-                window.open(getLinkSmartOGImage(row.original.url), "_blank");
+                window.open(
+                  getLinkSmartOGImage({
+                    host: window.location.host,
+                    url: row.original.url,
+                  }),
+                  "_blank",
+                );
               }}
               src={row.original.OGImage.src}
               width={120}
@@ -241,7 +247,7 @@ export const ListPage = ({ siteId }: IProps) => {
   }, [mounted, getPages, getSite]);
 
   return (
-    <div className="w-full py-8">
+    <div className="container py-8">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

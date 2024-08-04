@@ -150,7 +150,10 @@ export const ListSite = () => {
         header: "How to use?",
         cell: ({ row }) => {
           const site = row.original;
-          const urlExample = getLinkSmartOGImage(site.domain);
+          const urlExample = getLinkSmartOGImage({
+            host: window.location.host,
+            url: site.domain,
+          });
 
           return (
             <>
@@ -160,7 +163,12 @@ export const ListSite = () => {
                   {urlExample}
                 </Link>
               </Typography>
-              <CodeSnippet>{getSnippetHowToUse(site.domain)}</CodeSnippet>
+              <CodeSnippet>
+                {getSnippetHowToUse({
+                  host: window.location.host,
+                  domain: site.domain,
+                })}
+              </CodeSnippet>
             </>
           );
         },
@@ -229,7 +237,7 @@ export const ListSite = () => {
   }, [confirmDialog, deleteSite, deleting, updateSite]);
 
   return (
-    <div className="w-full py-8">
+    <div className="container py-8">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

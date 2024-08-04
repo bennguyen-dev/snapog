@@ -1,29 +1,8 @@
-"use client";
-
-import { useState } from "react";
-
-import { EyeIcon } from "lucide-react";
-
-import { useRouter } from "next/navigation";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { InputDemo } from "@/components/block/BlockInputDemo/InputDemo";
 import { Typography } from "@/components/ui/typography";
-import { getDomainName } from "@/lib/utils";
 import { ItemPreviewOGImage } from "@/modules/demo";
 
 export const BlockInputDemo = () => {
-  const router = useRouter();
-  const [domain, setDomain] = useState<string>("");
-
-  const handleSubmit = () => {
-    if (!domain) {
-      return;
-    }
-
-    router.push(`/demo/${getDomainName(domain)}`);
-  };
-
   return (
     <div className="container relative grid grid-cols-1 gap-8 py-8 sm:grid-cols-2">
       <div className="bg-gradient absolute -right-12 -top-20 -z-10 h-full w-3/5 rounded-full from-indigo-200 blur-3xl" />
@@ -37,18 +16,7 @@ export const BlockInputDemo = () => {
           automated screenshots, no code required.
         </Typography>
 
-        <div className="flex w-full max-w-md space-x-2 pb-8 pt-12">
-          <Input
-            title="Enter your website URL to see a live demo:"
-            type="text"
-            placeholder="yoursite.com"
-            value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-          />
-          <Button onClick={handleSubmit} icon={<EyeIcon className="icon" />}>
-            View Demo
-          </Button>
-        </div>
+        <InputDemo />
       </div>
       <div>
         <div className="ml-auto max-w-[600px]">

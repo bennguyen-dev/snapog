@@ -46,14 +46,26 @@ export function getImageLinkFromAWS(key: string) {
   return `https://${process.env.AWS_CDN_HOSTNAME}/${key}`;
 }
 
-export function getSnippetHowToUse(domain: string) {
-  return `  <!-- Put in your <head> tag -->
-  <meta
-    property="og:image"
-    content="https://${window.location.host}/api/get-image?url=${domain}/your/example/path"
-  />`;
+export function getSnippetHowToUse({
+  host,
+  domain,
+}: {
+  host: string;
+  domain: string;
+}) {
+  return `<!-- Put in your <head> tag -->
+<meta
+  property="og:image"
+  content="${getLinkSmartOGImage({ host, url: domain })}"
+/>`;
 }
 
-export function getLinkSmartOGImage(url: string) {
-  return `https://${window.location.host}/api/get-image?url=${getUrlWithoutProtocol(url)}`;
+export function getLinkSmartOGImage({
+  host,
+  url,
+}: {
+  host: string;
+  url: string;
+}) {
+  return `https://${host}/api/get-image?url=${getUrlWithoutProtocol(url)}`;
 }

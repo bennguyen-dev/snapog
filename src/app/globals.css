@@ -32,7 +32,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -75,7 +75,7 @@
   }
 
   .text-link {
-    @apply cursor-pointer text-foreground underline hover:text-blue-500 active:text-blue-600 dark:text-foreground dark:hover:text-blue-400 dark:active:text-blue-500;
+    @apply cursor-pointer text-blue-500 hover:underline active:underline;
   }
 
   .bg-gradient {
@@ -90,6 +90,15 @@
       #ddefbb,
       #ffeeee
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+  .bg-blur-transparent {
+    background: linear-gradient(
+      hsla(0, 0%, 100%, 0.4),
+      hsla(0, 0%, 100%, 0.3) 25%,
+      rgba(246, 249, 252, 0.3) 50%,
+      #f6f9fc 60%
+    );
   }
 
   .icon {

@@ -1,25 +1,25 @@
 import React from "react";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface IProps extends React.ComponentProps<typeof SyntaxHighlighter> {
   children: string;
+  className?: string;
 }
 
-const CodeSnippet = ({ children, ...rest }: IProps) => {
+const CodeSnippet = ({ children, className, ...rest }: IProps) => {
   return (
-    <SyntaxHighlighter
-      language="html"
-      style={vscDarkPlus}
-      wrapLongLines
-      customStyle={{
-        margin: 0,
-      }}
-      {...rest}
-    >
-      {children}
-    </SyntaxHighlighter>
+    <div className={className}>
+      <SyntaxHighlighter
+        language="html"
+        customStyle={{
+          margin: 0,
+        }}
+        {...rest}
+      >
+        {children}
+      </SyntaxHighlighter>
+    </div>
   );
 };
 

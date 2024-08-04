@@ -27,8 +27,8 @@ export const Header = async () => {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-transparent backdrop-blur">
-      <div className="container mx-auto flex h-14 items-center justify-between">
+    <header className="container z-50 mx-auto w-full bg-transparent">
+      <div className="flex items-center justify-between rounded-md bg-transparent py-4">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
             <span className="hidden text-xl font-bold sm:inline-block">
@@ -75,9 +75,7 @@ export const Header = async () => {
                 redirect("/signin");
               }}
             >
-              <Button type="submit" className="rounded-full">
-                Sign in
-              </Button>
+              <Button type="submit">Sign in</Button>
             </form>
           </div>
         )}
