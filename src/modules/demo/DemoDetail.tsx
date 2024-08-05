@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { BlockCompareOGImage } from "@/components/block";
+import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage";
 import { useCallApi, useMounted } from "@/hooks";
 import { IGetDemoResponse } from "@/sevices/demo";
 

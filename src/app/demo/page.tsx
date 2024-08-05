@@ -1,4 +1,4 @@
-import { BlockInputDemo } from "@/components/block";
+import { BlockInputDemo } from "@/components/block/BlockInputDemo";
 
 export default function DemoPage() {
   return (

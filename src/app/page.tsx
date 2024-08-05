@@ -1,18 +1,11 @@
-import { headers } from "next/headers";
-
-import {
-  BlockCompareOGImage,
-  BlockGetStartedNow,
-  BlockHowItWorks,
-  BlockInputDemo,
-} from "@/components/block";
+import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage";
+import { BlockFAQs } from "@/components/block/BlockFAQs";
+import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
+import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
+import { BlockInputDemo } from "@/components/block/BlockInputDemo";
 import { IGetDemoResponse } from "@/sevices/demo";
 
-export default function Home() {
-  const headersList = headers();
-
-  const host = headersList.get("host");
-
+export default async function Home() {
   const initPageInfo: IGetDemoResponse[] = [
     {
       url: "https://stripe.com",
@@ -44,8 +37,9 @@ export default function Home() {
     <>
       <BlockInputDemo />
       <BlockCompareOGImage pagesInfo={initPageInfo} loading={false} />
-      <BlockHowItWorks host={host} />
+      <BlockHowItWorks />
       <BlockGetStartedNow />
+      <BlockFAQs />
     </>
   );
 }

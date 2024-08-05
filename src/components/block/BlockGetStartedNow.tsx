@@ -1,11 +1,21 @@
+// import { ArrowRight } from "lucide-react";
+
 import { ArrowRight } from "lucide-react";
+
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 
-export const BlockGetStartedNow = () => {
+export const BlockGetStartedNow = async () => {
   return (
-    <div className="container flex flex-col items-center justify-center py-16">
+    <form
+      action={async () => {
+        "use server";
+        redirect("/signin");
+      }}
+      className="container flex flex-col items-center justify-center py-8 sm:py-16"
+    >
       <Typography variant="h2">
         Ready to increase CTR for your website?
       </Typography>
@@ -13,8 +23,8 @@ export const BlockGetStartedNow = () => {
         Automate your open-graph social images today!
       </Typography>
       <Button>
-        Get started now <ArrowRight className="ml-2" />
+        Get Started Now <ArrowRight className="ml-2" />
       </Button>
-    </div>
+    </form>
   );
 };

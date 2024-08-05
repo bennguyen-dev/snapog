@@ -1,16 +1,17 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { CodeSnippet } from "@/components/ui/code-snippet";
 import { Typography } from "@/components/ui/typography";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/lib/utils";
 
-interface IProps {
-  host: string | null;
-}
+export const BlockHowItWorks = () => {
+  const headersList = headers();
 
-export const BlockHowItWorks = ({ host }: IProps) => {
+  const host = headersList.get("host");
+
   return (
-    <div className="container flex flex-col items-center justify-center py-16">
+    <div className="container flex flex-col items-center justify-center py-8 sm:py-16">
       <Typography variant="h2">How it works</Typography>
       <Typography variant="p" className="mb-4">
         After signing up, just use this URL as the open-graph of any page on
