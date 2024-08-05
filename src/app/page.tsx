@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 
 import {
   BlockCompareOGImage,
+  BlockGetStartedNow,
   BlockHowItWorks,
   BlockInputDemo,
 } from "@/components/block";
@@ -44,6 +45,7 @@ export default function Home() {
       <BlockInputDemo />
       <BlockCompareOGImage pagesInfo={initPageInfo} loading={false} />
       <BlockHowItWorks host={host} />
+      <BlockGetStartedNow />
     </>
   );
 }
