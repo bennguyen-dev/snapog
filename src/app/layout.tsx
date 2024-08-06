@@ -70,7 +70,7 @@ export default function RootLayout({
         <Header />
         <SpeedInsights />
         <Analytics />
-        <main className="flex min-h-screen flex-col items-center justify-between overflow-x-clip">
+        <main className="flex min-h-screen flex-col items-center overflow-x-clip">
           {children}
         </main>
         <Footer />

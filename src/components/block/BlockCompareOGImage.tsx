@@ -14,7 +14,10 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
   return (
     <div className="container py-8">
       {domain && (
-        <Typography variant="h1" className="py-8 text-center font-mono">
+        <Typography
+          variant="h1"
+          className="mx-auto max-w-screen-md py-8 text-center"
+        >
           Open-graph image review for{" "}
           <span className="underline">{domain}</span>
         </Typography>

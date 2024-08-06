@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { cx } from "class-variance-authority";
 import { EyeIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +25,11 @@ const formSchema = z.object({
   }),
 });
 
-export const InputDemo = () => {
+interface IProps {
+  className?: string;
+}
+
+export const InputDemo = ({ className }: IProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +46,12 @@ export const InputDemo = () => {
 
   return (
     <Form {...form}>
-      <div className="mt-8 flex w-full max-w-lg space-x-2 sm:mt-12 ">
+      <div
+        className={cx(
+          "mt-8 flex w-full max-w-lg space-x-2 sm:mt-12",
+          className,
+        )}
+      >
         <FormField
           control={form.control}
           name="domain"
