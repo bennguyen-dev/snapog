@@ -40,6 +40,7 @@ export default async function Home() {
       <BlockHowItWorks />
       <BlockGetStartedNow />
       <BlockFAQs />
+      <BlockGetStartedNow />
     </>
   );
 }
