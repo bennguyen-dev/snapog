@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import { cx } from "class-variance-authority";
 import { Session } from "next-auth";
 
 import Link from "next/link";
@@ -37,7 +38,7 @@ export const Navbar = ({ session }: IProps) => {
           <NavigationMenuItem key={route.name}>
             <Link href={route.path} legacyBehavior passHref>
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cx(navigationMenuTriggerStyle(), "mx-4")}
                 active={pathname.includes(route.path)}
               >
                 {route.name}

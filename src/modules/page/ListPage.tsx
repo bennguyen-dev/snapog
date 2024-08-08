@@ -161,7 +161,7 @@ export const ListPage = ({ siteId }: IProps) => {
               src={row.original.OGImage.src}
               width={120}
               height={62}
-              className="aspect-[1200/628] max-w-40 cursor-pointer rounded"
+              className="aspect-og-facebook max-w-40 cursor-pointer rounded"
               alt={row.original.OGImage.src}
             />
           );

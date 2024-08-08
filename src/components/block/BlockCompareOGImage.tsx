@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Typography } from "@/components/ui/typography";
 import { ItemPreviewOGImage } from "@/modules/demo";
 import { IGetDemoResponse } from "@/sevices/demo";
@@ -12,7 +13,7 @@ interface IProps {
 
 export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
   return (
-    <div className="container py-8">
+    <div className="container py-8 sm:py-16">
       {domain && (
         <Typography
           variant="h1"
@@ -22,10 +23,12 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
           <span className="underline">{domain}</span>
         </Typography>
       )}
-      <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-6">
         <div>
-          <div className="text-center text-2xl font-bold">Normal OG images</div>
-          <div className="my-4 flex items-center justify-center">
+          <Typography variant="h3" className="mb-4 text-center font-bold">
+            Normal OG images
+          </Typography>
+          <div className="flex items-center justify-center">
             <ul className="font-medium text-red-500">
               <li className="flex items-center gap-1">
                 <X className="mr-1 inline-block h-5 w-5 stroke-2 text-red-500" />
@@ -47,21 +50,20 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
           </div>
         </div>
         <div>
-          <div className="text-center text-2xl font-bold">
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
+          <Typography variant="h3" className="mb-4 text-center font-bold">
             OG Smart's OG images
-          </div>
-          <div className="my-4 flex items-center justify-center">
+          </Typography>
+          <div className="flex items-center justify-center">
             <ul className="font-medium text-green-600">
-              <li className="flex items-center gap-1">
+              <li className="flex items-center gap-1 font-semibold sm:text-lg">
                 <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 In-context OG image with page screenshot (better CTR)
               </li>
-              <li className="flex items-center gap-1">
+              <li className="flex items-center gap-1 font-semibold sm:text-lg">
                 <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 Fully automated, generated for every page, save time.
               </li>
-              <li className="flex items-center gap-1">
+              <li className="flex items-center gap-1 font-semibold sm:text-lg">
                 <Check className="mr-1 inline-block h-5 w-5 stroke-2 text-green-500" />
                 Optimal size, high quality (retina scale), fast loading
               </li>
@@ -82,12 +84,14 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
                     image={page.ogImage}
                     title={page.title}
                     description={page.description}
+                    badge={<Badge variant="destructive">Old</Badge>}
                   />
                   <ItemPreviewOGImage
                     url={page.url}
                     image={page.smartOgImageBase64}
                     title={page.title}
                     description={page.description}
+                    badge={<Badge variant="success">New</Badge>}
                   />
                 </div>
               );

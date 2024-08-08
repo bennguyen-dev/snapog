@@ -1,27 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import HamburgerIcon from "@/assets/icons/hamburger.svg";
 import { auth, signOut } from "@/auth";
+import { MobileNavbar } from "@/components/layout/mobile-navbar";
 import { Navbar } from "@/components/layout/navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
-const Hamburger = () => {
-  return (
-    <button
-      className="mr-2 inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-0 py-2 text-base font-medium transition-colors hover:bg-transparent hover:text-accent-foreground focus-visible:bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 md:hidden"
-      type="button"
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-controls="radix-:R16u6la:"
-      data-state="closed"
-    >
-      <HamburgerIcon className="h-6 w-6" />
-      <span className="sr-only">Toggle Menu</span>
-    </button>
-  );
-};
 
 export const Header = async () => {
   const session = await auth();
@@ -37,9 +21,9 @@ export const Header = async () => {
           </Link>
         </div>
 
-        <Hamburger />
-
+        <MobileNavbar session={session} />
         <Navbar session={session} />
+
         {session?.user ? (
           <div className="flex items-center gap-4">
             <div className="flex cursor-pointer flex-col items-end">

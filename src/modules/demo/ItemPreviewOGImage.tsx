@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 import { cx } from "class-variance-authority";
-import { ArrowLeft, RotateCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
 
 import Image from "next/image";
 
@@ -13,6 +15,7 @@ interface IProps {
   image?: string;
   className?: string;
   loading?: boolean;
+  badge?: ReactNode;
 }
 
 export const ItemPreviewOGImage = ({
@@ -22,49 +25,49 @@ export const ItemPreviewOGImage = ({
   image,
   className,
   loading,
+  badge,
 }: IProps) => {
   const domain = url && new URL(url).hostname;
 
   return (
     <div
       className={cx(
-        "bg-blur-transparent rounded-md border border-border/50 p-1 pt-0 shadow-md",
+        "bg-blur-transparent relative rounded-md border-2 border-border p-1 pt-0 shadow-lg transition-all duration-200 ease-in-out",
         className,
       )}
     >
-      <div className="my-2 flex items-center justify-between gap-4 px-2">
+      {badge && <div className="absolute -right-4 -top-4 z-10">{badge}</div>}
+      <div className="my-2 flex items-center justify-between gap-4 pl-3 pr-1">
         <ArrowLeft className="h-5 w-5" />
-        <ArrowLeft className="h-5 w-5 rotate-180 text-neutral-300" />
+        <ArrowRight className="h-5 w-5 text-neutral-300" />
         <RotateCw className="h-5 w-5" />
         {loading ? (
-          <Skeleton className="h-10 w-full rounded-full bg-slate-200" />
+          <Skeleton className="h-10 w-full rounded-full bg-muted" />
         ) : (
-          <div className="flex flex-1 rounded-full bg-slate-200 px-4 py-2">
+          <div className="flex flex-1 rounded-full border bg-slate-200 px-4 py-2 backdrop-blur-2xl">
             <span className="line-clamp-1 break-all">
               {getUrlWithoutProtocol(url || "")}
             </span>
           </div>
         )}
       </div>
-      <div className="overflow-hidden rounded-md border border-solid border-neutral-300">
+      <div className="overflow-hidden rounded-md border border-solid">
         {image && !loading && (
           <div className="body">
-            {image.startsWith("http") || image.startsWith("https") ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={image} className="aspect-[1200/628]" alt={url} />
-            ) : (
-              <Image
-                src={image}
-                width={1200}
-                height={628}
-                className="aspect-[1200/628]"
-                alt={url || ""}
-              />
-            )}
+            <Image
+              src={image}
+              width={1200}
+              height={628}
+              className="aspect-og-facebook"
+              alt={url || ""}
+              unoptimized={
+                image.startsWith("http") || image.startsWith("https")
+              }
+            />
           </div>
         )}
-        {loading && <Skeleton className="aspect-[1200/628] h-full" />}
-        <div className="bg-gray-200 p-4">
+        {loading && <Skeleton className="aspect-og-facebook h-full" />}
+        <div className="border-t border-border bg-slate-200 px-4 py-3">
           <div className="truncate text-xs uppercase text-gray-600">
             {loading ? <Skeleton className="mb-2 h-4 w-1/5" /> : domain}
           </div>
