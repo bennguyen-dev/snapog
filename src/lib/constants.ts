@@ -10,8 +10,13 @@ export const ROUTES = [
     auth: false,
   },
   {
-    name: "Pricing",
-    path: "/pricing",
+    name: "How it works",
+    path: "/#how-it-works",
+    auth: false,
+  },
+  {
+    name: "FAQs",
+    path: "/#faqs",
     auth: false,
   },
 ];

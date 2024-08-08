@@ -25,32 +25,51 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const pathname = headersList.get("x-current-path");
   const host = headersList.get("host");
+  const time = new Date().getTime();
 
   return {
     title: "Smart OG | Boost CTR with No Code",
     description:
       "Automate your open-graph social images effortlessly. Enhance your click-through rate (CTR) with engaging and fully automated OG images. No coding required",
     applicationName: "Smart OG",
+    generator: "Smart OG",
+    referrer: "origin-when-cross-origin",
     openGraph: {
+      siteName: "Smart OG",
       images: [
         {
-          url: `https://og-image-develop.vercel.app/api/get-image?url=${host}${pathname}`,
+          url: `https://og-image-develop.vercel.app/api/get-image?url=${host}${pathname}&time=${time}`,
           width: 1200,
           height: 630,
+          alt: "Smart OG",
         },
       ],
+      type: "website",
+      locale: "en",
+      description:
+        "Automate your open-graph social images effortlessly. Enhance your click-through rate (CTR) with engaging and fully automated OG images. No coding required",
+      title: "Smart OG | Boost CTR with No Code",
+      url: `https://${host}${pathname}`,
     },
-    authors: [{ name: "Smart OG" }],
+    authors: [{ name: "Smart OG", url: `https://${host}` }],
+    category: "Open Graph",
     keywords: [
       "open-graph",
       "seo",
       "nextjs",
-      "vercel",
       "smart-og",
       "no-code",
       "og:image",
+      "open-graph check",
+      "open-graph generator",
+      "open-graph image",
+      "open-graph social image",
+      "open-graph image generator",
+      "open-graph image check",
+      "open-graph image generator",
     ],
-    publisher: "Smart OG",
+    creator: "Ben Nguyen",
+    publisher: "Ben Nguyen",
   };
 }
 
@@ -70,7 +89,7 @@ export default function RootLayout({
         <Header />
         <SpeedInsights />
         <Analytics />
-        <main className="flex min-h-screen flex-col items-center overflow-x-clip">
+        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-20">
           {children}
         </main>
         <Footer />

@@ -33,7 +33,7 @@ export const BlockFAQs = () => {
     {
       key: "question-2",
       title: (
-        <Typography variant="h3" className="text-left">
+        <Typography variant="h3" className="text-left text-base">
           How do I use this as the open graph image (social image) for my web
           pages?
         </Typography>
@@ -218,11 +218,14 @@ export const BlockFAQs = () => {
   ];
 
   return (
-    <div className="container flex flex-col items-center justify-center py-8 sm:py-16">
+    <div
+      id="faqs"
+      className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
+    >
       <Typography variant="h2" className="mb-8 text-center">
         Frequently Asked Questions
       </Typography>
-      <Accordion type="multiple" className="mx-auto w-full max-w-screen-xl">
+      <Accordion type="multiple" className="mx-auto w-full max-w-screen-lg">
         {FAQs.map((faq) => (
           <AccordionItem key={faq.key} value={faq.key}>
             <AccordionTrigger>{faq.title}</AccordionTrigger>

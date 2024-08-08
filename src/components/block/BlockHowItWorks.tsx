@@ -11,7 +11,10 @@ export const BlockHowItWorks = () => {
   const host = headersList.get("host");
 
   return (
-    <div className="container flex flex-col items-center justify-center py-8 sm:py-16">
+    <div
+      id="how-it-works"
+      className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
+    >
       <Typography variant="h2">How it works</Typography>
       <Typography variant="p" className="mb-4">
         After signing up, just use this URL as the open-graph of any page on

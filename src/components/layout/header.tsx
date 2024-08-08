@@ -27,8 +27,8 @@ export const Header = async () => {
   const session = await auth();
 
   return (
-    <header className="container z-50 mx-auto w-full bg-transparent">
-      <div className="flex items-center justify-between rounded-md bg-transparent py-4">
+    <header className="fixed left-0 top-0 z-50 w-full bg-card/90 text-card-foreground shadow-sm backdrop-blur">
+      <div className="container mx-auto flex items-center justify-between rounded-md bg-transparent py-3">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
             <span className="hidden text-xl font-bold sm:inline-block">
