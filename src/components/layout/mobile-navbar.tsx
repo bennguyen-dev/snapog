@@ -18,7 +18,6 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ROUTES } from "@/lib/constants";
 
@@ -53,36 +52,34 @@ export const MobileNavbar = ({ session }: IProps) => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pr-0">
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
-          <NavigationMenu>
-            <NavigationMenuList className="flex-col items-start space-y-3">
-              <NavigationMenuItem>
-                <Link href={"/"} legacyBehavior passHref>
+        <NavigationMenu>
+          <NavigationMenuList className="flex-col items-start space-y-3">
+            <NavigationMenuItem>
+              <Link href={"/"} legacyBehavior passHref>
+                <NavigationMenuLink
+                  onClick={() => setOpen(false)}
+                  className={cx(navigationMenuTriggerStyle(), "mx-0 px-0")}
+                  active={pathname === "/"}
+                >
+                  Home
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            {routes?.map((route) => (
+              <NavigationMenuItem key={route.name}>
+                <Link href={route.path} legacyBehavior passHref>
                   <NavigationMenuLink
                     onClick={() => setOpen(false)}
                     className={cx(navigationMenuTriggerStyle(), "mx-0 px-0")}
-                    active={pathname === "/"}
+                    active={pathname.includes(route.path)}
                   >
-                    Home
+                    {route.name}
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              {routes?.map((route) => (
-                <NavigationMenuItem key={route.name}>
-                  <Link href={route.path} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      onClick={() => setOpen(false)}
-                      className={cx(navigationMenuTriggerStyle(), "mx-0 px-0")}
-                      active={pathname.includes(route.path)}
-                    >
-                      {route.name}
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </ScrollArea>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
       </SheetContent>
     </Sheet>
   );

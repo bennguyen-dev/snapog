@@ -28,7 +28,7 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 146 65% 52%;
+    --success: 146 84% 40%;
     --success-foreground: 0 0% 100%;
 
     --warning: 48 100% 50%;
@@ -70,7 +70,7 @@
     --destructive-foreground: 210 40% 98%;
 
     --success: 146 65% 52%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 210 40% 98%;
 
     --warning: 48 100% 50%;
     --warning-foreground: 0 0% 100%;
@@ -121,5 +121,37 @@
 
   .icon {
     @apply h-4 w-4;
+  }
+
+  /* Common Ribbon Styles */
+  .ribbon {
+    @apply absolute -right-2.5 -top-2.5 z-10 h-28 w-28 overflow-hidden;
+  }
+  .ribbon::before {
+    @apply absolute left-0 top-0 -z-10 block border-4 content-[''];
+  }
+  .ribbon::after {
+    @apply absolute bottom-0 right-0 -z-10 block border-4 content-[''];
+  }
+  .ribbon span {
+    @apply absolute -left-4 top-6 block w-44 rotate-45 py-2 text-center font-semibold shadow-md shadow-foreground/10;
+  }
+
+  /* Ribbon Success (Green) */
+  .ribbon-success::before,
+  .ribbon-success::after {
+    @apply border-success border-r-transparent border-t-transparent brightness-90;
+  }
+  .ribbon-success span {
+    @apply bg-success text-success-foreground;
+  }
+
+  /* Ribbon Error (Red) */
+  .ribbon-error::before,
+  .ribbon-error::after {
+    @apply border-destructive border-r-transparent border-t-transparent brightness-90;
+  }
+  .ribbon-error span {
+    @apply bg-destructive text-destructive-foreground;
   }
 }

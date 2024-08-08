@@ -15,7 +15,10 @@ interface IProps {
   image?: string;
   className?: string;
   loading?: boolean;
-  badge?: ReactNode;
+  ribbon?: {
+    type: "error" | "success";
+    content: ReactNode;
+  };
 }
 
 export const ItemPreviewOGImage = ({
@@ -25,18 +28,26 @@ export const ItemPreviewOGImage = ({
   image,
   className,
   loading,
-  badge,
+  ribbon,
 }: IProps) => {
   const domain = url && new URL(url).hostname;
+
+  const ribbonClass =
+    ribbon?.type === "error" ? "ribbon-error" : "ribbon-success";
 
   return (
     <div
       className={cx(
-        "bg-blur-transparent relative rounded-md border-2 border-border p-1 pt-0 shadow-lg transition-all duration-200 ease-in-out",
+        "bg-blur-transparent relative rounded-md border-2 border-border p-1 pt-0 shadow-lg",
         className,
       )}
     >
-      {badge && <div className="absolute -right-4 -top-4 z-10">{badge}</div>}
+      {ribbon && (
+        <div className={cx("ribbon", ribbonClass)}>
+          <span>{ribbon.content}</span>
+        </div>
+      )}
+
       <div className="my-2 flex items-center justify-between gap-4 pl-3 pr-1">
         <ArrowLeft className="h-5 w-5" />
         <ArrowRight className="h-5 w-5 text-neutral-300" />
