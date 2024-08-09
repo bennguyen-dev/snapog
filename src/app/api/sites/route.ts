@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { inngest } from "@/lib/inngest";
-import { getUrlWithProtocol } from "@/lib/utils";
+import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
 import { pageService } from "@/sevices/page";
 import { siteService } from "@/sevices/site";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();
 
-  const domain = body?.domain;
+  const domain = getUrlWithoutProtocol(body?.domain);
+
+  console.log("domain 😋", { domain }, "");
   const cacheDurationDays = body?.cacheDurationDays;
 
   if (!req.auth?.user?.id) {
