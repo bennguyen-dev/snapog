@@ -28,45 +28,46 @@ export async function generateMetadata(): Promise<Metadata> {
   const time = new Date().getTime();
 
   return {
-    title: "Smart OG | Boost CTR with No Code",
+    title: "Snap OG - Automate Social Images | Boost CTR with No Code",
     description:
-      "Automate your open-graph social images effortlessly. Enhance your click-through rate (CTR) with engaging and fully automated OG images. No coding required",
-    applicationName: "Smart OG",
-    generator: "Smart OG",
+      "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
+    applicationName: "Snap OG",
+    generator: "Snap OG",
     referrer: "origin-when-cross-origin",
     openGraph: {
-      siteName: "Smart OG",
+      siteName: "Snap OG",
       images: [
         {
           url: `https://og-image-develop.vercel.app/api/get-image?url=${host}${pathname}&time=${time}`,
           width: 1200,
           height: 630,
-          alt: "Smart OG",
+          alt: "Snap OG",
         },
       ],
       type: "website",
       locale: "en",
       description:
-        "Automate your open-graph social images effortlessly. Enhance your click-through rate (CTR) with engaging and fully automated OG images. No coding required",
-      title: "Smart OG | Boost CTR with No Code",
+        "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
+      title: "Snap OG - Automate Social Images | Boost CTR with No Code",
       url: `https://${host}${pathname}`,
     },
-    authors: [{ name: "Smart OG", url: `https://${host}` }],
+    authors: [{ name: "Snap OG", url: `https://${host}` }],
     category: "Open Graph",
     keywords: [
-      "open-graph",
-      "seo",
-      "nextjs",
-      "smart-og",
-      "no-code",
-      "og:image",
-      "open-graph check",
-      "open-graph generator",
-      "open-graph image",
-      "open-graph social image",
-      "open-graph image generator",
-      "open-graph image check",
-      "open-graph image generator",
+      "Open Graph",
+      "Open Graph images",
+      "automated social images",
+      "no-code solutions",
+      "boost CTR",
+      "engage social media",
+      "OG images",
+      "Snap OG",
+      "Snap OG Generator",
+      "Social media optimization",
+      "image automation tools",
+      "enhance click-through rates",
+      "visual content tools",
+      "marketing automation",
     ],
     creator: "Ben Nguyen",
     publisher: "Ben Nguyen",
@@ -89,7 +90,7 @@ export default function RootLayout({
         <Header />
         <SpeedInsights />
         <Analytics />
-        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-20">
+        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-20">
           {children}
         </main>
         <Footer />

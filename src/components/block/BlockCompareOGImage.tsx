@@ -95,7 +95,7 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
                     description={page.description}
                     ribbon={{
                       type: "success",
-                      content: "Smart OG",
+                      content: "Snap OG",
                     }}
                   />
                 </div>

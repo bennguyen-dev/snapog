@@ -38,19 +38,27 @@ export const MobileNavbar = ({ session }: IProps) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-          aria-haspopup="dialog"
-          aria-expanded="false"
-          aria-controls="radix-:R16u6la:"
-          data-state="closed"
-        >
-          <HamburgerIcon className="h-6 w-6" />
-          <span className="sr-only">Toggle Menu</span>
-        </Button>
-      </SheetTrigger>
+      <div className="flex items-center justify-between gap-2 sm:hidden">
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="radix-:R16u6la:"
+            data-state="closed"
+          >
+            <HamburgerIcon className="h-6 w-6" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </SheetTrigger>
+        <div className="sm:hidden">
+          <Link className="flex items-center space-x-2" href="/">
+            <span className="text-xl font-bold ">Snap OG</span>
+          </Link>
+        </div>
+      </div>
+
       <SheetContent side="left" className="pr-0">
         <NavigationMenu>
           <NavigationMenuList className="flex-col items-start space-y-3">

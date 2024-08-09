@@ -96,29 +96,6 @@
     @apply cursor-pointer text-blue-500 hover:underline active:underline;
   }
 
-  .bg-gradient {
-    background: #ffeeee; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-      to right,
-      #ddefbb,
-      #ffeeee
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-      to right,
-      #ddefbb,
-      #ffeeee
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  }
-
-  .bg-blur-transparent {
-    background: linear-gradient(
-      hsla(0, 0%, 100%, 0.4),
-      hsla(0, 0%, 100%, 0.3) 25%,
-      rgba(246, 249, 252, 0.3) 50%,
-      #f6f9fc 60%
-    );
-  }
-
   .icon {
     @apply h-4 w-4;
   }

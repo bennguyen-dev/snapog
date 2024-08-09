@@ -18,12 +18,12 @@ export const BlockFAQs = () => {
       key: "question-1",
       title: (
         <Typography variant="h4" className="text-left text-base">
-          What is Smart OG?
+          What is Snap OG?
         </Typography>
       ),
       content: (
         <Typography variant="p" className="text-muted-foreground">
-          Smart OG is a free open-source tool that automatically generates
+          Snap OG is a free open-source tool that automatically generates
           open-graph social images for your website. It takes screenshots of
           your website and automatically generates an open-graph image with the
           best CTR.

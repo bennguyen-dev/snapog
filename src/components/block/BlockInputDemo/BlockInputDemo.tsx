@@ -4,9 +4,7 @@ import { ItemPreviewOGImage } from "@/modules/demo";
 
 export const BlockInputDemo = () => {
   return (
-    <div className="container relative grid grid-cols-1 gap-8 py-8 sm:grid-cols-2 sm:max-lg:pb-20">
-      <div className="bg-gradient absolute -right-12 -top-20 -z-10 h-full w-3/5 rounded-full from-indigo-200 blur-3xl" />
-      <div className="bg-gradient absolute bottom-0 left-0 -z-10 h-96 w-96 rounded-full from-indigo-200 blur-3xl" />
+    <div className="container relative grid grid-cols-1 gap-8 py-8 sm:grid-cols-2 sm:py-16 sm:max-lg:pb-20">
       <div className="flex flex-col justify-center align-middle">
         <Typography variant="h1">
           Automate your open-graph social images with screenshots!

@@ -271,7 +271,7 @@ export const ListSite = () => {
         </Button>
       </div>
       <Card>
-        <CardHeader className="px-7">
+        <CardHeader>
           <CardTitle>Sites</CardTitle>
           <CardDescription>
             List of sites where you can use social images

@@ -11,12 +11,12 @@ export const Header = async () => {
   const session = await auth();
 
   return (
-    <header className="fixed left-0 top-0 z-50 w-full bg-card/90 text-card-foreground shadow-sm backdrop-blur">
+    <header className="fixed left-0 top-0 z-50 w-full bg-card/90 text-card-foreground backdrop-blur">
       <div className="container mx-auto flex items-center justify-between rounded-md bg-transparent py-3">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
             <span className="hidden text-xl font-bold sm:inline-block">
-              Smart OG
+              Snap OG
             </span>
           </Link>
         </div>
@@ -29,6 +29,7 @@ export const Header = async () => {
             <div className="flex cursor-pointer flex-col items-end">
               <p className="text-base">{session.user.name}</p>
               <form
+                className="h-5"
                 action={async () => {
                   "use server";
                   await signOut();
