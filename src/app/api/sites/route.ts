@@ -11,7 +11,6 @@ export const POST = auth(async function POST(req) {
 
   const domain = getUrlWithoutProtocol(body?.domain);
 
-  console.log("domain 😋", { domain }, "");
   const cacheDurationDays = body?.cacheDurationDays;
 
   if (!req.auth?.user?.id) {
