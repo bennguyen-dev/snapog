@@ -449,39 +449,26 @@ class CrawlService {
       const pageSearch = await browser.newPage();
       const pageCrawl = await browser.newPage();
 
-      const [searchResult, crawlResult] = await Promise.allSettled([
-        this.searchSiteLinks({ domain, limit, page: pageSearch }),
-        this.crawlLinksInPage({ domain, limit, page: pageCrawl }),
-      ]);
-
-      // filter duplicated links
       let urls = new Set<string>();
 
-      if (searchResult.status === "fulfilled" && searchResult.value?.data) {
-        console.log(
-          `Search result found ${searchResult.value.data.urls.length} links`,
-        );
-        urls = new Set([...Array.from(urls), ...searchResult.value.data.urls]);
-      }
+      const crawlResult = await this.crawlLinksInPage({
+        domain,
+        limit,
+        page: pageCrawl,
+      });
 
-      if (crawlResult.status === "fulfilled" && crawlResult.value?.data) {
-        console.log(
-          `Crawl result found ${crawlResult.value.data.urls.length} links`,
-        );
-        urls = new Set([...Array.from(urls), ...crawlResult.value.data.urls]);
-      }
+      if (crawlResult.data?.urls?.length) {
+        urls = new Set([...Array.from(urls), ...crawlResult.data.urls]);
+      } else {
+        const searchResult = await this.searchSiteLinks({
+          domain,
+          limit,
+          page: pageSearch,
+        });
 
-      if (
-        searchResult.status === "fulfilled" &&
-        !searchResult.value?.data &&
-        crawlResult.status === "fulfilled" &&
-        !crawlResult.value?.data
-      ) {
-        return {
-          status: 500,
-          message: `Get links failed - search: ${searchResult?.value?.message} - crawl: ${crawlResult?.value?.message}`,
-          data: null,
-        };
+        if (searchResult.data?.urls?.length) {
+          urls = new Set([...Array.from(urls), ...searchResult.data.urls]);
+        }
       }
 
       return {

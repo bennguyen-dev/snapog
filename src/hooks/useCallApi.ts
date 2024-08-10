@@ -52,18 +52,15 @@ export const useCallApi = <T, E = object, B = object>({
         if (handleSuccess) {
           handleSuccess(response.message, response.data);
         }
-      }
-      if (status === 400) setError(response.data);
-      if (status === 401) {
+      } else if (status === 400) {
+        setError(response.data);
+      } else if (status === 401) {
         router.push("/signin");
-      }
-      if (status === 403) {
+      } else if (status === 403) {
         router.replace("/403");
-      }
-      if (status === 404) {
+      } else if (status === 404) {
         router.replace("/404");
-      }
-      if (handleError && status !== 200) {
+      } else if (handleError && status !== 200) {
         handleError(status, response.message || "Internal server error");
       }
     } catch (err: any) {

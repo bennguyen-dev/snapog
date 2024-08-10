@@ -1,4 +1,4 @@
-import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage";
+import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
@@ -36,7 +36,7 @@ export default async function Home() {
   return (
     <>
       <BlockInputDemo />
-      <BlockCompareOGImage pagesInfo={initPageInfo} loading={false} />
+      <BlockCompareOGImage pagesInfo={initPageInfo} />
       <BlockHowItWorks />
       <BlockGetStartedNow />
       <BlockFAQs />

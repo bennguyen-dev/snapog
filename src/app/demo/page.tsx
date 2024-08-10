@@ -4,7 +4,7 @@ import { BlockInputDemo } from "@/components/block/BlockInputDemo";
 export default function DemoPage() {
   return (
     <>
-      <BlockInputDemo />
+      <BlockInputDemo hidePreview />
       <BlockGetStartedNow />
     </>
   );

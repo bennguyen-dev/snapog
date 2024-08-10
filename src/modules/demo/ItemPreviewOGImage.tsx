@@ -51,7 +51,7 @@ export const ItemPreviewOGImage = ({
       <div className="my-2 flex items-center justify-between gap-4 pl-3 pr-1">
         <ArrowLeft className="h-5 w-5" />
         <ArrowRight className="h-5 w-5 text-neutral-300" />
-        <RotateCw className="h-5 w-5" />
+        <RotateCw className={cx("h-5 w-5", loading && "animate-spin")} />
         {loading ? (
           <Skeleton className="h-10 w-full rounded-full bg-muted" />
         ) : (
@@ -63,12 +63,12 @@ export const ItemPreviewOGImage = ({
         )}
       </div>
       <div className="overflow-hidden rounded-md border border-solid">
-        {image && !loading && (
+        {image && (
           <div className="body">
             <Image
               src={image}
               width={1200}
-              height={628}
+              height={630}
               className="aspect-og-facebook"
               alt={url || ""}
               unoptimized={
@@ -77,7 +77,9 @@ export const ItemPreviewOGImage = ({
             />
           </div>
         )}
-        {loading && <Skeleton className="aspect-og-facebook h-full" />}
+        {loading && (
+          <Skeleton className="aspect-og-facebook h-full rounded-none" />
+        )}
         <div className="border-t border-border bg-slate-200 px-4 py-3">
           <div className="truncate text-xs uppercase text-gray-600">
             {loading ? <Skeleton className="mb-2 h-4 w-1/5" /> : domain}

@@ -39,7 +39,7 @@ export const MobileNavbar = ({ session }: IProps) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <div className="flex items-center justify-between gap-2 sm:hidden">
+      <div className="flex items-center justify-between gap-2 md:hidden">
         <SheetTrigger asChild>
           <Button
             variant="ghost"
@@ -53,7 +53,7 @@ export const MobileNavbar = ({ session }: IProps) => {
             <span className="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
-        <div className="sm:hidden">
+        <div className="md:hidden">
           <Link className="flex items-center space-x-2" href="/">
             <Image src="/logo.svg" alt="Logo" width={64} height={64} />
           </Link>

@@ -6,23 +6,22 @@ import { IGetDemoResponse } from "@/sevices/demo";
 
 interface IProps {
   pagesInfo?: IGetDemoResponse[];
-  loading?: boolean;
   domain?: string;
 }
 
-export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
+export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
   return (
     <div className="container py-8 sm:py-16">
       {domain && (
         <Typography
           variant="h1"
-          className="mx-auto max-w-screen-md py-8 text-center"
+          className="mx-auto max-w-screen-md pb-12 text-center sm:pb-16"
         >
           Open-graph image review for{" "}
           <span className="underline">{domain}</span>
         </Typography>
       )}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-8">
+      <div className="grid grid-cols-1 gap-x-12 pb-8 sm:grid-cols-2 sm:gap-8">
         <div>
           <Typography variant="h3" className="mb-4 text-center font-bold">
             Normal OG images
@@ -70,46 +69,36 @@ export const BlockCompareOGImage = ({ pagesInfo, loading, domain }: IProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-16 py-8">
-        {pagesInfo && !loading
-          ? pagesInfo?.map((page) => {
-              return (
-                <div
-                  className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
-                  key={page.url}
-                >
-                  <ItemPreviewOGImage
-                    url={page.url}
-                    image={page.ogImage}
-                    title={page.title}
-                    description={page.description}
-                    ribbon={{
-                      type: "error",
-                      content: "Normal",
-                    }}
-                  />
-                  <ItemPreviewOGImage
-                    url={page.url}
-                    image={page.smartOgImageBase64}
-                    title={page.title}
-                    description={page.description}
-                    ribbon={{
-                      type: "success",
-                      content: "Snap OG",
-                    }}
-                  />
-                </div>
-              );
-            })
-          : Array.from({ length: 2 }).map((_, index) => (
-              <div
-                className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
-                key={index}
-              >
-                <ItemPreviewOGImage loading={true} />
-                <ItemPreviewOGImage loading={true} />
-              </div>
-            ))}
+      <div className="flex flex-col gap-16">
+        {pagesInfo?.map((page) => {
+          return (
+            <div
+              className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
+              key={page.url}
+            >
+              <ItemPreviewOGImage
+                url={page.url}
+                image={page.ogImage}
+                title={page.title}
+                description={page.description}
+                ribbon={{
+                  type: "error",
+                  content: "Normal",
+                }}
+              />
+              <ItemPreviewOGImage
+                url={page.url}
+                image={page.smartOgImageBase64}
+                title={page.title}
+                description={page.description}
+                ribbon={{
+                  type: "success",
+                  content: "Snap OG",
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

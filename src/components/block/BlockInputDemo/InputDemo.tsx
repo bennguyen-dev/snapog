@@ -41,7 +41,7 @@ export const InputDemo = ({ className }: IProps) => {
   });
 
   const onViewDemo = (data: z.infer<typeof formSchema>) => {
-    router.push(`/demo/${getDomainName(data.domain)}`);
+    router.push(`/demo/${getDomainName(data?.domain)}`);
   };
 
   return (

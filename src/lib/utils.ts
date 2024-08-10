@@ -69,3 +69,13 @@ export function getLinkSmartOGImage({
 }) {
   return `https://${host}/api/get-image?url=${getUrlWithoutProtocol(url)}`;
 }
+
+export function getKeyPathsCache({
+  functionName,
+  value,
+}: {
+  functionName: string;
+  value?: any;
+}) {
+  return `${functionName}-${value}`;
+}
