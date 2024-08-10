@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { cx } from "class-variance-authority";
-import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, InfoIcon, RotateCw } from "lucide-react";
 
 import Image from "next/image";
 
@@ -63,18 +63,20 @@ export const ItemPreviewOGImage = ({
         )}
       </div>
       <div className="overflow-hidden rounded-md border border-solid">
-        {image && (
-          <div className="body">
-            <Image
-              src={image}
-              width={1200}
-              height={630}
-              className="aspect-og-facebook"
-              alt={url || ""}
-              unoptimized={
-                image.startsWith("http") || image.startsWith("https")
-              }
-            />
+        {image ? (
+          <Image
+            src={image}
+            width={1200}
+            height={630}
+            className="aspect-og-facebook"
+            alt={url || ""}
+            unoptimized={image.startsWith("http") || image.startsWith("https")}
+            priority
+          />
+        ) : (
+          <div className="flex aspect-og-facebook h-full flex-col items-center justify-center bg-muted">
+            <InfoIcon className="mb-4 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm">You're missing an image 🙁</p>
           </div>
         )}
         {loading && (

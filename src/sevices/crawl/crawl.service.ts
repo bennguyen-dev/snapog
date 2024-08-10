@@ -108,8 +108,11 @@ class CrawlService {
         };
       }
 
-      const getAbsoluteUrl = (relativeUrl: string) => {
+      const getAbsoluteUrl = (relativeUrl?: string | null) => {
         try {
+          if (!relativeUrl) {
+            return relativeUrl;
+          }
           return new URL(relativeUrl, urlWithProtocol).href;
         } catch (error) {
           return relativeUrl;
@@ -136,7 +139,7 @@ class CrawlService {
       // Convert ogImage to absolute URL if it's relative
       const absoluteOgImage = ogImage?.startsWith("http")
         ? ogImage
-        : getAbsoluteUrl(ogImage as string);
+        : getAbsoluteUrl(ogImage);
 
       return {
         status: 200,
