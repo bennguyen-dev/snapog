@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const time = new Date().getTime();
 
   return {
-    title: "Snap OG - Automate Social Images | Boost CTR with No Code",
+    title: "Snap OG - Automate your Open-Graph social images with screenshots",
     description:
       "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
     applicationName: "Snap OG",
@@ -48,7 +48,8 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "en",
       description:
         "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
-      title: "Snap OG - Automate Social Images | Boost CTR with No Code",
+      title:
+        "Snap OG - Automate your Open-Graph social images with screenshots",
       url: `https://${host}${pathname}`,
     },
     authors: [{ name: "Snap OG", url: `https://${host}` }],
@@ -90,7 +91,7 @@ export default function RootLayout({
         <Header />
         <SpeedInsights />
         <Analytics />
-        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-20">
+        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-16">
           {children}
         </main>
         <Footer />
