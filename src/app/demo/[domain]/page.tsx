@@ -26,9 +26,7 @@ async function BlockCompare({ domain }: { domain: string }) {
     },
   );
 
-  const demoRes = await getDemoCached({ domain, numberOfImages: 3 });
-
-  console.log("demoRes 😋", { demoRes }, "");
+  const demoRes = await getDemoCached({ domain });
 
   return (
     <BlockCompareOGImage

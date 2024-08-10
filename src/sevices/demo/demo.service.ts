@@ -7,8 +7,6 @@ class DemoService {
     domain,
     numberOfImages = 3,
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
-    console.log("domain 😋", { domain }, "");
-
     try {
       const urls = await crawlService.getLinksByDomain({
         domain,
