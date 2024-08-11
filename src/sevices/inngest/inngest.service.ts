@@ -129,13 +129,13 @@ class InngestService {
               url: page.url,
             });
 
-            if (!pageCrawlInfo.data?.screenShot) {
+            if (!pageCrawlInfo.data?.screenshot) {
               console.log(`No screenshot available for ${page.url}`);
               return;
             }
 
             const uploadRes = await storageService.uploadImage({
-              image: pageCrawlInfo.data.screenShot,
+              image: pageCrawlInfo.data.screenshot,
               key: ogImage.src,
             });
 

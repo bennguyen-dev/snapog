@@ -7,6 +7,7 @@ class DemoService {
     domain,
     numberOfImages = 3,
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
+    console.time(`Get demo for domain: ${domain}`);
     try {
       const urls = await crawlService.getLinksByDomain({
         domain,
@@ -31,12 +32,12 @@ class DemoService {
 
       // Filter out null values (in case of errors during screenshot generation)
       urlsInfo.forEach((result) => {
-        if (result.data && result.data.screenShot) {
-          const { url, ogImage, title, description, screenShot } = result.data;
+        if (result.data && result.data.screenshot) {
+          const { url, ogImage, title, description, screenshot } = result.data;
 
           results.push({
             url,
-            smartOgImageBase64: `data:image/png;base64,${screenShot.toString("base64")}`,
+            smartOgImageBase64: `data:image/png;base64,${screenshot.toString("base64")}`,
             title,
             description,
             ogImage,
@@ -56,6 +57,8 @@ class DemoService {
         message: "Internal Server Error",
         data: null,
       };
+    } finally {
+      console.timeEnd(`Get demo for domain: ${domain}`);
     }
   }
 }

@@ -63,7 +63,7 @@ export const ItemPreviewOGImage = ({
         )}
       </div>
       <div className="overflow-hidden rounded-md border border-solid">
-        {image ? (
+        {!loading && image && (
           <Image
             src={image}
             width={1200}
@@ -73,7 +73,8 @@ export const ItemPreviewOGImage = ({
             unoptimized={image.startsWith("http") || image.startsWith("https")}
             priority
           />
-        ) : (
+        )}{" "}
+        {!loading && !image && (
           <div className="flex aspect-og-facebook h-full flex-col items-center justify-center bg-muted">
             <InfoIcon className="mb-4 h-10 w-10 text-muted-foreground" />
             <p className="text-sm">You're missing an image 🙁</p>

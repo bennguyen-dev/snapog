@@ -14,6 +14,7 @@ import {
   ISearchSiteLinks,
   ISearchSiteLinksResponse,
 } from "@/sevices/crawl";
+import { crawlServiceV2 } from "@/sevices/crawlV2";
 
 class CrawlService {
   public async getInfoByUrl({
@@ -22,11 +23,12 @@ class CrawlService {
     console.time(`Total execution time crawl info for url: ${url}`);
 
     const urlWithProtocol = getUrlWithProtocol(url);
+    const host = new URL(urlWithProtocol).host;
 
     let browser: Browser | null = null;
 
     try {
-      console.time(`Total execution time launch browser for url: ${url}`);
+      console.time(`Launching browser for url: ${url}`);
       browser = await puppeteer.launch({
         args: [
           ...chromium.args,
@@ -42,15 +44,16 @@ class CrawlService {
           "--disable-gpu",
           "--disable-software-rasterizer",
           "--disable-dev-shm-usage",
+          "--disable-features=site-per-process",
         ],
-        defaultViewport: { width: 1200, height: 628 },
+        defaultViewport: { width: 1200, height: 630 },
         executablePath: await chromium.executablePath(
           `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
         ),
         headless: true,
         ignoreHTTPSErrors: true,
       });
-      console.timeEnd(`Total execution time launch browser for url: ${url}`);
+      console.timeEnd(`Launching browser for url: ${url}`);
 
       if (!browser) {
         return {
@@ -62,25 +65,25 @@ class CrawlService {
 
       const page = await browser.newPage();
       // Optimize page load
-      await page.setRequestInterception(true);
-      page.on("request", (req) => {
-        if (
-          ["image", "stylesheet", "font", "script", "media"].includes(
-            req.resourceType(),
-          )
-        ) {
-          req.abort();
-        } else {
-          req.continue();
-        }
-      });
+      // await page.setRequestInterception(true);
+      // page.on("request", (req) => {
+      //   if (
+      //     ["image", "stylesheet", "font", "script", "media"].includes(
+      //       req.resourceType(),
+      //     )
+      //   ) {
+      //     req.abort();
+      //   } else {
+      //     req.continue();
+      //   }
+      // });
 
-      console.time(`Total execution time goto url: ${urlWithProtocol}`);
+      console.time(`Go to url: ${urlWithProtocol}`);
       const response = await page.goto(urlWithProtocol, {
-        waitUntil: "domcontentloaded",
-        timeout: 10000,
+        waitUntil: "networkidle2",
+        timeout: 60000,
       });
-      console.timeEnd(`Total execution time goto url: ${urlWithProtocol}`);
+      console.timeEnd(`Go to url: ${urlWithProtocol}`);
 
       if (!response || !response.ok()) {
         await browser.close();
@@ -100,7 +103,6 @@ class CrawlService {
 
       if (!bodyContentExist) {
         console.error(`No body content found on page: ${url}`);
-        await browser.close();
         return {
           status: 500,
           message: `No body content found on page: ${url}`,
@@ -108,20 +110,12 @@ class CrawlService {
         };
       }
 
-      const getAbsoluteUrl = (relativeUrl?: string | null) => {
-        try {
-          if (!relativeUrl) {
-            return relativeUrl;
-          }
-          return new URL(relativeUrl, urlWithProtocol).href;
-        } catch (error) {
-          return relativeUrl;
-        }
-      };
+      // wait for 2 seconds
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      console.time(`Total execution time screenshot: ${url}`);
+      console.time(`Screenshot and get info: ${url}`);
       const [screenshot, title, description, ogImage] = await Promise.all([
-        this.screenshotByScreenshotMachine({ url }),
+        page.screenshot({ optimizeForSpeed: true }),
         page.title(),
         page
           .$eval('meta[name="description"]', (el) => el.getAttribute("content"))
@@ -132,21 +126,22 @@ class CrawlService {
           )
           .catch(() => undefined),
       ]);
-      console.timeEnd(`Total execution time screenshot: ${url}`);
+      console.timeEnd(`Screenshot and get info: ${url}`);
 
       await page.close();
 
       // Convert ogImage to absolute URL if it's relative
-      const absoluteOgImage = ogImage?.startsWith("http")
-        ? ogImage
-        : getAbsoluteUrl(ogImage);
+      let absoluteOgImage = ogImage;
+      if (ogImage && !ogImage.startsWith("http")) {
+        absoluteOgImage = `https://${host}${ogImage}`;
+      }
 
       return {
         status: 200,
         message: "Info fetched successfully",
         data: {
           url: urlWithProtocol,
-          screenShot: screenshot,
+          screenshot: screenshot,
           title,
           description: description || undefined,
           ogImage: absoluteOgImage || undefined,
@@ -200,7 +195,6 @@ class CrawlService {
         };
       }
 
-      console.time(`Link extraction for site: ${homepage}`);
       const internalLinks = await page.evaluate(
         (homepage, limit) => {
           const uniqueLinks = new Set<string>();
@@ -274,7 +268,6 @@ class CrawlService {
         homepage,
         limit,
       );
-      console.timeEnd(`Link extraction for site: ${homepage}`);
 
       console.log(`Found ${internalLinks.length} important internal links`);
       return {
@@ -314,9 +307,6 @@ class CrawlService {
 
       while (uniqueLinks.size < limit) {
         const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&start=${(currentPage - 1) * 10}`;
-        console.log(`Navigating to page ${currentPage}: ${searchUrl}`);
-
-        console.time(`Page ${currentPage} navigation and processing`);
         await page.goto(searchUrl, { waitUntil: "networkidle0" });
 
         const links = await page.evaluate(
@@ -363,24 +353,14 @@ class CrawlService {
               }
             });
 
-            console.log(`Found ${uniqueLinks.size} unique links on this page`);
             return Array.from(uniqueLinks);
           },
           homepage,
           limit - uniqueLinks.size,
         );
 
-        console.timeEnd(`Page ${currentPage} navigation and processing`);
-
         const newLinksCount = links.length;
         uniqueLinks = new Set([...Array.from(uniqueLinks), ...links]);
-
-        console.log(`Page ${currentPage} results:`);
-        console.log(`- Found ${newLinksCount} new links`);
-        console.log(`- Total unique links so far: ${uniqueLinks.size}`);
-        console.log(
-          `- Remaining links to fetch: ${Math.max(0, limit - uniqueLinks.size)}`,
-        );
 
         if (newLinksCount === 0) {
           console.log("No more results found. Stopping search.");
@@ -418,6 +398,7 @@ class CrawlService {
   }: IGetLinksByDomain): Promise<IResponse<IGetLinksByDomainResponse | null>> {
     let browser: Browser | null = null;
 
+    console.time(`Execute get links of domain: ${domain}`);
     try {
       browser = await puppeteer.launch({
         args: [
@@ -454,23 +435,33 @@ class CrawlService {
 
       let urls = new Set<string>();
 
-      const crawlResult = await this.crawlLinksInPage({
-        domain,
-        limit,
-        page: pageCrawl,
-      });
-
-      if (crawlResult.data?.urls?.length) {
-        urls = new Set([...Array.from(urls), ...crawlResult.data.urls]);
-      } else {
-        const searchResult = await this.searchSiteLinks({
+      const thirdPartyResult =
+        await crawlServiceV2.getLinksOfDomainWithWeeTools({
           domain,
           limit,
-          page: pageSearch,
         });
 
-        if (searchResult.data?.urls?.length) {
-          urls = new Set([...Array.from(urls), ...searchResult.data.urls]);
+      if (thirdPartyResult.data?.urls?.length) {
+        urls = new Set([...Array.from(urls), ...thirdPartyResult.data.urls]);
+      } else {
+        const crawlResult = await this.crawlLinksInPage({
+          domain,
+          limit,
+          page: pageCrawl,
+        });
+
+        if (crawlResult.data?.urls?.length) {
+          urls = new Set([...Array.from(urls), ...crawlResult.data.urls]);
+        } else {
+          const searchResult = await this.searchSiteLinks({
+            domain,
+            limit,
+            page: pageSearch,
+          });
+
+          if (searchResult.data?.urls?.length) {
+            urls = new Set([...Array.from(urls), ...searchResult.data.urls]);
+          }
         }
       }
 
@@ -491,6 +482,7 @@ class CrawlService {
       };
     } finally {
       await browser?.close();
+      console.time(`Execute get links of domain: ${domain}`);
     }
   }
 
@@ -518,9 +510,9 @@ class CrawlService {
     const apiUrl = `https://api.screenshotmachine.com?${params.toString()}`;
 
     try {
-      console.time(`execute screenshotmachine api for ${url}`);
+      console.time(`Execute screenshotmachine api for ${url}`);
       const screenshotmachineRes = await fetch(apiUrl);
-      console.timeEnd(`execute screenshotmachine api for ${url}`);
+      console.timeEnd(`Execute screenshotmachine api for ${url}`);
 
       if (!screenshotmachineRes.ok) {
         throw new Error(

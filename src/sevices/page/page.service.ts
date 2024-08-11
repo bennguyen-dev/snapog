@@ -67,7 +67,7 @@ class PageService {
       };
     }
 
-    if (!pageCrawlInfo.data.screenShot) {
+    if (!pageCrawlInfo.data.screenshot) {
       return {
         message: "Failed to generate image",
         status: 400,
@@ -81,7 +81,7 @@ class PageService {
     const key = `${folderName}/${fileName}`;
 
     const uploadRes = await storageService.uploadImage({
-      image: pageCrawlInfo.data?.screenShot,
+      image: pageCrawlInfo.data?.screenshot,
       key: key,
     });
 

@@ -6,7 +6,7 @@ export interface IGetInfoByUrl {
 
 export interface IGetInfoByUrlResponse {
   url: string;
-  screenShot: Buffer;
+  screenshot: Buffer;
   title?: string;
   description?: string;
   ogImage?: string;
