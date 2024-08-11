@@ -1,10 +1,7 @@
-import { revalidateTag } from "next/cache";
-
 import { IMAGE_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
 import {
-  getKeyPathsCache,
   getUrlWithoutProtocol,
   getUrlWithProtocol,
   sanitizeFilename,
@@ -131,22 +128,17 @@ class PageService {
         },
       });
 
-      revalidateTag(
-        getKeyPathsCache({
-          functionName: "imageService.getImageByUrl",
-          value: { url: urlWithoutProtocol },
-        }),
-      );
-
       return {
         message: "Page created successfully",
         status: 200,
         data: page as IPageDetail,
       };
     } catch (error) {
+      console.error(`Error creating page: ${url}`, error);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
