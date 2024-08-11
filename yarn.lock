@@ -1671,6 +1671,41 @@
     "@babel/helper-validator-identifier" "^7.24.5"
     to-fast-properties "^2.0.0"
 
+"@cliqz/adblocker-content@^1.31.3":
+  version "1.31.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-content/-/adblocker-content-1.31.3.tgz#07a6322d4b95c4c109c88ddc7fdb7bde879debf0"
+  integrity sha512-yFqpTcBySLT/c4Q9LZade3q23UQLOKq3bwgFw/Xqn+n/jQv3VYELawxIWJIVPixuxwY19I1c9MqFinFIRCUgiw==
+  dependencies:
+    "@cliqz/adblocker-extended-selectors" "^1.31.3"
+
+"@cliqz/adblocker-extended-selectors@^1.31.3":
+  version "1.31.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.31.3.tgz#478d8710aafbbf2a66a8946d4101daa07854711d"
+  integrity sha512-q9e/Rk+Bvn99qH4EDC6WVuS/dds9u/wE6MsqfCQgvQvd6CPPTXKo1ZPLTGj1OWl0+OY7CqROwNH0uAQcPgPHkA==
+
+"@cliqz/adblocker-puppeteer@^1.31.3":
+  version "1.31.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-puppeteer/-/adblocker-puppeteer-1.31.3.tgz#66661bea26129434065b18bd6e0b7207cb21b2e6"
+  integrity sha512-Pel81HytLjO/D7IQj4RfBS/t3kp2bYFWCrgHGdt/36CMqlcRcUIppEG6iUX+Elns4OEMa4hGCTvogUTSSe7bqg==
+  dependencies:
+    "@cliqz/adblocker" "^1.31.3"
+    "@cliqz/adblocker-content" "^1.31.3"
+    tldts-experimental "^6.0.14"
+
+"@cliqz/adblocker@^1.31.3":
+  version "1.31.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.31.3.tgz#78116f248becbc092594878bd69863e14493981e"
+  integrity sha512-oi6Euq3waPOt4Hlu8aQmkwBS07VpvL+niPN//v3lV6wkPUozTGMsHjVQx2BEvUyZAvIx2nDWHCBRU4Syt4igqA==
+  dependencies:
+    "@cliqz/adblocker-content" "^1.31.3"
+    "@cliqz/adblocker-extended-selectors" "^1.31.3"
+    "@remusao/guess-url-type" "^1.3.0"
+    "@remusao/small" "^1.2.1"
+    "@remusao/smaz" "^1.9.1"
+    "@types/chrome" "^0.0.269"
+    "@types/firefox-webext-browser" "^120.0.0"
+    tldts-experimental "^6.0.14"
+
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz#a23514e8fb9af1269d5f7788aa556798d61c6b59"
@@ -2516,6 +2551,41 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/rect/-/rect-1.1.0.tgz#f817d1d3265ac5415dadc67edab30ae196696438"
   integrity sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==
 
+"@remusao/guess-url-type@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@remusao/guess-url-type/-/guess-url-type-1.3.0.tgz#4d1b73f13d91f5e7775c461be782059ab5da83ad"
+  integrity sha512-SNSJGxH5ckvxb3EUHj4DqlAm/bxNxNv2kx/AESZva/9VfcBokwKNS+C4D1lQdWIDM1R3d3UG+xmVzlkNG8CPTQ==
+
+"@remusao/small@^1.2.1":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@remusao/small/-/small-1.3.0.tgz#14d43c84ed723579512c6aa1ece6c576861e3418"
+  integrity sha512-bydAhJI+ywmg5xMUcbqoR8KahetcfkFywEZpsyFZ8EBofilvWxbXnMSe4vnjDI1Y+SWxnNhR4AL/2BAXkf4b8A==
+
+"@remusao/smaz-compress@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@remusao/smaz-compress/-/smaz-compress-1.10.0.tgz#ed8686c53f0cc17cd882ce8497de8958056bd93a"
+  integrity sha512-E/lC8OSU+3bQrUl64vlLyPzIxo7dxF2RvNBe9KzcM4ax43J/d+YMinmMztHyCIHqRbz7rBCtkp3c0KfeIbHmEg==
+  dependencies:
+    "@remusao/trie" "^1.5.0"
+
+"@remusao/smaz-decompress@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@remusao/smaz-decompress/-/smaz-decompress-1.10.0.tgz#50608337c9ef94fe32dfaf6bfd8859e6f90b9bf3"
+  integrity sha512-aA5ImUH480Pcs5/cOgToKmFnzi7osSNG6ft+7DdmQTaQEEst3nLq3JLlBEk+gwidURymjbx6DYs60LHaZ415VQ==
+
+"@remusao/smaz@^1.9.1":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@remusao/smaz/-/smaz-1.10.0.tgz#faf83d8bbc4b93a5b70b8dca333526fff8f3c864"
+  integrity sha512-GQzCxmmMpLkyZwcwNgz8TpuBEWl0RUQa8IcvKiYlPxuyYKqyqPkCr0hlHI15ckn3kDUPS68VmTVgyPnLNrdVmg==
+  dependencies:
+    "@remusao/smaz-compress" "^1.10.0"
+    "@remusao/smaz-decompress" "^1.10.0"
+
+"@remusao/trie@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@remusao/trie/-/trie-1.5.0.tgz#5afac2b03fec45fdd715a270f73fb1471d9da4eb"
+  integrity sha512-UX+3utJKgwCsg6sUozjxd38gNMVRXrY4TNX9VvCdSrlZBS1nZjRPi98ON3QjRAdf6KCguJFyQARRsulTeqQiPg==
+
 "@rushstack/eslint-patch@^1.3.3":
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.2.tgz#053f1540703faa81dea2966b768ee5581c66aeda"
@@ -3134,6 +3204,14 @@
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
 
+"@types/chrome@^0.0.269":
+  version "0.0.269"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.269.tgz#5bc2a536bb72a3332119742f31b42b5250d39905"
+  integrity sha512-vF7x8YywnhXX2F06njQ/OE7a3Qeful43C5GUOsUksXWk89WoSFUU3iLeZW8lDpVO9atm8iZIEiLQTRC3H7NOXQ==
+  dependencies:
+    "@types/filesystem" "*"
+    "@types/har-format" "*"
+
 "@types/cookie@0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.6.0.tgz#eac397f28bf1d6ae0ae081363eca2f425bedf0d5"
@@ -3145,6 +3223,28 @@
   integrity sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==
   dependencies:
     "@types/ms" "*"
+
+"@types/filesystem@*":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/filesystem/-/filesystem-0.0.36.tgz#7227c2d76bfed1b21819db310816c7821d303857"
+  integrity sha512-vPDXOZuannb9FZdxgHnqSwAG/jvdGM8Wq+6N4D/d80z+D4HWH+bItqsZaVRQykAn6WEVeEkLm2oQigyHtgb0RA==
+  dependencies:
+    "@types/filewriter" "*"
+
+"@types/filewriter@*":
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/@types/filewriter/-/filewriter-0.0.33.tgz#d9d611db9d9cd99ae4e458de420eeb64ad604ea8"
+  integrity sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==
+
+"@types/firefox-webext-browser@^120.0.0":
+  version "120.0.4"
+  resolved "https://registry.yarnpkg.com/@types/firefox-webext-browser/-/firefox-webext-browser-120.0.4.tgz#27eead781051b2e681a344dd2983735faadd4343"
+  integrity sha512-lBrpf08xhiZBigrtdQfUaqX1UauwZ+skbFiL8u2Tdra/rklkKadYmIzTwkNZSWtuZ7OKpFqbE2HHfDoFqvZf6w==
+
+"@types/har-format@*":
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/@types/har-format/-/har-format-1.2.15.tgz#f352493638c2f89d706438a19a9eb300b493b506"
+  integrity sha512-RpQH4rXLuvTXKR0zqHq3go0RVXYv/YVqv4TnPH95VbwUxZdQlK1EtcMvQvMpDngHbt13Csh9Z4qT9AbkiQH5BA==
 
 "@types/hast@^2.0.0":
   version "2.3.10"
@@ -6935,6 +7035,18 @@ through@^2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
+
+tldts-core@^6.1.39:
+  version "6.1.39"
+  resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-6.1.39.tgz#43f0912f9cbbf2511c7146d411417c126c245200"
+  integrity sha512-+Qib8VaRq6F56UjP4CJXd30PI4s3hFumDywUlsbiEWoA8+lfAaWNTLr3e6/zZOgHzVyon4snHaybeFHd8C0j/A==
+
+tldts-experimental@^6.0.14:
+  version "6.1.39"
+  resolved "https://registry.yarnpkg.com/tldts-experimental/-/tldts-experimental-6.1.39.tgz#6d53f164053b7f9e89fb049d677d32edcc832542"
+  integrity sha512-BX/rK3bM7EZeDxgnKFJPUYQ2wcA/zXy1HdR9wT6iZFi8JJj4P4I+u3GTR+wkQaSB1xNhgbWrGvNt4krQnKg2rw==
+  dependencies:
+    tldts-core "^6.1.39"
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

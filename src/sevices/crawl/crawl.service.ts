@@ -1,3 +1,4 @@
+import { PuppeteerBlocker } from "@cliqz/adblocker-puppeteer";
 import chromium from "@sparticuz/chromium-min";
 import puppeteer, { Browser } from "puppeteer-core";
 
@@ -28,6 +29,12 @@ class CrawlService {
     let browser: Browser | null = null;
 
     try {
+      console.time(`Blocker for url: ${url}`);
+      const blocker = await PuppeteerBlocker.fromLists(fetch, [
+        "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
+      ]);
+      console.timeEnd(`Blocker for url: ${url}`);
+
       console.time(`Launching browser for url: ${url}`);
       browser = await puppeteer.launch({
         args: [
@@ -67,6 +74,7 @@ class CrawlService {
       await page.setUserAgent(
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
       );
+      await blocker.enableBlockingInPage(page);
       // Optimize page load
       // await page.setRequestInterception(true);
       // page.on("request", (req) => {
@@ -113,21 +121,52 @@ class CrawlService {
         };
       }
 
-      // wait for 2 seconds
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // wait for 3 seconds
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      console.time(`Screenshot and get info: ${url}`);
-      const [screenshot, title, description, ogImage] = await Promise.all([
-        page.screenshot({ optimizeForSpeed: true }),
-        page.title(),
-        page
+      const getTitle = async () => {
+        console.time(`Get title: ${url}`);
+        const title = await page.title();
+        console.timeEnd(`Get title: ${url}`);
+        return title;
+      };
+
+      const getDescription = async () => {
+        console.time(`Get description: ${url}`);
+        const description = await page
           .$eval('meta[name="description"]', (el) => el.getAttribute("content"))
-          .catch(() => ""),
-        page
+          .catch(() => "");
+        console.timeEnd(`Get description: ${url}`);
+        return description;
+      };
+
+      const getOgImage = async () => {
+        console.time(`Get ogImage: ${url}`);
+        const ogImage = await page
           .$eval('meta[property="og:image"]', (el) =>
             el.getAttribute("content"),
           )
-          .catch(() => undefined),
+          .catch(() => undefined);
+        console.timeEnd(`Get ogImage: ${url}`);
+        return ogImage;
+      };
+
+      const getScreenshot = async () => {
+        console.time(`Get screenshot: ${url}`);
+        const screenshot = await page.screenshot({
+          optimizeForSpeed: true,
+          omitBackground: true,
+        });
+        console.timeEnd(`Get screenshot: ${url}`);
+        return screenshot;
+      };
+
+      console.time(`Screenshot and get info: ${url}`);
+      const [screenshot, title, description, ogImage] = await Promise.all([
+        getScreenshot(),
+        getTitle(),
+        getDescription(),
+        getOgImage(),
       ]);
       console.timeEnd(`Screenshot and get info: ${url}`);
 

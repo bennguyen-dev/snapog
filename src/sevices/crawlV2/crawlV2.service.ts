@@ -43,8 +43,6 @@ class CrawlServiceV2 {
       // Filter and limit internal links that start with the baseUrl and do not start with "mailto:"
       const filteredInternalLinks = new Set<string>();
 
-      filteredInternalLinks.add(baseUrl);
-
       if (!result.internal) {
         return {
           status: 200,
