@@ -50,7 +50,7 @@ class CrawlService {
         executablePath: await chromium.executablePath(
           `https://${process.env.AWS_CDN_HOSTNAME}/chromium/chromium-v123.0.1-pack.tar`,
         ),
-        headless: true,
+        headless: "shell",
         ignoreHTTPSErrors: true,
       });
       console.timeEnd(`Launching browser for url: ${url}`);
@@ -64,6 +64,9 @@ class CrawlService {
       }
 
       const page = await browser.newPage();
+      await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      );
       // Optimize page load
       // await page.setRequestInterception(true);
       // page.on("request", (req) => {
@@ -80,7 +83,7 @@ class CrawlService {
 
       console.time(`Go to url: ${urlWithProtocol}`);
       const response = await page.goto(urlWithProtocol, {
-        waitUntil: "networkidle2",
+        waitUntil: "domcontentloaded",
         timeout: 60000,
       });
       console.timeEnd(`Go to url: ${urlWithProtocol}`);
