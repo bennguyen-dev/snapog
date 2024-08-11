@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { inngest } from "@/lib/inngest";
-import { crawlService } from "@/sevices/crawl";
+import { crawlServiceV2 } from "@/sevices/crawlV2";
 import { pageService } from "@/sevices/page";
 import { siteService } from "@/sevices/site";
 import { storageService } from "@/sevices/storage";
@@ -20,7 +20,7 @@ class InngestService {
           }
 
           // Get internal links
-          const urlsResult = await crawlService.getLinksByDomain({
+          const urlsResult = await crawlServiceV2.getInternalLinksOfDomain({
             domain: site.data.domain as string,
             limit: 3, // TODO: make it configurable later when user has pricing
           });
@@ -125,8 +125,11 @@ class InngestService {
             const cacheDurationDays = page.cacheDurationDays ?? 0;
 
             console.log(`Processing page: ${page.url}`);
-            const pageCrawlInfo = await crawlService.getInfoByUrl({
+            const pageCrawlInfo = await crawlServiceV2.crawlInfoByUrl({
               url: page.url,
+              configScreenshot: {
+                cacheLimit: 0,
+              },
             });
 
             if (!pageCrawlInfo.data?.screenshot) {

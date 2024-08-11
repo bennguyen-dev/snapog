@@ -1,5 +1,5 @@
 import { IResponse } from "@/lib/type";
-import { crawlService } from "@/sevices/crawl";
+import { crawlServiceV2 } from "@/sevices/crawlV2";
 import { IGetDemo, IGetDemoResponse } from "@/sevices/demo";
 
 class DemoService {
@@ -9,10 +9,12 @@ class DemoService {
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
     console.time(`Get demo for domain: ${domain}`);
     try {
-      const urls = await crawlService.getLinksByDomain({
+      const urls = await crawlServiceV2.getInternalLinksOfDomain({
         domain,
         limit: numberOfImages,
       });
+
+      console.log("urls 😋", { urls }, "");
 
       if (!urls.data) {
         return {
@@ -24,7 +26,7 @@ class DemoService {
 
       // Generate screenshots for each page concurrently
       const urlsInfoPromises = urls.data?.urls.map((url) =>
-        crawlService.getInfoByUrl({ url }),
+        crawlServiceV2.crawlInfoByUrl({ url }),
       );
       const urlsInfo = await Promise.all(urlsInfoPromises);
 

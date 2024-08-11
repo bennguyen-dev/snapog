@@ -1,12 +1,15 @@
+import { revalidateTag } from "next/cache";
+
 import { IMAGE_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
 import {
-  getUrlWithProtocol,
+  getKeyPathsCache,
   getUrlWithoutProtocol,
+  getUrlWithProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { crawlService } from "@/sevices/crawl";
+import { crawlServiceV2 } from "@/sevices/crawlV2";
 import { ogImageService } from "@/sevices/ogImage";
 import {
   ICreatePage,
@@ -56,8 +59,11 @@ class PageService {
     }
 
     // Check if page already exists
-    const pageCrawlInfo = await crawlService.getInfoByUrl({
+    const pageCrawlInfo = await crawlServiceV2.crawlInfoByUrl({
       url: urlWithProtocol,
+      configScreenshot: {
+        cacheLimit: 0,
+      },
     });
     if (!pageCrawlInfo.data) {
       return {
@@ -124,6 +130,13 @@ class PageService {
           OGImage: true,
         },
       });
+
+      revalidateTag(
+        getKeyPathsCache({
+          functionName: "imageService.getImageByUrl",
+          value: { url: urlWithoutProtocol },
+        }),
+      );
 
       return {
         message: "Page created successfully",

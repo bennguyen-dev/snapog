@@ -15,7 +15,6 @@ import {
   ISearchSiteLinks,
   ISearchSiteLinksResponse,
 } from "@/sevices/crawl";
-import { crawlServiceV2 } from "@/sevices/crawlV2";
 
 class CrawlService {
   public async getInfoByUrl({
@@ -477,33 +476,23 @@ class CrawlService {
 
       let urls = new Set<string>();
 
-      const thirdPartyResult =
-        await crawlServiceV2.getLinksOfDomainWithWeeTools({
-          domain,
-          limit,
-        });
+      const crawlResult = await this.crawlLinksInPage({
+        domain,
+        limit,
+        page: pageCrawl,
+      });
 
-      if (thirdPartyResult.data?.urls?.length) {
-        urls = new Set([...Array.from(urls), ...thirdPartyResult.data.urls]);
+      if (crawlResult.data?.urls?.length) {
+        urls = new Set([...Array.from(urls), ...crawlResult.data.urls]);
       } else {
-        const crawlResult = await this.crawlLinksInPage({
+        const searchResult = await this.searchSiteLinks({
           domain,
           limit,
-          page: pageCrawl,
+          page: pageSearch,
         });
 
-        if (crawlResult.data?.urls?.length) {
-          urls = new Set([...Array.from(urls), ...crawlResult.data.urls]);
-        } else {
-          const searchResult = await this.searchSiteLinks({
-            domain,
-            limit,
-            page: pageSearch,
-          });
-
-          if (searchResult.data?.urls?.length) {
-            urls = new Set([...Array.from(urls), ...searchResult.data.urls]);
-          }
+        if (searchResult.data?.urls?.length) {
+          urls = new Set([...Array.from(urls), ...searchResult.data.urls]);
         }
       }
 
@@ -528,7 +517,7 @@ class CrawlService {
     }
   }
 
-  private async screenshotByScreenshotMachine({
+  public async screenshotByScreenshotMachine({
     url,
     config,
   }: IScreenshotByScreenshotmachine): Promise<Buffer> {
@@ -553,16 +542,14 @@ class CrawlService {
 
     try {
       console.time(`Execute screenshotmachine api for ${url}`);
-      const screenshotmachineRes = await fetch(apiUrl);
+      const res = await fetch(apiUrl);
       console.timeEnd(`Execute screenshotmachine api for ${url}`);
 
-      if (!screenshotmachineRes.ok) {
-        throw new Error(
-          `Failed to fetch screenshot: ${screenshotmachineRes.status}`,
-        );
+      if (!res.ok) {
+        throw new Error(`Failed to fetch screenshot: ${res.status}`);
       }
 
-      return Buffer.from(await screenshotmachineRes.arrayBuffer());
+      return Buffer.from(await res.arrayBuffer());
     } catch (error) {
       console.error("Error fetching screenshot:", error);
 

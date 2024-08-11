@@ -1,109 +1,40 @@
+import { JSDOM } from "jsdom";
+
 import { IResponse } from "@/lib/type";
 import { getUrlWithProtocol } from "@/lib/utils";
 import {
-  IGetLinksOfDomain,
-  IGetLinksOfDomainResponse,
+  ICrawlInfoOfUrl,
+  ICrawlInfoOfUrlResponse,
+  IGetInternalLinksOfDomain,
+  IGetInternalLinksOfDomainResponse,
+  IGetMetadataOfUrl,
+  IGetMetadataOfUrlResponse,
+  IScreenshotByScreenshotmachine,
 } from "@/sevices/crawlV2";
 
 class CrawlServiceV2 {
-  public async getLinksOfDomainWithWeeTools({
-    domain,
-    limit,
-  }: IGetLinksOfDomain): Promise<IResponse<IGetLinksOfDomainResponse | null>> {
-    const baseUrl = getUrlWithProtocol(domain);
-
-    const headers = {
-      "accept-language": "en-US,en;q=0.9",
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-    };
-    const data = `data=${baseUrl}`;
-
-    console.time(`Get links with wee.tools for domain: ${domain}`);
+  public async crawlInfoByUrl({
+    url,
+    configScreenshot,
+  }: ICrawlInfoOfUrl): Promise<IResponse<ICrawlInfoOfUrlResponse | null>> {
+    console.time(`Crawl info of url: ${url}`);
     try {
-      const response = await fetch(
-        "https://wee.tools/links-extractor/link_extract.php",
-        {
-          method: "POST",
-          headers: headers,
-          body: data,
-        },
-      );
-
-      if (!response.ok) {
-        console.error("Error:", response.statusText);
-        return {
-          status: 500,
-          message: response.statusText,
-          data: null,
-        };
-      }
-
-      const result: any = await response.json();
-
-      // Filter and limit internal links that start with the baseUrl and do not start with "mailto:"
-      const filteredInternalLinks = new Set<string>();
-
-      if (!result.internal) {
-        return {
-          status: 200,
-          message: "Success",
-          data: {
-            urls: [],
-          },
-        };
-      }
-
-      for (let link of Object.values<any>(result.internal)) {
-        link = link.split("|")[0];
-        if (
-          link.startsWith(baseUrl) &&
-          !link.includes("mailto:") &&
-          !link.includes("tel:") &&
-          !link.includes("sms:") &&
-          !link.includes("skype:") &&
-          !link.includes("whatsapp:") &&
-          !link.includes("callto:") &&
-          !link.includes("viber:") &&
-          !link.includes("telegram:")
-        ) {
-          const url = new URL(link);
-          url.search = "";
-
-          filteredInternalLinks.add(url.toString());
-          if (limit && filteredInternalLinks.size >= limit) {
-            break;
-          }
-        }
-      }
-
-      // Sort the links, placing those with paths before those with fragments
-      const sortedInternalLinks = Array.from(filteredInternalLinks).sort(
-        (a, b) => {
-          const aHasHash = a.includes("#");
-          const bHasHash = b.includes("#");
-
-          // Links with paths come before those with fragments
-          if (!aHasHash && bHasHash) return -1;
-          if (aHasHash && !bHasHash) return 1;
-          return 0;
-        },
-      );
-
-      // Limit the number of URLs based on the provided limit
-      const limitedInternalLinks = sortedInternalLinks.slice(
-        0,
-        limit,
-      ) as string[];
-
+      const metadata = await this.getMetadataOfUrl({ url });
+      const screenShot = await this.screenshotByScreenshotMachine({
+        url,
+        config: configScreenshot,
+      });
       return {
         status: 200,
-        message: "Links fetched successfully",
+        message: "Crawl info fetched successfully",
         data: {
-          urls: limitedInternalLinks,
+          url,
+          ...metadata.data,
+          screenshot: screenShot,
         },
       };
     } catch (error) {
-      console.error("Error fetching internal links:", error);
+      console.error("Error fetching or parsing the website:", error);
       return {
         status: 500,
         message:
@@ -111,7 +42,180 @@ class CrawlServiceV2 {
         data: null,
       };
     } finally {
-      console.timeEnd(`Get links with wee.tools for domain: ${domain}`);
+      console.timeEnd(`Crawl info of url: ${url}`);
+    }
+  }
+
+  public async getInternalLinksOfDomain({
+    domain,
+    limit = Infinity,
+  }: IGetInternalLinksOfDomain): Promise<
+    IResponse<IGetInternalLinksOfDomainResponse | null>
+  > {
+    console.time(`Get internal links of domain: ${domain}`);
+    try {
+      const baseUrl = new URL(getUrlWithProtocol(domain));
+
+      const response = await fetch(baseUrl.toString());
+      const html = await response.text();
+
+      const dom = new JSDOM(html);
+      const doc = dom.window.document;
+
+      const linkElements = Array.from(doc.getElementsByTagName("a"));
+      const uniqueLinks = new Set<string>();
+
+      for (const element of linkElements) {
+        if (uniqueLinks.size >= limit) break;
+
+        const href = element.getAttribute("href");
+        if (href) {
+          try {
+            const linkUrl = new URL(href, baseUrl);
+
+            // Check if it's an internal link and not a mailto
+            if (
+              linkUrl.hostname === baseUrl.hostname &&
+              !href.startsWith("mailto:") &&
+              !href.startsWith("sms:") &&
+              !href.startsWith("skype:") &&
+              !href.startsWith("whatsapp:") &&
+              !href.startsWith("callto:") &&
+              !href.startsWith("viber:") &&
+              !href.startsWith("telegram:")
+            ) {
+              // Normalize the URL
+              let normalizedUrl = `${linkUrl.protocol}//${linkUrl.hostname}${linkUrl.pathname}`;
+              normalizedUrl = normalizedUrl.replace(/\/$/, ""); // Remove trailing slash
+              normalizedUrl = normalizedUrl.split("#")[0]; // Remove hash
+              normalizedUrl = normalizedUrl.split("?")[0]; // Remove search string
+
+              uniqueLinks.add(normalizedUrl);
+            }
+          } catch (error) {
+            console.error("Error processing link:", href, error);
+          }
+        }
+      }
+
+      return {
+        status: 200,
+        message: "Internal links fetched successfully",
+        data: {
+          urls: Array.from(uniqueLinks),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching links:", error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
+    } finally {
+      console.timeEnd(`Get internal links of domain: ${domain}`);
+    }
+  }
+
+  private async getMetadataOfUrl({
+    url,
+  }: IGetMetadataOfUrl): Promise<IResponse<IGetMetadataOfUrlResponse | null>> {
+    console.time(`Get metadata of url: ${url}`);
+    try {
+      const response = await fetch(url);
+      const html = await response.text();
+      const dom = new JSDOM(html);
+      const doc = dom.window.document;
+
+      const baseUrl = new URL(url);
+
+      const title = doc.querySelector("title")?.textContent || "";
+      const description =
+        doc
+          .querySelector('meta[name="description"]')
+          ?.getAttribute("content") || "";
+
+      let ogImage =
+        doc
+          .querySelector('meta[property="og:image"]')
+          ?.getAttribute("content") || "";
+      if (ogImage && !ogImage.startsWith("http")) {
+        ogImage = new URL(ogImage, baseUrl).href;
+      }
+
+      let favicon =
+        doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+        doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
+        "/favicon.ico";
+      favicon = new URL(favicon, baseUrl).href;
+
+      return {
+        status: 200,
+        message: "Metadata fetched successfully",
+        data: {
+          url,
+          title,
+          description,
+          ogImage,
+          favicon,
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching or parsing the website:", error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
+    } finally {
+      console.timeEnd(`Get metadata of url: ${url}`);
+    }
+  }
+
+  private async screenshotByScreenshotMachine({
+    url,
+    config,
+  }: IScreenshotByScreenshotmachine): Promise<Buffer> {
+    const defaultOptions = {
+      device: "desktop",
+      dimension: "1366x715",
+      zoom: 100,
+      format: "png",
+      delay: 2000,
+      "accept-language": "en-US,en;q=0.9",
+      click: "[class*='close'],[class*='accept']", // click on the close button
+      hide: "[class*='cookie'],[class*='banner']", // hide the cookie banner
+    };
+
+    const params = new URLSearchParams({
+      ...defaultOptions,
+      config,
+      url: url,
+      key: process.env.SCREENSHOT_MACHINE_KEY,
+    } as unknown as Record<string, string>);
+
+    const apiUrl = `https://api.screenshotmachine.com?${params.toString()}`;
+
+    try {
+      console.time(`Execute screenshotmachine api for ${url}`);
+      const res = await fetch(apiUrl);
+      console.timeEnd(`Execute screenshotmachine api for ${url}`);
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch screenshot: ${res.status}`);
+      }
+
+      return Buffer.from(await res.arrayBuffer());
+    } catch (error) {
+      console.error("Error fetching screenshot:", error);
+
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("Failed to fetch screenshot");
+      }
     }
   }
 }
