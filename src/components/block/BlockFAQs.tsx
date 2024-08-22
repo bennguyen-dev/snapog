@@ -17,23 +17,20 @@ export const BlockFAQs = () => {
     {
       key: "question-1",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           What is Snap OG?
         </Typography>
       ),
       content: (
         <Typography variant="p" className="text-muted-foreground">
-          Snap OG is a free open-source tool that automatically generates
-          open-graph social images for your website. It takes screenshots of
-          your website and automatically generates an open-graph image with the
-          best CTR.
+          SnapOG is a tool that allows you to create images for any website.
         </Typography>
       ),
     },
     {
       key: "question-2",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           How do I use this as the open graph image (social image) for my web
           pages?
         </Typography>
@@ -73,7 +70,7 @@ export const BlockFAQs = () => {
     {
       key: "question-3",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           What kind of URL can I use in the &quot;{host}
           /api/get-image?url=&quot; parameter?
         </Typography>
@@ -93,7 +90,7 @@ export const BlockFAQs = () => {
     {
       key: "question-4",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           How does the authentication work? I don&apos;t see any API key.
         </Typography>
       ),
@@ -107,7 +104,7 @@ export const BlockFAQs = () => {
     {
       key: "question-5",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           How do I prevent someone else from using my URL to generate thousands
           of images and consuming all of my usage limit?
         </Typography>
@@ -125,7 +122,7 @@ export const BlockFAQs = () => {
     {
       key: "question-6",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           What if my website has hundreds of thousands of unique URLs? Will each
           URL get a separate image?
         </Typography>
@@ -148,7 +145,7 @@ export const BlockFAQs = () => {
     {
       key: "question-7",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           How is the image limit counted? Are cached images counted toward my
           limit?
         </Typography>
@@ -163,7 +160,7 @@ export const BlockFAQs = () => {
     {
       key: "question-8",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           I just updated a web page, how do I get a new image for that specific
           URL?
         </Typography>
@@ -179,7 +176,7 @@ export const BlockFAQs = () => {
     {
       key: "question-9",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           Why don&apos;t I need to verify the sites I add? Can I add any site
           even if I don&apos;t own it?
         </Typography>
@@ -201,7 +198,7 @@ export const BlockFAQs = () => {
     {
       key: "question-10",
       title: (
-        <Typography variant="h4" className="text-left text-base">
+        <Typography variant="h4" className="text-left text-base font-medium">
           When I add a root domain (e.g., yourwebsite.com), does that means I
           can generate images for all the subdomains like blog.yourwebsite.com,
           shop.yourwebsite.com, etc.?
