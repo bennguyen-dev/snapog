@@ -10,6 +10,16 @@ export function getUrlWithProtocol(url: string) {
   return url.startsWith("http") ? url : `https://${url}`;
 }
 
+export function cleanUrl(url: string) {
+  let newUrl = url;
+
+  newUrl = newUrl.replace(/\/$/, ""); // Remove trailing slash
+  newUrl = newUrl.split("#")[0]; // Remove hash
+  newUrl = newUrl.split("?")[0]; // Remove search string
+
+  return newUrl;
+}
+
 export function sanitizeFilename(url: string) {
   // Replace / with -
   url = url.replace(/\//g, "-");

@@ -30,7 +30,7 @@ export const Footer = () => {
                   <Link href="/">Open-graph image</Link>
                 </li>
                 <li className="hover:underline">
-                  <Link href="/demo">Tailwind CSS</Link>
+                  <Link href="/demo">Demo</Link>
                 </li>
               </ul>
             </div>
