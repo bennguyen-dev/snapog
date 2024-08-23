@@ -25,7 +25,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const pathname = headersList.get("x-current-path");
   const host = headersList.get("host");
-  const time = new Date().getTime();
 
   return {
     title: "Snap OG - Automate your Open-Graph social images with screenshots",
@@ -38,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Snap OG",
       images: [
         {
-          url: `https://${host}/api/get-image?url=${host}${pathname}&time=${time}`,
+          url: `https://${host}/api/get-image?url=${host}${pathname}`,
           width: 1200,
           height: 630,
           alt: "Snap OG",

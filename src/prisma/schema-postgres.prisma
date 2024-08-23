@@ -90,6 +90,8 @@ model Site {
 
   user  User   @relation(fields: [userId], references: [id])
   pages Page[]
+
+  @@unique([userId, domain])
 }
 
 model Page {
@@ -106,6 +108,8 @@ model Page {
 
   site    Site     @relation(fields: [siteId], references: [id])
   OGImage OGImage? @relation(fields: [OGImageId], references: [id])
+
+  @@unique([siteId, url])
 }
 
 model OGImage {
