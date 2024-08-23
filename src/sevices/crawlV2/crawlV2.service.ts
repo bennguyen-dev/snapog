@@ -19,6 +19,16 @@ class CrawlServiceV2 {
   }: ICrawlInfoOfUrl): Promise<IResponse<ICrawlInfoOfUrlResponse | null>> {
     console.time(`Crawl info of url: ${url}`);
     try {
+      // Check if the URL is reachable by making a request
+      const response = await fetch(getUrlWithProtocol(url), { method: "HEAD" });
+      if (!response.ok) {
+        return {
+          status: response.status,
+          message: `Error fetching the website ${url} - ${response.statusText}`,
+          data: null,
+        };
+      }
+
       const metadata = await this.getMetadataOfUrl({ url });
       const screenShot = await this.screenshotByScreenshotMachine({
         url,
