@@ -10,13 +10,13 @@ export const BlockAboutUs = () => {
 
   return (
     <div
-      id="faqs"
-      className="container flex scroll-mt-20 flex-col items-center py-8 sm:py-16"
+      id="about-us"
+      className="container flex max-w-screen-md scroll-mt-20 flex-col gap-4 py-8 sm:py-16"
     >
-      <Typography variant="h2" className="mb-8">
+      <Typography variant="h2" className="text-center">
         About Us
       </Typography>
-      <Typography variant="p" className="mb-8 text-foreground">
+      <Typography variant="p" className="text-foreground">
         We are a global team building awesome software for the internet.
       </Typography>
 
