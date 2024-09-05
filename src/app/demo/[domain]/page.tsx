@@ -1,8 +1,6 @@
-import { Suspense } from "react";
-
 import { unstable_cache } from "next/cache";
+import { notFound } from "next/navigation";
 
-import { BlockCompareOGImageLoading } from "@/components/block/BlockCompareOGImage";
 import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
@@ -10,10 +8,16 @@ import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
 import { getKeyPathsCache } from "@/lib/utils";
 import { demoService, IGetDemo, IGetDemoResponse } from "@/sevices/demo";
 
-async function BlockCompare({ domain }: { domain: string }) {
+export default async function DemoDetailPage({
+  params,
+}: {
+  params: { domain: string };
+}) {
+  const domain = params.domain;
+
   const getDemoCached = unstable_cache(
     async ({ domain }: IGetDemo) => {
-      return await demoService.getDemo({ domain, numberOfImages: 3 });
+      return await demoService.getDemo({ domain });
     },
     [
       getKeyPathsCache({
@@ -28,26 +32,16 @@ async function BlockCompare({ domain }: { domain: string }) {
 
   const demoRes = await getDemoCached({ domain });
 
-  return (
-    <BlockCompareOGImage
-      pagesInfo={demoRes.data as IGetDemoResponse[]}
-      domain={domain}
-    />
-  );
-}
-
-export default async function DemoDetailPage({
-  params,
-}: {
-  params: { domain: string };
-}) {
-  const domain = params.domain;
+  if (demoRes.status === 404) {
+    return notFound();
+  }
 
   return (
     <>
-      <Suspense fallback={<BlockCompareOGImageLoading domain={domain} />}>
-        <BlockCompare domain={domain} />
-      </Suspense>
+      <BlockCompareOGImage
+        pagesInfo={demoRes.data as IGetDemoResponse[]}
+        domain={domain}
+      />
       <BlockHowItWorks />
       <BlockGetStartedNow />
       <BlockFAQs />

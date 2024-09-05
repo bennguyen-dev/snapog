@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 
 import { Typography } from "@/components/ui/typography";
+import { getUrlWithProtocol } from "@/lib/utils";
 import { ItemPreviewOGImage } from "@/modules/demo";
 import { IGetDemoResponse } from "@/sevices/demo";
 
@@ -77,20 +78,20 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
               key={page.url}
             >
               <ItemPreviewOGImage
-                url={page.url}
-                image={page.ogImage}
-                title={page.title}
-                description={page.description}
+                url={getUrlWithProtocol(page.url)}
+                image={page.OGImage}
+                title={page.OGTitle}
+                description={page.OGDescription}
                 ribbon={{
                   type: "error",
                   content: "Normal",
                 }}
               />
               <ItemPreviewOGImage
-                url={page.url}
-                image={page.smartOgImageBase64}
-                title={page.title}
-                description={page.description}
+                url={getUrlWithProtocol(page.url)}
+                image={page.SnapOgImage}
+                title={page.OGTitle}
+                description={page.OGDescription}
                 ribbon={{
                   type: "success",
                   content: "Snap OG",
