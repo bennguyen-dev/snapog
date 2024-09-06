@@ -62,7 +62,7 @@ export const ItemPreviewOGImage = ({
           </div>
         )}
       </div>
-      <div className="overflow-hidden rounded-md border border-solid">
+      <div className="overflow-hidden rounded-sm border border-solid">
         {!loading && image && (
           <Image
             src={image}

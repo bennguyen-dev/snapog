@@ -7,7 +7,12 @@ import {
   sanitizeFilename,
 } from "@/lib/utils";
 import { crawlServiceV2 } from "@/sevices/crawlV2";
-import { ICreateDemo, IGetDemo, IGetDemoResponse } from "@/sevices/demo";
+import {
+  ICreateDemo,
+  ICreateDemoResponse,
+  IGetDemo,
+  IGetDemoResponse,
+} from "@/sevices/demo";
 import { storageService } from "@/sevices/storage";
 
 class DemoService {
@@ -58,7 +63,10 @@ class DemoService {
     }
   }
 
-  async createDemo({ domain, numberOfImages = 3 }: ICreateDemo) {
+  async createDemo({
+    domain,
+    numberOfImages = 3,
+  }: ICreateDemo): Promise<IResponse<ICreateDemoResponse | null>> {
     console.time(`Create demo for domain: ${domain}`);
     try {
       // Check if the domain already exists in the database
@@ -92,7 +100,10 @@ class DemoService {
 
       // Step 2: Get info of URLs
       const urlsInfoPromises = urls.data?.urls.map((url) =>
-        crawlServiceV2.crawlInfoByUrl({ url }),
+        crawlServiceV2.crawlInfoByUrl({
+          url,
+          configScreenshot: { cacheLimit: 0 },
+        }),
       );
       const urlsInfo = await Promise.all(urlsInfoPromises);
 
@@ -133,7 +144,7 @@ class DemoService {
       if (results.length === 0 || !results) {
         return {
           status: 400,
-          message: "No valid results found",
+          message: "No valid results found for the domain",
           data: null,
         };
       }
@@ -149,7 +160,7 @@ class DemoService {
       });
 
       return {
-        status: 201,
+        status: 200,
         message: "Domain created successfully",
         data: newDemo,
       };

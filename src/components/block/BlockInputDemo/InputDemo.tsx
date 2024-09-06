@@ -17,7 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCallApi } from "@/hooks";
 import { getDomainName } from "@/lib/utils";
+import { ICreateDemo, ICreateDemoResponse } from "@/sevices/demo";
 
 const formSchema = z.object({
   domain: z.string().min(1, {
@@ -40,8 +42,28 @@ export const InputDemo = ({ className }: IProps) => {
     mode: "onChange",
   });
 
+  const { promiseFunc: createDemo, loading: creating } = useCallApi<
+    ICreateDemoResponse,
+    object,
+    ICreateDemo
+  >({
+    url: `/api/demo`,
+    options: {
+      method: "POST",
+    },
+    nonCallInit: true,
+    handleSuccess(_, data) {
+      router.push(`/demo/${getDomainName(data?.domain)}`);
+    },
+    handleError(_, message) {
+      form.setError("domain", { message });
+    },
+  });
+
   const onViewDemo = (data: z.infer<typeof formSchema>) => {
-    router.push(`/demo/${getDomainName(data?.domain)}`);
+    createDemo({
+      domain: data.domain,
+    });
   };
 
   return (
@@ -56,7 +78,7 @@ export const InputDemo = ({ className }: IProps) => {
           control={form.control}
           name="domain"
           render={({ field }) => (
-            <FormItem className="flex-1">
+            <FormItem className="flex-1 text-left">
               <FormControl>
                 <Input
                   title="Enter your website URL to see a live demo:"
@@ -79,6 +101,7 @@ export const InputDemo = ({ className }: IProps) => {
           type="submit"
           onClick={form.handleSubmit(onViewDemo)}
           icon={<EyeIcon className="icon" />}
+          loading={creating}
         >
           View Demo
         </Button>

@@ -49,24 +49,19 @@ export const useCallApi = <T, E = object, B = object>({
       if (status === 200) {
         setData(response.data);
         setError(undefined);
-        if (handleSuccess) {
-          handleSuccess(response.message, response.data);
-        }
-      } else if (status === 400) {
-        setError(response.data);
+        handleSuccess?.(response.message, response.data);
       } else if (status === 401) {
         router.push("/signin");
       } else if (status === 403) {
         router.replace("/403");
       } else if (status === 404) {
         router.replace("/404");
-      } else if (handleError && status !== 200) {
-        handleError(status, response.message || "Internal server error");
+      } else {
+        setError(response.error);
+        handleError?.(status, response.message || "Internal server error");
       }
     } catch (err: any) {
-      if (handleError) {
-        handleError(500, err.message || "Internal server error");
-      }
+      handleError?.(500, err.message || "Internal server error");
     } finally {
       setLoading(false);
       setLetCall(false);

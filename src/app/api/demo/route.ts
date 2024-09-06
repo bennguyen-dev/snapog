@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getUrlWithoutProtocol } from "@/lib/utils";
+import { getDomainName } from "@/lib/utils";
 import { demoService } from "@/sevices/demo";
 
 export async function POST(req: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = await demoService.createDemo({
-    domain: getUrlWithoutProtocol(domain),
+    domain: getDomainName(domain),
   });
 
   return NextResponse.json(res, { status: res.status });
