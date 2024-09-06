@@ -92,7 +92,10 @@ class CrawlServiceV2 {
               !href.startsWith("whatsapp:") &&
               !href.startsWith("callto:") &&
               !href.startsWith("viber:") &&
-              !href.startsWith("telegram:")
+              !href.startsWith("telegram:") &&
+              !href.startsWith("tel:") &&
+              !href.startsWith("#") &&
+              !href.includes("/api")
             ) {
               // Normalize the URL
               let normalizedUrl = `${linkUrl.protocol}//${linkUrl.hostname}${linkUrl.pathname}`;
@@ -193,15 +196,16 @@ class CrawlServiceV2 {
       dimension: "1366x715",
       zoom: 100,
       format: "png",
-      delay: 2000,
+      delay: 3000,
       "accept-language": "en-US,en;q=0.9",
-      click: "[class*='close'],[class*='accept']", // click on the close button
+      click:
+        "[class*='close'],[class*='accept'],[class*='close'],[class*='accept'][class*='close-button'],[class*='close-icon'],[class*='close-btn'],[class*='close-button'],[class*='close-icon'],[class*='close-btn'],[class*='close-button'],[class*='close-icon'],[class*='close-btn'],[class*='close-button'],[class*='close-icon'],[class*='close-btn'],[class*='close-button'],[aria-label*='Close']", // click on the close button"
       hide: "[class*='cookie'],[class*='banner']", // hide the cookie banner
     };
 
     const params = new URLSearchParams({
       ...defaultOptions,
-      config,
+      ...config,
       url: url,
       key: process.env.SCREENSHOT_MACHINE_KEY,
     } as unknown as Record<string, string>);

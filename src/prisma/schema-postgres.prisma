@@ -122,3 +122,34 @@ model OGImage {
 
   pages Page[]
 }
+
+// New Demo Model
+model Demo {
+  id                String @id @default(cuid())
+  domain            String
+  cacheDurationDays Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pages DemoPage[]
+
+  @@unique([domain])
+}
+
+model DemoPage {
+  id            String  @id @default(cuid())
+  demoId        String
+  url           String
+  OGImage       String?
+  OGTitle       String?
+  OGDescription String?
+  SnapOGImage   String? // New field to store the new image URL
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Demo Demo @relation(fields: [demoId], references: [id])
+
+  @@unique([demoId, url])
+}

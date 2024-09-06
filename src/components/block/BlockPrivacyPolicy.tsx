@@ -15,9 +15,9 @@ export const BlockPrivacyPolicy = () => {
         Privacy Policy
       </Typography>
       <Typography>
-        Your privacy is important to us. It is image.social's policy to respect
-        your privacy regarding any information we may collect from you across
-        our website, https:{host}, and other sites we own and operate.
+        Your privacy is important to us. It is snap OG's policy to respect your
+        privacy regarding any information we may collect from you across our
+        website, https:{host}, and other sites we own and operate.
       </Typography>
       <Typography>
         We only ask for personal information when we truly need it to provide a
