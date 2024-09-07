@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cx } from "class-variance-authority";
 import { EyeIcon } from "lucide-react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { useCallApi } from "@/hooks";
 import { getDomainName } from "@/lib/utils";
 import { ICreateDemo, ICreateDemoResponse } from "@/sevices/demo";
+import { IVerifyCaptcha } from "@/sevices/googleCaptcha";
 
 const formSchema = z.object({
   domain: z.string().min(1, {
@@ -31,8 +33,11 @@ interface IProps {
   className?: string;
 }
 
+interface ICreateDemoPayload extends ICreateDemo, IVerifyCaptcha {}
+
 export const InputDemo = ({ className }: IProps) => {
   const router = useRouter();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +50,7 @@ export const InputDemo = ({ className }: IProps) => {
   const { promiseFunc: createDemo, loading: creating } = useCallApi<
     ICreateDemoResponse,
     object,
-    ICreateDemo
+    ICreateDemoPayload
   >({
     url: `/api/demo`,
     options: {
@@ -60,10 +65,27 @@ export const InputDemo = ({ className }: IProps) => {
     },
   });
 
-  const onViewDemo = (data: z.infer<typeof formSchema>) => {
-    createDemo({
-      domain: data.domain,
-    });
+  const onViewDemo = async (data: z.infer<typeof formSchema>) => {
+    if (!executeRecaptcha) {
+      form.setError("domain", {
+        message:
+          "Execute recaptcha not available yet likely meaning key not recaptcha key not set",
+      });
+      return;
+    }
+
+    try {
+      const gReCaptchaToken = await executeRecaptcha("createDemo");
+
+      createDemo({
+        domain: data.domain,
+        gReCaptchaToken,
+      });
+    } catch (error) {
+      form.setError("domain", {
+        message: "Failed to create demo. Please try again.",
+      });
+    }
   };
 
   return (
@@ -89,6 +111,7 @@ export const InputDemo = ({ className }: IProps) => {
                       form.handleSubmit(onViewDemo)();
                     }
                   }}
+                  disabled={creating}
                   {...field}
                 />
               </FormControl>

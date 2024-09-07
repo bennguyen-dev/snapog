@@ -1,8 +1,9 @@
 import { cx } from "class-variance-authority";
 
 import { InputDemo } from "@/components/block/BlockInputDemo/InputDemo";
+import { GoogleCaptchaProvider } from "@/components/provider/googleCaptchaProvider";
+import { PreviewOgImage } from "@/components/ui/preview-og-image";
 import { Typography } from "@/components/ui/typography";
-import { ItemPreviewOGImage } from "@/modules/demo";
 
 interface IProps {
   hidePreview?: boolean;
@@ -33,12 +34,14 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
           automated screenshots, no code required.
         </Typography>
 
-        <InputDemo className="sm:max-lg:absolute sm:max-lg:bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+        <GoogleCaptchaProvider>
+          <InputDemo className="sm:max-lg:absolute sm:max-lg:bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+        </GoogleCaptchaProvider>
       </div>
       {!hidePreview && (
         <div>
           <div className="ml-auto max-w-[600px]">
-            <ItemPreviewOGImage
+            <PreviewOgImage
               url="https://stripe.com"
               image="/demo/stripe-home.png"
               title="Stripe | Financial Infrastructure to Grow Your Revenue"

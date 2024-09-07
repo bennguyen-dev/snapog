@@ -21,7 +21,7 @@ interface IProps {
   };
 }
 
-export const ItemPreviewOGImage = ({
+export const PreviewOgImage = ({
   url,
   title,
   description,

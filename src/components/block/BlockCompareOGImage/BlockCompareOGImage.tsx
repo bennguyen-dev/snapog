@@ -1,8 +1,8 @@
 import { Check, X } from "lucide-react";
 
+import { PreviewOgImage } from "@/components/ui/preview-og-image";
 import { Typography } from "@/components/ui/typography";
 import { getUrlWithProtocol } from "@/lib/utils";
-import { ItemPreviewOGImage } from "@/modules/demo";
 import { IGetDemoResponse } from "@/sevices/demo";
 
 interface IProps {
@@ -77,7 +77,7 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
               className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
               key={page.url}
             >
-              <ItemPreviewOGImage
+              <PreviewOgImage
                 url={getUrlWithProtocol(page.url)}
                 image={page.OGImage}
                 title={page.OGTitle}
@@ -87,7 +87,7 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
                   content: "Normal",
                 }}
               />
-              <ItemPreviewOGImage
+              <PreviewOgImage
                 url={getUrlWithProtocol(page.url)}
                 image={page.SnapOgImage}
                 title={page.OGTitle}

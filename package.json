@@ -52,6 +52,7 @@
     "puppeteer-core": "^22.10.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.52.0",
     "react-syntax-highlighter": "^15.5.0",
     "slugify": "^1.6.6",
