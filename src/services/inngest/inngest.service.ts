@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db";
 import { inngest } from "@/lib/inngest";
-import { crawlServiceV2 } from "@/sevices/crawlV2";
-import { pageService } from "@/sevices/page";
-import { siteService } from "@/sevices/site";
-import { storageService } from "@/sevices/storage";
+import { crawlServiceV2 } from "@/services/crawlV2";
+import { pageService } from "@/services/page";
+import { siteService } from "@/services/site";
+import { storageService } from "@/services/storage";
 
 class InngestService {
   public backgroundCreateSite = inngest.createFunction(

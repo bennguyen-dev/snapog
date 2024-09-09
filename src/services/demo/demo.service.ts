@@ -6,14 +6,14 @@ import {
   getUrlWithoutProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { crawlServiceV2 } from "@/sevices/crawlV2";
+import { crawlServiceV2 } from "@/services/crawlV2";
 import {
   ICreateDemo,
   ICreateDemoResponse,
   IGetDemo,
   IGetDemoResponse,
-} from "@/sevices/demo";
-import { storageService } from "@/sevices/storage";
+} from "@/services/demo";
+import { storageService } from "@/services/storage";
 
 class DemoService {
   async getDemo({

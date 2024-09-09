@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CACHE_DURATION_DAYS, DURATION_CACHES } from "@/lib/constants";
-import { ICreateSite } from "@/sevices/site";
+import { ICreateSite } from "@/services/site";
 
 interface IProps {
   loading?: boolean;

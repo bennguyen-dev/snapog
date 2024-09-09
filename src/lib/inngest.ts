@@ -1,6 +1,6 @@
 import { EventSchemas, Inngest } from "inngest";
 
-import { IBackgroundCreateSite } from "@/sevices/inngest";
+import { IBackgroundCreateSite } from "@/services/inngest";
 
 type Events = {
   "background/create.site": IBackgroundCreateSite;

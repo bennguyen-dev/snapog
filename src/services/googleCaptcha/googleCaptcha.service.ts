@@ -2,7 +2,7 @@ import { IResponse } from "@/lib/type";
 import {
   IVerifyCaptcha,
   IVerifyCaptchaResponse,
-} from "@/sevices/googleCaptcha/googleCaptcha.interface";
+} from "@/services/googleCaptcha/googleCaptcha.interface";
 
 class GoogleCaptchaService {
   async verifyCaptcha({

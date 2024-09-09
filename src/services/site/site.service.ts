@@ -2,7 +2,7 @@ import { CACHE_DURATION_DAYS } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
 import { sanitizeFilename } from "@/lib/utils";
-import { pageService } from "@/sevices/page";
+import { pageService } from "@/services/page";
 import {
   ICreateSite,
   IDeleteSitesBy,
@@ -10,8 +10,8 @@ import {
   IGetSitesBy,
   ISiteDetail,
   IUpdateSiteBy,
-} from "@/sevices/site";
-import { storageService } from "@/sevices/storage";
+} from "@/services/site";
+import { storageService } from "@/services/storage";
 
 class SiteService {
   async create({

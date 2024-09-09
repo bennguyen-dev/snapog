@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { inngest } from "@/lib/inngest";
 import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
-import { pageService } from "@/sevices/page";
-import { siteService } from "@/sevices/site";
+import { pageService } from "@/services/page";
+import { siteService } from "@/services/site";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();

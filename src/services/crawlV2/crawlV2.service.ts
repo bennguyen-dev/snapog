@@ -10,7 +10,7 @@ import {
   IGetMetadataOfUrl,
   IGetMetadataOfUrlResponse,
   IScreenshotByScreenshotmachine,
-} from "@/sevices/crawlV2";
+} from "@/services/crawlV2";
 
 class CrawlServiceV2 {
   public async crawlInfoByUrl({

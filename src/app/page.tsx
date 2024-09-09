@@ -3,7 +3,7 @@ import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
 import { BlockInputDemo } from "@/components/block/BlockInputDemo";
-import { IGetDemoResponse } from "@/sevices/demo";
+import { IGetDemoResponse } from "@/services/demo";
 
 export default async function Home() {
   const initPageInfo: IGetDemoResponse[] = [

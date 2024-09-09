@@ -35,7 +35,7 @@ import {
   IAddSiteDialogRef,
   IEditSiteDialogRef,
 } from "@/modules/site";
-import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
+import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/services/site";
 
 export const ListSite = () => {
   const { mounted } = useMounted();

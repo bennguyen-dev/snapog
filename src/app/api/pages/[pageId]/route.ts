@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { pageService } from "@/sevices/page";
+import { pageService } from "@/services/page";
 
 export const GET = auth(async function GET(req, res) {
   if (!req.auth?.user?.id) {
