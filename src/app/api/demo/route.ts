@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getDomainName } from "@/lib/utils";
-import { demoService } from "@/sevices/demo";
-import { googleCaptchaService } from "@/sevices/googleCaptcha";
+import { demoService } from "@/services/demo";
+import { googleCaptchaService } from "@/services/googleCaptcha";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

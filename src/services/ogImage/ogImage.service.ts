@@ -4,8 +4,8 @@ import {
   ICreateOGImage,
   IOGImageDetail,
   IUpdateOGImage,
-} from "@/sevices/ogImage/ogImage.interface";
-import { storageService } from "@/sevices/storage";
+} from "@/services/ogImage/ogImage.interface";
+import { storageService } from "@/services/storage";
 
 class OGImageService {
   async create({

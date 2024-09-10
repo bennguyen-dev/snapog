@@ -20,8 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCallApi } from "@/hooks";
 import { getDomainName } from "@/lib/utils";
-import { ICreateDemo, ICreateDemoResponse } from "@/sevices/demo";
-import { IVerifyCaptcha } from "@/sevices/googleCaptcha";
+import { ICreateDemo, ICreateDemoResponse } from "@/services/demo";
+import { IVerifyCaptcha } from "@/services/googleCaptcha";
 
 const formSchema = z.object({
   domain: z.string().min(1, {

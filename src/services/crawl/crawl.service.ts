@@ -14,7 +14,7 @@ import {
   IScreenshotByScreenshotmachine,
   ISearchSiteLinks,
   ISearchSiteLinksResponse,
-} from "@/sevices/crawl";
+} from "@/services/crawl";
 
 class CrawlService {
   public async getInfoByUrl({

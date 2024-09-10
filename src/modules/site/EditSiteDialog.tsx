@@ -38,7 +38,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DURATION_CACHES } from "@/lib/constants";
-import { ISiteDetail, IUpdateSiteBy } from "@/sevices/site";
+import { ISiteDetail, IUpdateSiteBy } from "@/services/site";
 
 const formSchema = z.object({
   domain: z.string(),

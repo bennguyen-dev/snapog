@@ -6,16 +6,16 @@ import {
   getUrlWithProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { crawlServiceV2 } from "@/sevices/crawlV2";
-import { ogImageService } from "@/sevices/ogImage";
+import { crawlServiceV2 } from "@/services/crawlV2";
+import { ogImageService } from "@/services/ogImage";
 import {
   ICreatePage,
   IDeletePagesBy,
   IGetPageBy,
   IPageDetail,
   IUpdatePagesBy,
-} from "@/sevices/page";
-import { storageService } from "@/sevices/storage";
+} from "@/services/page";
+import { storageService } from "@/services/storage";
 
 class PageService {
   async create({

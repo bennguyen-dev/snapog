@@ -11,7 +11,7 @@ import {
   IDeleteImages,
   IUploadImage,
   IUploadImageResponse,
-} from "@/sevices/storage";
+} from "@/services/storage";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,

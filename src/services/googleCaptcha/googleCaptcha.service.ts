@@ -2,15 +2,13 @@ import { IResponse } from "@/lib/type";
 import {
   IVerifyCaptcha,
   IVerifyCaptchaResponse,
-} from "@/sevices/googleCaptcha/googleCaptcha.interface";
+} from "@/services/googleCaptcha/googleCaptcha.interface";
 
 class GoogleCaptchaService {
   async verifyCaptcha({
     gReCaptchaToken,
   }: IVerifyCaptcha): Promise<IResponse<IVerifyCaptchaResponse | null>> {
     const secretKey = process?.env?.RECAPTCHA_SECRET_KEY;
-
-    console.log("secretKey 😋", { secretKey, gReCaptchaToken }, "");
 
     try {
       const res = await fetch(

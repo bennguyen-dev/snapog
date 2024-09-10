@@ -10,7 +10,7 @@ import {
   IGetMetadataOfUrl,
   IGetMetadataOfUrlResponse,
   IScreenshotByScreenshotmachine,
-} from "@/sevices/crawlV2";
+} from "@/services/crawlV2";
 
 class CrawlServiceV2 {
   public async crawlInfoByUrl({
@@ -65,49 +65,31 @@ class CrawlServiceV2 {
     console.time(`Get internal links of domain: ${domain}`);
     try {
       const baseUrl = new URL(getUrlWithProtocol(domain));
-
       const response = await fetch(baseUrl.toString());
       const html = await response.text();
-
       const dom = new JSDOM(html);
       const doc = dom.window.document;
 
-      const linkElements = Array.from(doc.getElementsByTagName("a"));
       const uniqueLinks = new Set<string>();
+      const linkElements = Array.from(doc.getElementsByTagName("a"));
 
       for (const element of linkElements) {
         if (uniqueLinks.size >= limit) break;
 
         const href = element.getAttribute("href");
-        if (href) {
-          try {
-            const linkUrl = new URL(href, baseUrl);
+        if (!href) continue;
 
-            // Check if it's an internal link and not a mailto
-            if (
-              linkUrl.hostname === baseUrl.hostname &&
-              !href.startsWith("mailto:") &&
-              !href.startsWith("sms:") &&
-              !href.startsWith("skype:") &&
-              !href.startsWith("whatsapp:") &&
-              !href.startsWith("callto:") &&
-              !href.startsWith("viber:") &&
-              !href.startsWith("telegram:") &&
-              !href.startsWith("tel:") &&
-              !href.startsWith("#") &&
-              !href.includes("/api")
-            ) {
-              // Normalize the URL
-              let normalizedUrl = `${linkUrl.protocol}//${linkUrl.hostname}${linkUrl.pathname}`;
-              normalizedUrl = normalizedUrl.replace(/\/$/, ""); // Remove trailing slash
-              normalizedUrl = normalizedUrl.split("#")[0]; // Remove hash
-              normalizedUrl = normalizedUrl.split("?")[0]; // Remove search string
-
-              uniqueLinks.add(normalizedUrl);
-            }
-          } catch (error) {
-            console.error("Error processing link:", href, error);
+        try {
+          const linkUrl = new URL(href, baseUrl);
+          if (
+            linkUrl.hostname === baseUrl.hostname &&
+            !this.isExcludedLink(href)
+          ) {
+            const normalizedUrl = this.normalizeUrl(linkUrl);
+            uniqueLinks.add(normalizedUrl);
           }
+        } catch (error) {
+          console.error("Error processing link:", href, error);
         }
       }
 
@@ -131,53 +113,83 @@ class CrawlServiceV2 {
     }
   }
 
+  private isExcludedLink(href: string): boolean {
+    const excludedPrefixes = [
+      "mailto:",
+      "sms:",
+      "skype:",
+      "whatsapp:",
+      "callto:",
+      "viber:",
+      "telegram:",
+      "tel:",
+      "#",
+    ];
+    return (
+      excludedPrefixes.some((prefix) => href.startsWith(prefix)) ||
+      href.includes("/api")
+    );
+  }
+
+  private normalizeUrl(url: URL): string {
+    let normalizedUrl = `${url.protocol}//${url.hostname}${url.pathname}`;
+    normalizedUrl = normalizedUrl.replace(/\/$/, "");
+    normalizedUrl = normalizedUrl.split("#")[0];
+    normalizedUrl = normalizedUrl.split("?")[0];
+    return normalizedUrl;
+  }
+
   private async getMetadataOfUrl({
     url,
   }: IGetMetadataOfUrl): Promise<IResponse<IGetMetadataOfUrlResponse | null>> {
     console.time(`Get metadata of url: ${url}`);
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch URL: ${response.status} ${response.statusText}`,
+        );
+      }
       const html = await response.text();
       const dom = new JSDOM(html);
       const doc = dom.window.document;
-
       const baseUrl = new URL(url);
 
-      const title = doc.querySelector("title")?.textContent || "";
-      const description =
-        doc
-          .querySelector('meta[name="description"]')
-          ?.getAttribute("content") || "";
+      const getMetaContent = (selector: string): string =>
+        doc.querySelector(selector)?.getAttribute("content") || "";
 
-      let ogImage =
-        doc
-          .querySelector('meta[property="og:image"]')
-          ?.getAttribute("content") || "";
-      if (ogImage && !ogImage.startsWith("http")) {
-        ogImage = new URL(ogImage, baseUrl).href;
-      }
+      const getElementContent = (selector: string): string =>
+        doc.querySelector(selector)?.textContent || "";
 
-      let favicon =
-        doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
-        doc.querySelector('link[rel="shortcut icon"]')?.getAttribute("href") ||
-        "/favicon.ico";
-      favicon = new URL(favicon, baseUrl).href;
+      const resolveUrl = (path: string): string =>
+        path ? new URL(path, baseUrl).href : "";
+
+      const metadata = {
+        url,
+        title: getElementContent("title"),
+        description: getMetaContent('meta[name="description"]'),
+        ogImage: resolveUrl(getMetaContent('meta[property="og:image"]')),
+        favicon: resolveUrl(
+          doc.querySelector('link[rel="icon"]')?.getAttribute("href") ||
+            doc
+              .querySelector('link[rel="shortcut icon"]')
+              ?.getAttribute("href") ||
+            "/favicon.ico",
+        ),
+      };
 
       return {
         status: 200,
         message: "Metadata fetched successfully",
-        data: {
-          url,
-          title,
-          description,
-          ogImage,
-          favicon,
-        },
+        data: metadata,
       };
     } catch (error) {
       console.error("Error fetching or parsing the website:", error);
       return {
-        status: 500,
+        status:
+          error instanceof Error && "status" in error
+            ? (error.status as number)
+            : 500,
         message:
           error instanceof Error ? error.message : "Internal Server Error",
         data: null,

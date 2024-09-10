@@ -9,9 +9,9 @@ import {
   IGetImageByImageLinkResponse,
   IGetImageByUrl,
   IGetImageByUrlResponse,
-} from "@/sevices/image";
-import { pageService } from "@/sevices/page";
-import { siteService } from "@/sevices/site";
+} from "@/services/image";
+import { pageService } from "@/services/page";
+import { siteService } from "@/services/site";
 
 class ImageService {
   async getImageByUrl({

@@ -34,8 +34,8 @@ import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
-import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
-import { ISiteDetail } from "@/sevices/site";
+import { IPageDetail, IUpdatePagesBy } from "@/services/page";
+import { ISiteDetail } from "@/services/site";
 
 interface IProps {
   siteId: string;

@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DURATION_CACHES } from "@/lib/constants";
-import { IPageDetail, IUpdatePagesBy } from "@/sevices/page";
+import { IPageDetail, IUpdatePagesBy } from "@/services/page";
 
 const formSchema = z.object({
   url: z.string(),

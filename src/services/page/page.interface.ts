@@ -1,4 +1,4 @@
-import { IOGImageDetail } from "@/sevices/ogImage";
+import { IOGImageDetail } from "@/services/ogImage";
 
 export interface ICreatePage {
   url: string;

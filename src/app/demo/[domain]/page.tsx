@@ -4,7 +4,7 @@ import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/Bloc
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
-import { demoService } from "@/sevices/demo";
+import { demoService } from "@/services/demo";
 
 export default async function DemoDetailPage({
   params,
