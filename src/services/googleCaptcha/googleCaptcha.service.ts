@@ -10,8 +10,6 @@ class GoogleCaptchaService {
   }: IVerifyCaptcha): Promise<IResponse<IVerifyCaptchaResponse | null>> {
     const secretKey = process?.env?.RECAPTCHA_SECRET_KEY;
 
-    console.log("secretKey 😋", { secretKey, gReCaptchaToken }, "");
-
     try {
       const res = await fetch(
         "https://www.google.com/recaptcha/api/siteverify",
