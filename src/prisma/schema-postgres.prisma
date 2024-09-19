@@ -21,7 +21,9 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Site      Site[]
+
+  Site         Site[]
+  Subscription Subscription[]
 }
 
 model Account {
@@ -152,4 +154,43 @@ model DemoPage {
   Demo Demo @relation(fields: [demoId], references: [id])
 
   @@unique([demoId, url])
+}
+
+// lemonSqueezy
+model Plan {
+  id                 Int            @id @default(autoincrement())
+  productId          Int
+  productName        String?
+  variantId          Int            @unique
+  name               String
+  description        String?
+  price              String
+  isUsageBased       Boolean        @default(false)
+  interval           String?
+  intervalCount      Int?
+  trialInterval      String?
+  trialIntervalCount Int?
+  sort               Int?
+  subscriptions      Subscription[]
+}
+
+model Subscription {
+  id                 Int     @id @default(autoincrement())
+  lemonSqueezyId     String  @unique
+  orderId            Int
+  name               String
+  email              String
+  status             String
+  statusFormatted    String
+  renewsAt           String?
+  endsAt             String?
+  trialEndsAt        String?
+  price              String
+  isUsageBased       Boolean @default(false)
+  isPaused           Boolean @default(false)
+  subscriptionItemId Int?
+  userId             String
+  planId             Int
+  user               User    @relation(fields: [userId], references: [id])
+  plan               Plan    @relation(fields: [planId], references: [id])
 }
