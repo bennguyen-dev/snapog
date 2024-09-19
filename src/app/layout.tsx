@@ -6,8 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter as FontSans } from "next/font/google";
 import { headers } from "next/headers";
 
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
@@ -88,13 +86,9 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Header />
         <SpeedInsights />
         <Analytics />
-        <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-16">
-          {children}
-        </main>
-        <Footer />
+        {children}
         <Toaster />
       </body>
     </html>

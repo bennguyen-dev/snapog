@@ -237,7 +237,7 @@ export const ListSite = () => {
   }, [confirmDialog, deleteSite, deleting, updateSite]);
 
   return (
-    <div className="container py-8">
+    <div className="container py-4">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

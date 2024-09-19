@@ -1,7 +1,11 @@
+import { SquareMousePointer } from "lucide-react";
+
+import { NavItem } from "@/lib/type";
+
 export const ROUTES = [
   {
     name: "Site",
-    path: "/sites",
+    path: "/dashboard/sites",
     auth: true,
   },
   {
@@ -18,6 +22,21 @@ export const ROUTES = [
     name: "FAQs",
     path: "/#faqs",
     auth: false,
+  },
+];
+
+export const navItems: NavItem[] = [
+  // {
+  //   title: "Dashboard",
+  //   href: "/dashboard",
+  //   icon: <LayoutDashboard className="size-5" />,
+  //   label: "Dashboard",
+  // },
+  {
+    title: "Sites",
+    href: "/dashboard/sites",
+    icon: <SquareMousePointer className="size-5" />,
+    label: "user",
   },
 ];
 
