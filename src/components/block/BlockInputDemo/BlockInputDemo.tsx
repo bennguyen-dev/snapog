@@ -1,8 +1,8 @@
 import { cx } from "class-variance-authority";
 
 import { InputDemo } from "@/components/block/BlockInputDemo/InputDemo";
+import { PreviewOgImage } from "@/components/customs/preview-og-image";
 import { GoogleCaptchaProvider } from "@/components/provider/googleCaptchaProvider";
-import { PreviewOgImage } from "@/components/ui/preview-og-image";
 import { Typography } from "@/components/ui/typography";
 
 interface IProps {

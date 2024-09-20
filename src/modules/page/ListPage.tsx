@@ -247,7 +247,7 @@ export const ListPage = ({ siteId }: IProps) => {
   }, [mounted, getPages, getSite]);
 
   return (
-    <div className="container py-8">
+    <div className="p-8">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

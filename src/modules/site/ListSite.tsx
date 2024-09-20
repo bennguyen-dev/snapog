@@ -7,6 +7,7 @@ import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
 
 import Link from "next/link";
 
+import { CodeSnippet } from "@/components/customs/code-snippet";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -23,7 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CodeSnippet } from "@/components/ui/code-snippet";
 import { DataTable } from "@/components/ui/data-table";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
@@ -237,7 +237,7 @@ export const ListSite = () => {
   }, [confirmDialog, deleteSite, deleting, updateSite]);
 
   return (
-    <div className="container py-4">
+    <div className="p-8">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>

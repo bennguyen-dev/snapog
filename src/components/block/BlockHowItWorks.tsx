@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 
-import { CodeSnippet } from "@/components/ui/code-snippet";
+import { CodeSnippet } from "@/components/customs/code-snippet";
 import { Typography } from "@/components/ui/typography";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/lib/utils";
 
