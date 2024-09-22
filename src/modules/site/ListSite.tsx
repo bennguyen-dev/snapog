@@ -140,7 +140,10 @@ export const ListSite = () => {
         header: "Domain",
         cell: ({ row }) => {
           return (
-            <Link href={`/sites/${row.original.id}`} className="text-link">
+            <Link
+              href={`/dashboard/sites/${row.original.id}`}
+              className="text-link"
+            >
               {row.original.domain}
             </Link>
           );

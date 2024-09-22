@@ -1,4 +1,5 @@
 import {
+  createCheckout,
   getProduct,
   listPrices,
   listProducts,
@@ -6,10 +7,13 @@ import {
 } from "@lemonsqueezy/lemonsqueezy.js";
 import { Plan } from "@prisma/client";
 
+import { headers } from "next/headers";
+
+import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { configureLemonSqueezy } from "@/lib/lemonsqueezy";
 import { IResponse } from "@/lib/type";
-import { NewPlan } from "@/services/plan";
+import { ICheckoutUrl, ICheckoutUrlResponse, INewPlan } from "@/services/plan";
 
 class PlanService {
   async syncPlans(): Promise<IResponse<Plan[] | null>> {
@@ -20,7 +24,7 @@ class PlanService {
       const productVariants: Plan[] = await prisma.plan.findMany();
 
       // Helper function to add a variant to the productVariants array and sync it with the database.
-      const _addVariant = async (variant: NewPlan) => {
+      const _addVariant = async (variant: INewPlan) => {
         console.log(`Syncing variant ${variant.name} with the database...`);
 
         // Sync the variant with the plan in the database.
@@ -115,6 +119,77 @@ class PlanService {
         status: 200,
         message: "Plans synced successfully",
         data: productVariants,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
+    }
+  }
+
+  async getCheckoutUrl({
+    variantId,
+    embed = false,
+  }: ICheckoutUrl): Promise<IResponse<ICheckoutUrlResponse | null>> {
+    configureLemonSqueezy();
+
+    const headersList = headers();
+
+    const host = headersList.get("host");
+
+    const session = await auth();
+
+    if (!session?.user) {
+      return {
+        status: 401,
+        message: "Unauthorized",
+        data: null,
+      };
+    }
+
+    try {
+      const checkout = await createCheckout(
+        process.env.LEMONSQUEEZY_STORE_ID!,
+        variantId,
+        {
+          checkoutOptions: {
+            embed,
+            media: false,
+            logo: true,
+          },
+          checkoutData: {
+            email: session.user.email ?? undefined,
+            custom: {
+              user_id: session.user.id,
+            },
+          },
+          productOptions: {
+            enabledVariants: [variantId],
+            redirectUrl: `https://${host}/dashboard/billing/`,
+            receiptButtonText: "View your receipt",
+            receiptThankYouNote: "Thank you for your purchase!",
+          },
+        },
+      );
+
+      if (!checkout.data) {
+        return {
+          status: 500,
+          message: "Failed to create checkout",
+          data: null,
+        };
+      }
+
+      return {
+        status: 200,
+        message: "Checkout URL generated successfully",
+        data: {
+          url: checkout.data.data.attributes.url,
+        },
       };
     } catch (error) {
       console.error(error);

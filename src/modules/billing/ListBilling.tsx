@@ -1,4 +1,4 @@
-import { CardPlan } from "@/components/customs/card-plan";
+import { CardPlan } from "@/components/customs/CardPlan";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,7 +18,7 @@ export const ListBilling = async () => {
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href="/image-og/public">Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

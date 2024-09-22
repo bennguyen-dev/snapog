@@ -29,7 +29,7 @@ export const SignIn = () => {
               key={provider.id}
               action={async () => {
                 "use server";
-                await signIn(provider.id, { redirectTo: "/sites" });
+                await signIn(provider.id, { redirectTo: "/dashboard/sites" });
               }}
             >
               <Button className="w-full" variant="outline" type="submit">

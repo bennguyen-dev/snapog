@@ -1,23 +1,22 @@
+import { Plan } from "@prisma/client";
 import { CheckIcon } from "lucide-react";
 
+import { ButtonCardPlan } from "@/components/customs/ButtonCardPlan";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { NewPlan } from "@/services/plan";
 
 interface IProps {
-  plan: NewPlan;
+  plan: Plan;
   popular?: boolean;
 }
 
-export const CardPlan = ({ plan, popular }: IProps) => {
+export const CardPlan = async ({ plan, popular }: IProps) => {
   const { price, description, productName, packageSize } = plan;
 
   return (
@@ -30,15 +29,14 @@ export const CardPlan = ({ plan, popular }: IProps) => {
         )}
         <CardTitle className="mb-6">{productName}</CardTitle>
 
-        <CardDescription className="text-center">
-          {description && (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: description,
-              }}
-            />
-          )}
-        </CardDescription>
+        {description && (
+          <div
+            className="text-center text-sm text-muted-foreground"
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
+        )}
       </CardHeader>
 
       <CardContent>
@@ -60,9 +58,7 @@ export const CardPlan = ({ plan, popular }: IProps) => {
         </ul>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" variant={popular ? "default" : "outline"}>
-          Select
-        </Button>
+        <ButtonCardPlan className="w-full" plan={plan} popular={popular} />
       </CardFooter>
     </Card>
   );

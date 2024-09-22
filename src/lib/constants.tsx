@@ -14,6 +14,11 @@ export const ROUTES = [
     auth: false,
   },
   {
+    name: "Pricing",
+    path: "/pricing",
+    auth: false,
+  },
+  {
     name: "How it works",
     path: "/#how-it-works",
     auth: false,

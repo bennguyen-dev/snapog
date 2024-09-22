@@ -7,7 +7,7 @@ export default async function SignInPage() {
   const session = await auth();
 
   if (session?.user) {
-    redirect("/sites");
+    redirect("/dashboard/sites");
   }
 
   return <SignIn />;

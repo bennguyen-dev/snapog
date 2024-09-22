@@ -258,7 +258,9 @@ export const ListPage = ({ siteId }: IProps) => {
             {fetchingSite ? (
               <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
             ) : (
-              <BreadcrumbLink href={`/sites`}>{site?.domain}</BreadcrumbLink>
+              <BreadcrumbLink href={`/dashboard/sites`}>
+                {site?.domain}
+              </BreadcrumbLink>
             )}
           </BreadcrumbItem>
           <BreadcrumbSeparator />

@@ -5,12 +5,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Inter as FontSans } from "next/font/google";
 import { headers } from "next/headers";
+import Script from "next/script";
 
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 import type { Metadata } from "next";
-
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -86,6 +86,11 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
+        {/* Load the Lemon Squeezy's Lemon.js script before the page is interactive. */}
+        <Script
+          src="https://app.lemonsqueezy.com/js/lemon.js"
+          strategy="beforeInteractive"
+        />
         <SpeedInsights />
         <Analytics />
         {children}
