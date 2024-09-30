@@ -89,3 +89,12 @@ export function getKeyPathsCache({
 }) {
   return `${functionName}-${value}`;
 }
+
+export const getPrice = (price: number) => {
+  return parseFloat(price.toString()).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+};

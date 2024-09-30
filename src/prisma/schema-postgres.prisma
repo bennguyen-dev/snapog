@@ -158,20 +158,21 @@ model DemoPage {
 
 // lemonSqueezy
 model Plan {
-  id                 String  @id @default(cuid())
+  id                 String   @id @default(cuid())
   productId          Int
   productName        String?
-  variantId          Int     @unique
+  variantId          Int      @unique
   name               String
   description        String?
   price              String
-  isUsageBased       Boolean @default(false)
+  isUsageBased       Boolean  @default(false)
   interval           String?
   intervalCount      Int?
   trialInterval      String?
   trialIntervalCount Int?
   sort               Int?
   packageSize        Int?
+  isPopular          Boolean?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

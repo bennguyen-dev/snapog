@@ -1,9 +1,9 @@
-import { CardPlan } from "@/components/customs/CardPlan";
+import { ListPlan } from "@/components/block/BlockPricing/ListPlan";
 import { Typography } from "@/components/ui/typography";
 import { planService } from "@/services/plan";
 
 export const BlockPricing = async () => {
-  const plans = await planService.getAll();
+  const { data: plans } = await planService.getAll();
 
   return (
     <div className="container py-8 sm:py-16">
@@ -17,9 +17,7 @@ export const BlockPricing = async () => {
         Choose an affordable plan that’s packed with the best features for
         engaging your audience, creating customer loyalty, and driving sales.
       </Typography>
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-center">
-        {plans.data?.map((plan) => <CardPlan key={plan.id} plan={plan} />)}
-      </div>
+      {plans && plans.length > 0 && <ListPlan plans={plans} />}
     </div>
   );
 };

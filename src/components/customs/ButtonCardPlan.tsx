@@ -13,25 +13,35 @@ import { toast } from "@/components/ui/use-toast";
 
 interface IProps {
   plan: Plan;
-  popular?: boolean;
   className?: string;
+  type: "sign-up" | "subscription";
 }
 
-export const ButtonCardPlan = ({ plan, popular, className }: IProps) => {
-  const { data: session } = useSession();
+export const ButtonCardPlan = ({
+  plan,
+  className,
+  type = "sign-up",
+}: IProps) => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const label = useMemo(() => {
-    if (!session?.user) {
-      return "Sign Up";
+    if (type === "sign-up") {
+      return "Get started";
     }
 
     return "Subscription";
-  }, [session?.user]);
+  }, [type]);
 
   const onClick = useCallback(async () => {
-    if (!session?.user) {
+    if (type === "sign-up" && !session?.user) {
       router.push("/signin");
+      return;
+    }
+
+    if (type === "sign-up" && session?.user) {
+      router.push("/dashboard/billing");
+      return;
     }
 
     try {
@@ -48,13 +58,13 @@ export const ButtonCardPlan = ({ plan, popular, className }: IProps) => {
 
       toast({ variant: "destructive", title });
     }
-  }, [plan.variantId, router, session?.user]);
+  }, [plan.variantId, router, session?.user, type]);
 
   return (
     <Button
       onClick={onClick}
       className={className}
-      variant={popular ? "default" : "outline"}
+      variant={plan.isPopular ? "default" : "outline"}
     >
       {label}
     </Button>

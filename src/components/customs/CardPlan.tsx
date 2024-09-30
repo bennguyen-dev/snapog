@@ -1,4 +1,5 @@
 import { Plan } from "@prisma/client";
+import { cx } from "class-variance-authority";
 import { CheckIcon } from "lucide-react";
 
 import { ButtonCardPlan } from "@/components/customs/ButtonCardPlan";
@@ -10,28 +11,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getPrice } from "@/lib/utils";
 
 interface IProps {
   plan: Plan;
-  popular?: boolean;
+  type: "sign-up" | "subscription";
 }
 
-export const CardPlan = async ({ plan, popular }: IProps) => {
-  const { price, description, productName, packageSize } = plan;
+export const CardPlan = ({ plan, type }: IProps) => {
+  const { price, description, productName, packageSize, isPopular } = plan;
 
   return (
-    <Card>
+    <Card className={cx(isPopular ? "border-foreground" : "")}>
       <CardHeader className="pb-2 text-center">
-        {popular && (
-          <Badge className="mb-3 w-max self-center uppercase">
+        {isPopular && (
+          <Badge className="mb-6 w-max self-center uppercase">
             Most popular
           </Badge>
         )}
-        <CardTitle className="mb-6">{productName}</CardTitle>
+        <CardTitle className="!mb-6">{productName}</CardTitle>
 
         {description && (
           <div
-            className="text-center text-sm text-muted-foreground"
+            className="list-disc text-center text-sm text-muted-foreground"
             dangerouslySetInnerHTML={{
               __html: description,
             }}
@@ -41,7 +43,9 @@ export const CardPlan = async ({ plan, popular }: IProps) => {
 
       <CardContent>
         <div className="mb-12 text-center">
-          <span className="text-4xl font-bold">${Number(price) / 100}</span>
+          <span className="text-4xl font-bold">
+            {getPrice(Number(price) / 100)}
+          </span>
           <span className="text-sm text-muted-foreground">/month</span>
         </div>
         <ul className="space-y-2.5 text-sm">
@@ -58,7 +62,7 @@ export const CardPlan = async ({ plan, popular }: IProps) => {
         </ul>
       </CardContent>
       <CardFooter>
-        <ButtonCardPlan className="w-full" plan={plan} popular={popular} />
+        <ButtonCardPlan className="w-full" plan={plan} type={type} />
       </CardFooter>
     </Card>
   );
