@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { getCheckoutUrl } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { useCallAction } from "@/hooks/useCallAction";
+import { ICheckoutUrl, ICheckoutUrlResponse } from "@/services/plan";
 
 interface IProps {
   plan: Plan;
@@ -24,6 +26,23 @@ export const ButtonCardPlan = ({
 }: IProps) => {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const { loading, promiseFunc: getUrl } = useCallAction<
+    ICheckoutUrlResponse | null,
+    any,
+    ICheckoutUrl
+  >({
+    action: getCheckoutUrl,
+    nonCallInit: true,
+    handleSuccess: (_, data) => {
+      if (data?.url) {
+        router.push(data.url);
+      }
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
+    },
+  });
 
   const label = useMemo(() => {
     if (type === "sign-up") {
@@ -44,27 +63,15 @@ export const ButtonCardPlan = ({
       return;
     }
 
-    try {
-      const { data } = await getCheckoutUrl({
-        variantId: plan.variantId,
-      });
-
-      if (data?.url) {
-        window.LemonSqueezy.Url.Open(data.url);
-      }
-    } catch (error) {
-      const title =
-        error instanceof Error ? error.message : "Internal Server Error";
-
-      toast({ variant: "destructive", title });
-    }
-  }, [plan.variantId, router, session?.user, type]);
+    getUrl({ variantId: plan.variantId });
+  }, [getUrl, plan.variantId, router, session?.user, type]);
 
   return (
     <Button
       onClick={onClick}
       className={className}
       variant={plan.isPopular ? "default" : "outline"}
+      loading={loading}
     >
       {label}
     </Button>

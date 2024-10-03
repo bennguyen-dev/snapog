@@ -82,7 +82,7 @@ export const ListBilling = () => {
             ))}
           </RadioGroup>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:items-center">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:items-center xl:grid-cols-4">
           {filterPlans?.map((plan) => (
             <CardPlan key={plan.id} plan={plan} type="subscription" />
           ))}
