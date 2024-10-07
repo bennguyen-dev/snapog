@@ -1,7 +1,6 @@
-import { Plan } from "@prisma/client";
+import { Prisma } from "@/lib/db";
 
-export interface INewPlan
-  extends Omit<Plan, "id" | "createdAt" | "updatedAt"> {}
+export interface INewPlan extends Prisma.PlanCreateInput {}
 
 export interface ICheckoutUrl {
   variantId: number;
