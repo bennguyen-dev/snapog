@@ -239,7 +239,7 @@ class WebhookService {
         data: {
           eventName,
           processed: false,
-          body: JSON.stringify(body), // Assuming body is stored as a JSON string
+          body, // Assuming body is stored as a JSON string
         },
       });
     } catch (error) {
