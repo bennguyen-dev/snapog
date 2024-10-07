@@ -118,6 +118,16 @@ class WebhookService {
     let processingError = "";
     const eventBody = webhookEvent.body;
 
+    console.log(
+      "a 😋",
+      {
+        eventBody,
+        webhookHasData: webhookHasData(eventBody),
+        webhookHasMeta: webhookHasMeta(eventBody),
+      },
+      "",
+    );
+
     if (!webhookHasMeta(eventBody)) {
       processingError = "Event body is missing the 'meta' property.";
     } else if (webhookHasData(eventBody)) {
@@ -135,6 +145,8 @@ class WebhookService {
             variantId: parseInt(variantId, 10),
           },
         });
+
+        console.log("plan 😋", { plan }, "");
 
         if (!plan) {
           processingError = `Plan with variantId ${variantId} not found.`;
@@ -173,6 +185,8 @@ class WebhookService {
             planId: plan.id,
           };
 
+          console.log("updateData 😋", { updateData }, "");
+
           // Create/update subscription in the database.
           try {
             await prisma.subscription.upsert({
@@ -194,24 +208,24 @@ class WebhookService {
         // Save license keys; eventBody is a "License key"
         /* Not implemented */
       }
+    }
 
-      try {
-        // Update the webhook event in the database.
-        await prisma.webhookEvent.update({
-          where: {
-            id: webhookEvent.id,
-          },
-          data: {
-            processed: true,
-            processingError,
-          },
-        });
-      } catch (error) {
-        console.error(
-          `Failed to update WebhookEvent #${webhookEvent.id} in the database.`,
-          error,
-        );
-      }
+    try {
+      // Update the webhook event in the database.
+      await prisma.webhookEvent.update({
+        where: {
+          id: webhookEvent.id,
+        },
+        data: {
+          processed: true,
+          processingError,
+        },
+      });
+    } catch (error) {
+      console.error(
+        `Failed to update WebhookEvent #${webhookEvent.id} in the database.`,
+        error,
+      );
     }
   }
 
