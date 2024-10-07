@@ -5,6 +5,9 @@ import {
 } from "@lemonsqueezy/lemonsqueezy.js";
 import { Subscription, WebhookEvent } from "@prisma/client";
 
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+
 import { prisma } from "@/lib/db";
 import { configureLemonSqueezy } from "@/lib/lemonsqueezy";
 import { webhookHasData, webhookHasMeta } from "@/lib/typeguards";
@@ -14,10 +17,11 @@ class WebhookService {
   private async hasWebhook() {
     configureLemonSqueezy();
 
-    if (!process.env.WEBHOOK_URL) {
-      throw new Error(
-        "Missing required WEBHOOK_URL env variable. Please, set it in your .env file.",
-      );
+    const headersList = headers();
+    const host = headersList.get("host");
+
+    if (!host) {
+      throw new Error("Missing host in header when check has webhook event");
     }
 
     // Check if a webhook exists on Lemon Squeezy.
@@ -25,12 +29,14 @@ class WebhookService {
       filter: { storeId: process.env.LEMONSQUEEZY_STORE_ID },
     });
 
-    // Check if WEBHOOK_URL ends with a slash. If not, add it.
-    let webhookUrl = process.env.WEBHOOK_URL;
+    // Check if url ends with a slash. If not, add it.
+    let webhookUrl = `https://${host}`;
     if (!webhookUrl.endsWith("/")) {
       webhookUrl += "/";
     }
     webhookUrl += "api/webhook";
+
+    revalidatePath("/");
 
     return allWebhooks.data?.data.find(
       (wh) => wh.attributes.url === webhookUrl && wh.attributes.test_mode,
@@ -44,14 +50,15 @@ class WebhookService {
   async setupWebhook() {
     configureLemonSqueezy();
 
-    if (!process.env.WEBHOOK_URL) {
-      throw new Error(
-        "Missing required WEBHOOK_URL env variable. Please, set it in your .env file.",
-      );
+    const headersList = headers();
+    const host = headersList.get("host");
+
+    if (!host) {
+      throw new Error("Missing host in header when setup webhook event");
     }
 
-    // Check if WEBHOOK_URL ends with a slash. If not, add it.
-    let webhookUrl = process.env.WEBHOOK_URL;
+    // Check if url ends with a slash. If not, add it.
+    let webhookUrl = `https://${host}`;
     if (!webhookUrl.endsWith("/")) {
       webhookUrl += "/";
     }
@@ -82,10 +89,14 @@ class WebhookService {
     }
 
     console.log(`Webhook ${webhook?.id} created on Lemon Squeezy.`);
+
+    revalidatePath("/");
   }
 
   async processWebhookEvent(webhookEvent: WebhookEvent) {
     configureLemonSqueezy();
+    const headersList = headers();
+    const host = headersList.get("host");
 
     const existingWebhookEvent = await prisma.webhookEvent.findUnique({
       where: {
@@ -98,9 +109,9 @@ class WebhookService {
       );
     }
 
-    if (!process.env.WEBHOOK_URL) {
+    if (!host) {
       throw new Error(
-        "Missing required WEBHOOK_URL env variable. Please, set it in your .env file.",
+        "Missing host in webhook event when processing webhook event",
       );
     }
 
