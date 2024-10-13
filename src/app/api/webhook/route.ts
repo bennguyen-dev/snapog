@@ -48,12 +48,12 @@ export async function POST(request: Request) {
 
   // Type guard to check if the object has a 'meta' property.
   if (webhookHasMeta(data)) {
-    const webhookEventId = await webhookService.storeWebhookEvent(
+    const webhookEvent = await webhookService.storeWebhookEvent(
       data.meta.event_name,
       data,
     );
 
-    if (!webhookEventId) {
+    if (!webhookEvent) {
       return NextResponse.json({
         error: "Failed to store webhook event",
         status: 500,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     }
 
     // Non-blocking call to process the webhook event.
-    void webhookService.processWebhookEvent(webhookEventId);
+    void webhookService.processWebhookEvent(webhookEvent);
 
     return NextResponse.json({
       message: "Webhook event received and processing started",

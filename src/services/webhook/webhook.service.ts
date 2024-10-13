@@ -121,6 +121,7 @@ class WebhookService {
     console.log(
       "a 😋",
       {
+        webhookEvent,
         eventBody,
         webhookHasData: webhookHasData(eventBody),
         webhookHasMeta: webhookHasMeta(eventBody),
