@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getPrice } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 
 interface IProps {
   plan: Plan;
@@ -43,9 +43,7 @@ export const CardPlan = ({ plan, type }: IProps) => {
 
       <CardContent>
         <div className="mb-12 text-center">
-          <span className="text-4xl font-bold">
-            {getPrice(Number(price) / 100)}
-          </span>
+          <span className="text-4xl font-bold">{formatPrice(price)}</span>
           <span className="text-sm text-muted-foreground">/month</span>
         </div>
         <ul className="space-y-2.5 text-sm">

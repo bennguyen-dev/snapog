@@ -1,6 +1,7 @@
 "use server";
 
 import { ICheckoutUrl, planService } from "@/services/plan";
+import { subscriptionService } from "@/services/subscription";
 import { webhookService } from "@/services/webhook";
 
 export async function getCheckoutUrl(res: ICheckoutUrl) {
@@ -13,4 +14,8 @@ export async function getAllPlan() {
 
 export async function setupWebhook() {
   return await webhookService.setupWebhook();
+}
+
+export async function getCurrentSubscription() {
+  return await subscriptionService.getCurrentSubscription();
 }
