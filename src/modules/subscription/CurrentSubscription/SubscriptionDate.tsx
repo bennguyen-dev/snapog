@@ -31,7 +31,7 @@ export function SubscriptionDate({
 
   return (
     <>
-      <span>{message}</span>
+      <span className="text-sm text-muted-foreground">{message}</span>
     </>
   );
 }

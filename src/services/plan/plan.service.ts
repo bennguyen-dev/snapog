@@ -210,7 +210,7 @@ class PlanService {
           },
           productOptions: {
             enabledVariants: [variantId],
-            redirectUrl: `https://${host}/dashboard/billing/`,
+            redirectUrl: `https://${host}/dashboard/subscription/`,
             receiptButtonText: "View your receipt",
             receiptThankYouNote: "Thank you for your purchase!",
           },

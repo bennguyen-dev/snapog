@@ -15,10 +15,11 @@ import { formatPrice } from "@/lib/utils";
 
 interface IProps {
   plan: Plan;
+  currentPlan?: Plan;
   type: "sign-up" | "subscription";
 }
 
-export const CardPlan = ({ plan, type }: IProps) => {
+export const CardPlan = ({ plan, type, currentPlan }: IProps) => {
   const { price, description, productName, packageSize, isPopular } = plan;
 
   return (
@@ -33,7 +34,7 @@ export const CardPlan = ({ plan, type }: IProps) => {
 
         {description && (
           <div
-            className="list-disc text-center text-sm text-muted-foreground"
+            className="text-center text-sm text-muted-foreground"
             dangerouslySetInnerHTML={{
               __html: description,
             }}
@@ -60,7 +61,12 @@ export const CardPlan = ({ plan, type }: IProps) => {
         </ul>
       </CardContent>
       <CardFooter>
-        <ButtonCardPlan className="w-full" plan={plan} type={type} />
+        <ButtonCardPlan
+          className="w-full"
+          plan={plan}
+          currentPlan={currentPlan}
+          type={type}
+        />
       </CardFooter>
     </Card>
   );

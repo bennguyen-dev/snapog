@@ -19,3 +19,7 @@ export async function setupWebhook() {
 export async function getCurrentSubscription() {
   return await subscriptionService.getCurrentSubscription();
 }
+
+export async function cancelSubscription(lemonSqueezyId: string) {
+  return await subscriptionService.cancelSub(lemonSqueezyId);
+}

@@ -1,3 +1,4 @@
+import { Typography } from "@/components/ui/typography";
 import { formatPrice } from "@/lib/utils";
 
 export function SubscriptionPrice({
@@ -22,9 +23,12 @@ export function SubscriptionPrice({
   }
 
   const formattedIntervalCount =
-    intervalCount && intervalCount !== 1 ? `every ${intervalCount} ` : "every";
+    intervalCount && intervalCount !== 1 ? `/${intervalCount} ` : "/";
 
   return (
-    <span>{`${formattedPrice} ${formattedIntervalCount} ${interval}`}</span>
+    <Typography>
+      <span className="text-4xl font-bold">{formattedPrice}</span>
+      <span className="text-sm text-muted-foreground">{`${formattedIntervalCount}${interval}`}</span>
+    </Typography>
   );
 }

@@ -44,8 +44,8 @@ export const navItems: NavItem[] = [
     label: "Sites",
   },
   {
-    title: "Billing",
-    href: "/dashboard/billing",
+    title: "Subscription",
+    href: "/dashboard/subscription",
     icon: <ReceiptText className="size-5" />,
     label: "Billing",
   },

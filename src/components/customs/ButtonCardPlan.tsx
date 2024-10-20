@@ -15,12 +15,14 @@ import { ICheckoutUrl, ICheckoutUrlResponse } from "@/services/plan";
 
 interface IProps {
   plan: Plan;
+  currentPlan?: Plan;
   className?: string;
   type: "sign-up" | "subscription";
 }
 
 export const ButtonCardPlan = ({
   plan,
+  currentPlan,
   className,
   type = "sign-up",
 }: IProps) => {
@@ -44,13 +46,19 @@ export const ButtonCardPlan = ({
     },
   });
 
-  const label = useMemo(() => {
+  const [label, disabled] = useMemo(() => {
     if (type === "sign-up") {
-      return "Get started";
+      return ["Get started", false];
     }
 
-    return "Subscription";
-  }, [type]);
+    if (!currentPlan) {
+      return ["Select", true];
+    } else if (currentPlan.id === plan.id) {
+      return ["Current Plan", true];
+    } else {
+      return ["Select", false];
+    }
+  }, [currentPlan, plan.id, type]);
 
   const onClick = useCallback(async () => {
     if (type === "sign-up" && !session?.user) {
@@ -59,7 +67,7 @@ export const ButtonCardPlan = ({
     }
 
     if (type === "sign-up" && session?.user) {
-      router.push("/dashboard/billing");
+      router.push("/dashboard/subscription");
       return;
     }
 
@@ -72,6 +80,7 @@ export const ButtonCardPlan = ({
       className={className}
       variant={plan.isPopular ? "default" : "outline"}
       loading={loading}
+      disabled={disabled}
     >
       {label}
     </Button>
