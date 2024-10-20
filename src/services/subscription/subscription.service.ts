@@ -136,6 +136,8 @@ class SubscriptionService {
       data: cancelledSub.data,
     };
   }
+
+  async updateSub() {}
 }
 
 export const subscriptionService = new SubscriptionService();

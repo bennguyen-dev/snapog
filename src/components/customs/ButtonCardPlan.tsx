@@ -54,7 +54,7 @@ export const ButtonCardPlan = ({
     if (!currentPlan) {
       return ["Select", true];
     } else if (currentPlan.id === plan.id) {
-      return ["Current Plan", true];
+      return ["Your plan", true];
     } else {
       return ["Select", false];
     }
