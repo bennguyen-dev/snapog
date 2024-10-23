@@ -6,7 +6,6 @@ import {
   getUrlWithProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { crawlServiceV2 } from "@/services/crawlV2";
 import { ogImageService } from "@/services/ogImage";
 import {
   ICreatePage,
@@ -15,6 +14,7 @@ import {
   IPageDetail,
   IUpdatePagesBy,
 } from "@/services/page";
+import { puppeteerService } from "@/services/puppeteer";
 import { storageService } from "@/services/storage";
 
 class PageService {
@@ -56,11 +56,8 @@ class PageService {
     }
 
     // Check if page already exists
-    const pageCrawlInfo = await crawlServiceV2.crawlInfoByUrl({
+    const pageCrawlInfo = await puppeteerService.getInfo({
       url: urlWithProtocol,
-      configScreenshot: {
-        cacheLimit: 0,
-      },
     });
     if (!pageCrawlInfo.data) {
       return {

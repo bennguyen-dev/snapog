@@ -13,6 +13,7 @@ import {
   IGetDemo,
   IGetDemoResponse,
 } from "@/services/demo";
+import { puppeteerService } from "@/services/puppeteer";
 import { storageService } from "@/services/storage";
 
 class DemoService {
@@ -100,9 +101,8 @@ class DemoService {
 
       // Step 2: Get info of URLs
       const urlsInfoPromises = urls.data?.urls.map((url) =>
-        crawlServiceV2.crawlInfoByUrl({
+        puppeteerService.getInfo({
           url,
-          configScreenshot: { cacheLimit: 0 },
         }),
       );
       const urlsInfo = await Promise.all(urlsInfoPromises);

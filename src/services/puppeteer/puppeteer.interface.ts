@@ -8,5 +8,5 @@ export interface IGetInfoResponse {
   description?: string;
   ogImage?: string;
   favicon?: string;
-  screenshot?: any;
+  screenshot?: Buffer;
 }
