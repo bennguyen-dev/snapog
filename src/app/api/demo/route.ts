@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getDomainName } from "@/lib/utils";
 import { demoService } from "@/services/demo";
 import { googleCaptchaService } from "@/services/googleCaptcha";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const domain = body?.domain;
+  const url = body?.url;
   const gReCaptchaToken = body?.gReCaptchaToken;
 
-  if (!domain) {
+  if (!url) {
     return NextResponse.json({
-      message: "Domain is required",
+      message: "Url is required",
       status: 400,
       data: null,
     });
@@ -24,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   if (captchaVerification.data?.success) {
     const res = await demoService.createDemo({
-      url: getDomainName(domain),
+      url,
     });
 
     return NextResponse.json(res, { status: res.status });

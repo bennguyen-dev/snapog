@@ -24,8 +24,8 @@ import { ICreateDemo, ICreateDemoResponse } from "@/services/demo";
 import { IVerifyCaptcha } from "@/services/googleCaptcha";
 
 const formSchema = z.object({
-  domain: z.string().min(1, {
-    message: "Domain is required",
+  url: z.string().min(1, {
+    message: "Url is required",
   }),
 });
 
@@ -42,7 +42,7 @@ export const InputDemo = ({ className }: IProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      domain: "",
+      url: "",
     },
     mode: "onChange",
   });
@@ -61,13 +61,13 @@ export const InputDemo = ({ className }: IProps) => {
       router.push(`/demo/${getDomainName(data?.domain)}`);
     },
     handleError(_, message) {
-      form.setError("domain", { message });
+      form.setError("url", { message });
     },
   });
 
   const onViewDemo = async (data: z.infer<typeof formSchema>) => {
     if (!executeRecaptcha) {
-      form.setError("domain", {
+      form.setError("url", {
         message:
           "Execute recaptcha not available yet likely meaning key not recaptcha key not set",
       });
@@ -78,11 +78,11 @@ export const InputDemo = ({ className }: IProps) => {
       const gReCaptchaToken = await executeRecaptcha("createDemo");
 
       createDemo({
-        url: data.domain,
+        url: data.url,
         gReCaptchaToken,
       });
     } catch (error) {
-      form.setError("domain", {
+      form.setError("url", {
         message: "Failed to create demo. Please try again.",
       });
     }
@@ -98,7 +98,7 @@ export const InputDemo = ({ className }: IProps) => {
       >
         <FormField
           control={form.control}
-          name="domain"
+          name="url"
           render={({ field }) => (
             <FormItem className="flex-1 text-left">
               <FormControl>
