@@ -13,7 +13,7 @@ export default async function DemoDetailPage({
 }) {
   const domain = params.domain;
 
-  const demoRes = await demoService.getDemo({ domain });
+  const demoRes = await demoService.getDemo({ url: domain });
 
   if (demoRes.status === 404) {
     return notFound();

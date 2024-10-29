@@ -1,6 +1,6 @@
 // create demo
 export interface ICreateDemo {
-  domain: string;
+  url: string;
   numberOfImages?: number;
 }
 
@@ -10,7 +10,7 @@ export interface ICreateDemoResponse {
 
 // get demo
 export interface IGetDemo {
-  domain: string;
+  url: string;
 }
 
 export interface IGetDemoResponse {

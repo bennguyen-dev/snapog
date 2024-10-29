@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { inngest } from "@/lib/inngest";
-import { crawlServiceV2 } from "@/services/crawlV2";
 import { pageService } from "@/services/page";
+import { scrapeService } from "@/services/scrapeApi";
 import { siteService } from "@/services/site";
 import { storageService } from "@/services/storage";
 
@@ -20,22 +20,22 @@ class InngestService {
           }
 
           // Get internal links
-          const urlsResult = await crawlServiceV2.getInternalLinksOfDomain({
-            domain: site.data.domain as string,
+          const urlsResult = await scrapeService.scrapeInternalLinks({
+            url: site.data.domain as string,
             limit: 3, // TODO: make it configurable later when user has pricing
           });
           if (
             !urlsResult ||
             !urlsResult.data ||
-            !urlsResult.data.urls ||
-            urlsResult.data.urls.length === 0
+            !urlsResult.data.links ||
+            urlsResult.data.links.length === 0
           ) {
             console.log(`No URLs found for domain: ${site.data.domain}`);
             return { status: "error", message: "No URLs found" };
           }
 
           // Create pages
-          const pageCreationPromises = urlsResult.data.urls.map((link) =>
+          const pageCreationPromises = urlsResult.data.links.map((link) =>
             pageService.create({
               siteId: site.data?.id as string,
               url: link,
@@ -50,14 +50,14 @@ class InngestService {
           }>(
             (acc, result, index) => {
               if (result.status === "fulfilled") {
-                acc.succeeded.push(urlsResult.data?.urls?.[index] as string);
+                acc.succeeded.push(urlsResult.data?.links?.[index] as string);
               } else {
                 acc.failed.push({
-                  url: urlsResult.data?.urls?.[index] as string,
+                  url: urlsResult.data?.links?.[index] as string,
                   error: result.reason,
                 });
                 console.error(
-                  `Failed to create page for ${urlsResult.data?.urls?.[index]}:`,
+                  `Failed to create page for ${urlsResult.data?.links?.[index]}:`,
                   result.reason,
                 );
               }
@@ -125,11 +125,8 @@ class InngestService {
             const cacheDurationDays = page.cacheDurationDays ?? 0;
 
             console.log(`Processing page: ${page.url}`);
-            const pageCrawlInfo = await crawlServiceV2.crawlInfoByUrl({
+            const pageCrawlInfo = await scrapeService.scrapeInfo({
               url: page.url,
-              configScreenshot: {
-                cacheLimit: 0,
-              },
             });
 
             if (!pageCrawlInfo.data?.screenshot) {

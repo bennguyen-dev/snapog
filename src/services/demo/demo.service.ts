@@ -2,25 +2,28 @@ import { IMAGE_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
 import {
+  getDomainName,
   getImageLinkFromAWS,
   getUrlWithoutProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { crawlServiceV2 } from "@/services/crawlV2";
 import {
   ICreateDemo,
   ICreateDemoResponse,
   IGetDemo,
   IGetDemoResponse,
 } from "@/services/demo";
+import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 
 class DemoService {
   async getDemo({
-    domain,
+    url,
   }: IGetDemo): Promise<IResponse<IGetDemoResponse[] | null>> {
-    console.time(`Get demo for domain: ${domain}`);
+    console.time(`Get demo for url: ${url}`);
     try {
+      const domain = getDomainName(url);
+
       const demo = await prisma.demo.findUnique({
         where: {
           domain,
@@ -55,20 +58,22 @@ class DemoService {
       console.error("Error generating OG images for domain:", error);
       return {
         status: 500,
-        message: "Internal Server Error",
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     } finally {
-      console.timeEnd(`Get demo for domain: ${domain}`);
+      console.timeEnd(`Get demo for url: ${url}`);
     }
   }
 
   async createDemo({
-    domain,
+    url,
     numberOfImages = 3,
   }: ICreateDemo): Promise<IResponse<ICreateDemoResponse | null>> {
-    console.time(`Create demo for domain: ${domain}`);
+    console.time(`Create demo for url: ${url}`);
     try {
+      const domain = getDomainName(url);
       // Check if the domain already exists in the database
       const existingDomain = await prisma.demo.findUnique({
         where: {
@@ -85,24 +90,19 @@ class DemoService {
       }
 
       // Step 1: Get URLs of the domain
-      const urls = await crawlServiceV2.getInternalLinksOfDomain({
-        domain,
+      const linksRes = await scrapeService.scrapeInternalLinks({
+        url,
         limit: numberOfImages,
       });
 
-      if (!urls.data) {
-        return {
-          status: urls.status,
-          message: urls.message,
-          data: null,
-        };
+      if (!linksRes.data) {
+        throw new Error("Failed to get internal links");
       }
 
       // Step 2: Get info of URLs
-      const urlsInfoPromises = urls.data?.urls.map((url) =>
-        crawlServiceV2.crawlInfoByUrl({
+      const urlsInfoPromises = linksRes.data?.links.map((url) =>
+        scrapeService.scrapeInfo({
           url,
-          configScreenshot: { cacheLimit: 0 },
         }),
       );
       const urlsInfo = await Promise.all(urlsInfoPromises);
@@ -165,14 +165,15 @@ class DemoService {
         data: newDemo,
       };
     } catch (error) {
-      console.error(`Error create demo for domain: ${domain}`, error);
+      console.error(`Error create demo for url: ${url}`, error);
       return {
         status: 500,
-        message: "Internal Server Error",
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     } finally {
-      console.timeEnd(`Create demo for domain: ${domain}`);
+      console.timeEnd(`Create demo for url: ${url}`);
     }
   }
 }

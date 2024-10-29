@@ -78,7 +78,7 @@ export const InputDemo = ({ className }: IProps) => {
       const gReCaptchaToken = await executeRecaptcha("createDemo");
 
       createDemo({
-        domain: data.domain,
+        url: data.domain,
         gReCaptchaToken,
       });
     } catch (error) {

@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   if (captchaVerification.data?.success) {
     const res = await demoService.createDemo({
-      domain: getDomainName(domain),
+      url: getDomainName(domain),
     });
 
     return NextResponse.json(res, { status: res.status });
