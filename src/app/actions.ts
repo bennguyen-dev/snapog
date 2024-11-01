@@ -1,7 +1,9 @@
 "use server";
 
+import { auth } from "@/auth";
 import { ICheckoutUrl, planService } from "@/services/plan";
 import { subscriptionService } from "@/services/subscription";
+import { usageService } from "@/services/usage";
 import { webhookService } from "@/services/webhook";
 
 export async function getCheckoutUrl(res: ICheckoutUrl) {
@@ -22,4 +24,18 @@ export async function getCurrentSubscription() {
 
 export async function cancelSubscription(lemonSqueezyId: string) {
   return await subscriptionService.cancelSub(lemonSqueezyId);
+}
+
+// Add this new action alongside existing ones
+export async function getUserUsage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+
+  return await usageService.getUserUsage({ userId: session.user.id });
 }

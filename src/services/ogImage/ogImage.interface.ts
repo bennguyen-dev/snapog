@@ -1,6 +1,7 @@
 export interface ICreateOGImage {
   src: string;
   expiresAt: Date;
+  userId: string;
 }
 
 export interface IUpdateOGImage {

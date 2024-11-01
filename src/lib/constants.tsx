@@ -1,4 +1,4 @@
-import { SquareMousePointer } from "lucide-react";
+import { LayoutDashboard, ReceiptText, SquareMousePointer } from "lucide-react";
 
 import { NavItem } from "@/lib/type";
 
@@ -26,24 +26,24 @@ export const ROUTES = [
 ];
 
 export const navItems: NavItem[] = [
-  // {
-  //   title: "Dashboard",
-  //   href: "/dashboard",
-  //   icon: <LayoutDashboard className="size-5" />,
-  //   label: "Dashboard",
-  // },
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: <LayoutDashboard className="size-5" />,
+    label: "Dashboard",
+  },
   {
     title: "Sites",
     href: "/dashboard/sites",
     icon: <SquareMousePointer className="size-5" />,
     label: "Sites",
   },
-  // {
-  //   title: "Subscription",
-  //   href: "/dashboard/subscription",
-  //   icon: <ReceiptText className="size-5" />,
-  //   label: "Subscription",
-  // },
+  {
+    title: "Subscription",
+    href: "/dashboard/subscription",
+    icon: <ReceiptText className="size-5" />,
+    label: "Subscription",
+  },
 ];
 
 export const CACHE_DURATION_DAYS = 30;

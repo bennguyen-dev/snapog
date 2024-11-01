@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import { getAllPlan, getCurrentSubscription } from "@/app/actions";
+import {
+  getAllPlan,
+  getCurrentSubscription,
+  getUserUsage,
+} from "@/app/actions";
 import { CardPlan } from "@/components/customs/CardPlan";
 import {
   Breadcrumb,
@@ -23,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCallAction } from "@/hooks/useCallAction";
 import { cn } from "@/lib/utils";
+import { CardUsage } from "@/modules/subscription/CardUsage";
 import {
   CurrentSubscription,
   DefaultSubscription,
@@ -41,7 +46,7 @@ export const ListSubscription = () => {
   const { data: userSubscriptions, setLetCall: getCurrentSub } = useCallAction({
     action: getCurrentSubscription,
   });
-
+  const { data: userUsage } = useCallAction({ action: getUserUsage });
   const filterPlans = useMemo(() => {
     if (!plans) return [];
 
@@ -101,6 +106,16 @@ export const ListSubscription = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        <div className="mb-4 sm:mb-6">
+          {userUsage && (
+            <CardUsage
+              current={userUsage.current}
+              limit={userUsage.limit}
+              periodStart={userUsage.periodStart}
+              periodEnd={userUsage.periodEnd}
+            />
+          )}
+        </div>
         <div className="mb-4 sm:mb-6">
           {!userSubscriptions?.length && <DefaultSubscription />}
           {userSubscriptions?.length &&
