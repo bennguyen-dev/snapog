@@ -9,7 +9,7 @@ interface IProps {
   periodEnd: Date | null;
 }
 
-export const CardUsage = ({
+export const UserUsage = ({
   current,
   limit,
   periodStart,

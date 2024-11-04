@@ -5,37 +5,35 @@ import {
 
 import { revalidatePath } from "next/cache";
 
-import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { configureLemonSqueezy } from "@/lib/lemonsqueezy";
 import { IResponse } from "@/lib/type";
 import {
+  ICancelSubscription,
+  IGetUserSubscription,
   IUserSubscription,
   SUBSCRIPTION_STATUS,
 } from "@/services/subscription";
 
 class SubscriptionService {
-  async getCurrentSubscription(): Promise<
-    IResponse<IUserSubscription[] | null>
-  > {
-    const session = await auth();
-    const userId = session?.user?.id;
-
-    if (!userId) {
-      return {
-        data: null,
-        message: "Unauthorized",
-        status: 401,
-      };
-    }
-
+  async getUserSubscription({
+    userId,
+  }: IGetUserSubscription): Promise<IResponse<IUserSubscription | null>> {
     try {
-      const userSubscriptions = await prisma.subscription.findMany({
-        where: { userId },
-        include: { plan: true },
+      const userSubscription = await prisma.subscription.findFirst({
+        where: {
+          userId,
+          status: SUBSCRIPTION_STATUS.ACTIVE,
+        },
+        include: {
+          plan: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
-      if (userSubscriptions.length === 0) {
+      if (!userSubscription) {
         return {
           data: null,
           message: "No subscriptions found for this user",
@@ -43,25 +41,10 @@ class SubscriptionService {
         };
       }
 
-      const { ACTIVE, PAUSED, CANCELLED } = SUBSCRIPTION_STATUS;
-
-      // Show active subscriptions first, then paused, then canceled
-      const sortedSubscriptions = userSubscriptions.sort((a, b) => {
-        if (a.status === ACTIVE && b.status !== ACTIVE) {
-          return -1;
-        }
-
-        if (a.status === PAUSED && b.status === CANCELLED) {
-          return -1;
-        }
-
-        return 0;
-      });
-
       return {
         message: "Successfully fetched user subscriptions",
         status: 200,
-        data: sortedSubscriptions,
+        data: userSubscription,
       };
     } catch (error) {
       console.error(error);
@@ -74,21 +57,19 @@ class SubscriptionService {
     }
   }
 
-  async cancelSub(
-    lemonSqueezyId: string,
-  ): Promise<IResponse<Subscription | null>> {
+  async cancelSub({
+    lemonSqueezyId,
+    userId,
+  }: ICancelSubscription): Promise<IResponse<Subscription | null>> {
     configureLemonSqueezy();
 
     // Get user subscriptions
-    const userSubscriptions =
-      await subscriptionService.getCurrentSubscription();
+    const userSubscriptions = await subscriptionService.getUserSubscription({
+      userId,
+    });
 
     // Check if the subscription exists
-    const subscription = userSubscriptions.data?.find(
-      (sub) => sub.lemonSqueezyId === lemonSqueezyId,
-    );
-
-    if (!subscription) {
+    if (userSubscriptions.data?.lemonSqueezyId !== lemonSqueezyId) {
       return {
         status: 404,
         message: `Subscription #${lemonSqueezyId} not found.`,
@@ -136,8 +117,6 @@ class SubscriptionService {
       data: cancelledSub.data,
     };
   }
-
-  async updateSub() {}
 }
 
 export const subscriptionService = new SubscriptionService();

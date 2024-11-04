@@ -19,11 +19,33 @@ export async function setupWebhook() {
 }
 
 export async function getCurrentSubscription() {
-  return await subscriptionService.getCurrentSubscription();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+
+  return await subscriptionService.getUserSubscription({
+    userId: session.user.id,
+  });
 }
 
 export async function cancelSubscription(lemonSqueezyId: string) {
-  return await subscriptionService.cancelSub(lemonSqueezyId);
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+  return await subscriptionService.cancelSub({
+    lemonSqueezyId,
+    userId: session.user.id,
+  });
 }
 
 // Add this new action alongside existing ones

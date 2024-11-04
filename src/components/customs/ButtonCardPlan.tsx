@@ -51,9 +51,7 @@ export const ButtonCardPlan = ({
       return ["Get started", false];
     }
 
-    if (!currentPlan) {
-      return ["Select", true];
-    } else if (currentPlan.id === plan.id) {
+    if (currentPlan?.id === plan.id) {
       return ["Your plan", true];
     } else {
       return ["Select", false];
