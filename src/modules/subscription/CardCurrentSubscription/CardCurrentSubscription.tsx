@@ -16,28 +16,24 @@ import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
 import { useConfirmDialog } from "@/hooks";
 import { useCallAction } from "@/hooks/useCallAction";
-import { SubscriptionDate } from "@/modules/subscription/CurrentSubscription/SubscriptionDate";
-import { SubscriptionPrice } from "@/modules/subscription/CurrentSubscription/SubscriptionPrice";
-import { SubscriptionStatus } from "@/modules/subscription/CurrentSubscription/SubscriptionStatus";
-import { UserUsage } from "@/modules/subscription/CurrentSubscription/UserUsage";
+import { SubscriptionDate } from "@/modules/subscription/CardCurrentSubscription/SubscriptionDate";
+import { SubscriptionPrice } from "@/modules/subscription/CardCurrentSubscription/SubscriptionPrice";
+import { SubscriptionStatus } from "@/modules/subscription/CardCurrentSubscription/SubscriptionStatus";
 import {
   IUserSubscription,
   SubscriptionStatusType,
 } from "@/services/subscription";
-import { IUsageResponse } from "@/services/usage";
 
 interface IProps {
   subscription: IUserSubscription;
   className?: string;
   cbSuccess?: () => void;
-  userUsage?: IUsageResponse | null;
 }
 
-export const CurrentSubscription = ({
+export const CardCurrentSubscription = ({
   subscription,
   className,
   cbSuccess,
-  userUsage,
 }: IProps) => {
   const plan = subscription.plan;
 
@@ -89,14 +85,6 @@ export const CurrentSubscription = ({
             price={subscription.price}
             isUsageBased={plan.isUsageBased ?? false}
           />
-          {userUsage && (
-            <UserUsage
-              current={userUsage.current}
-              limit={userUsage.limit}
-              periodStart={userUsage.periodStart}
-              periodEnd={userUsage.periodEnd}
-            />
-          )}
         </CardHeader>
         <CardContent className="flex-1 max-md:hidden">
           <Typography className="mb-4">What's included:</Typography>

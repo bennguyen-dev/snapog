@@ -9,15 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
-import { UserUsage } from "@/modules/subscription/CurrentSubscription/UserUsage";
-import { IUsageResponse } from "@/services/usage";
 
 interface IProps {
   className?: string;
-  userUsage?: IUsageResponse | null;
 }
 
-export const DefaultSubscription = ({ className, userUsage }: IProps) => {
+export const CardDefaultSubscription = ({ className }: IProps) => {
   return (
     <Card className={cx("flex", className)}>
       <CardHeader className="flex-1">
@@ -25,14 +22,6 @@ export const DefaultSubscription = ({ className, userUsage }: IProps) => {
         <CardDescription className="!mb-4">
           You are currently on the Free plan, billed monthly.
         </CardDescription>
-        {userUsage && (
-          <UserUsage
-            current={userUsage.current}
-            limit={userUsage.limit}
-            periodStart={userUsage.periodStart}
-            periodEnd={userUsage.periodEnd}
-          />
-        )}
       </CardHeader>
       <CardContent className="flex-1 max-md:hidden">
         <Typography className="mb-4">What's included:</Typography>

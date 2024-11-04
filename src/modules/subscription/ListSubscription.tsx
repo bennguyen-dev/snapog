@@ -28,9 +28,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCallAction } from "@/hooks/useCallAction";
 import { cn } from "@/lib/utils";
 import {
-  CurrentSubscription,
-  DefaultSubscription,
-} from "@/modules/subscription/CurrentSubscription";
+  CardCurrentSubscription,
+  CardDefaultSubscription,
+  CardUserUsage,
+} from "@/modules/subscription";
 
 const frequencies = [
   { id: "1", value: "month", label: "Monthly" },
@@ -44,7 +45,11 @@ export const ListSubscription = () => {
   const { data: userSubscription, setLetCall: getCurrentSub } = useCallAction({
     action: getCurrentSubscription,
   });
-  const { data: userUsage, setLetCall: getUsage } = useCallAction({
+  const {
+    data: userUsage,
+    setLetCall: getUsage,
+    loading: fetchingUsage,
+  } = useCallAction({
     action: getUserUsage,
   });
 
@@ -71,16 +76,18 @@ export const ListSubscription = () => {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="mb-4 sm:mb-6">
+          <CardUserUsage userUsage={userUsage} loading={fetchingUsage} />
+        </div>
+        <div className="mb-4 sm:mb-6">
           {!userSubscription ? (
-            <DefaultSubscription userUsage={userUsage} />
+            <CardDefaultSubscription />
           ) : (
-            <CurrentSubscription
+            <CardCurrentSubscription
               subscription={userSubscription}
               cbSuccess={() => {
                 getCurrentSub(true);
                 getUsage(true);
               }}
-              userUsage={userUsage}
             />
           )}
         </div>

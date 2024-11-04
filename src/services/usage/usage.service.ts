@@ -2,7 +2,10 @@ import { Subscription } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
-import { SUBSCRIPTION_STATUS } from "@/services/subscription";
+import {
+  SUBSCRIPTION_STATUS,
+  subscriptionService,
+} from "@/services/subscription";
 import { USAGE_CONSTANTS } from "@/services/usage/usage.constant";
 
 import {
@@ -14,29 +17,46 @@ import {
 class UsageService {
   private async getCurrentPeriodInfo(userId: string): Promise<{
     subscription: Subscription | null;
-    periodStart: Date | null; // if no subscription periodStart is null
-    periodEnd: Date | null; // if no subscription periodEnd is null
+    periodStart: Date | null;
+    periodEnd: Date | null;
   }> {
     // Get active subscription if exists
-    const subscription = await prisma.subscription.findFirst({
-      where: {
+    const { data: subscription } =
+      await subscriptionService.getUserSubscription({
         userId,
-        status: SUBSCRIPTION_STATUS.ACTIVE,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+      });
 
     let periodStart: Date | null = null;
     let periodEnd: Date | null = null;
 
     if (subscription) {
-      // Use subscription period
-      periodStart = new Date(subscription.renewsAt ?? subscription.createdAt);
-      periodEnd = new Date(
-        subscription.endsAt ?? subscription.renewsAt ?? subscription.createdAt,
-      );
+      // Set period start to subscription creation date
+      periodStart = new Date(subscription.createdAt);
+
+      // Calculate period end based on plan interval
+      if (subscription.plan.interval === "month") {
+        // Add one month to creation date
+        periodEnd = new Date(subscription.createdAt);
+        periodEnd.setMonth(
+          periodEnd.getMonth() + (subscription.plan.intervalCount || 1),
+        );
+      } else if (subscription.plan.interval === "year") {
+        // Add one year to creation date
+        periodEnd = new Date(subscription.createdAt);
+        periodEnd.setFullYear(
+          periodEnd.getFullYear() + (subscription.plan.intervalCount || 1),
+        );
+      }
+
+      // If subscription has renewsAt, use that as the period end
+      if (subscription.renewsAt) {
+        periodEnd = new Date(subscription.renewsAt);
+      }
+
+      // If subscription has endsAt (cancelled), use that as the period end
+      if (subscription.endsAt) {
+        periodEnd = new Date(subscription.endsAt);
+      }
     }
 
     return { subscription, periodStart, periodEnd };

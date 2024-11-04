@@ -20,11 +20,11 @@ export default async function AuthLayout({ children }: IProps) {
 
   return (
     <SessionProvider>
-      <div className="flex">
+      <div className="flex ">
         <AuthSidebar />
-        <main className="w-full flex-1 overflow-hidden">
+        <main className="flex h-screen w-full flex-col overflow-hidden">
           <AuthHeader />
-          {children}
+          <div className="h-full flex-1 overflow-y-auto">{children}</div>
         </main>
       </div>
     </SessionProvider>
