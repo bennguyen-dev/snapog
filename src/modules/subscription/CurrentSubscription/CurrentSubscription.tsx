@@ -19,21 +19,25 @@ import { useCallAction } from "@/hooks/useCallAction";
 import { SubscriptionDate } from "@/modules/subscription/CurrentSubscription/SubscriptionDate";
 import { SubscriptionPrice } from "@/modules/subscription/CurrentSubscription/SubscriptionPrice";
 import { SubscriptionStatus } from "@/modules/subscription/CurrentSubscription/SubscriptionStatus";
+import { UserUsage } from "@/modules/subscription/CurrentSubscription/UserUsage";
 import {
   IUserSubscription,
   SubscriptionStatusType,
 } from "@/services/subscription";
+import { IUsageResponse } from "@/services/usage";
 
 interface IProps {
   subscription: IUserSubscription;
   className?: string;
   cbSuccess?: () => void;
+  userUsage?: IUsageResponse | null;
 }
 
 export const CurrentSubscription = ({
   subscription,
   className,
   cbSuccess,
+  userUsage,
 }: IProps) => {
   const plan = subscription.plan;
 
@@ -85,8 +89,16 @@ export const CurrentSubscription = ({
             price={subscription.price}
             isUsageBased={plan.isUsageBased ?? false}
           />
+          {userUsage && (
+            <UserUsage
+              current={userUsage.current}
+              limit={userUsage.limit}
+              periodStart={userUsage.periodStart}
+              periodEnd={userUsage.periodEnd}
+            />
+          )}
         </CardHeader>
-        <CardContent className="flex-1">
+        <CardContent className="flex-1 max-md:hidden">
           <Typography className="mb-4">What's included:</Typography>
           <ul className="space-y-2.5 text-sm">
             <li className="flex space-x-2">

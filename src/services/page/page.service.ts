@@ -101,6 +101,7 @@ class PageService {
       const ogImage = await ogImageService.create({
         src: uploadRes.data.src,
         expiresAt: newExpiresAt,
+        userId: site.userId,
       });
 
       if (!ogImage.data) {

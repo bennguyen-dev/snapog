@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import { getAllPlan, getCurrentSubscription } from "@/app/actions";
+import {
+  getAllPlan,
+  getCurrentSubscription,
+  getUserUsage,
+} from "@/app/actions";
 import { CardPlan } from "@/components/customs/CardPlan";
 import {
   Breadcrumb,
@@ -27,7 +31,6 @@ import {
   CurrentSubscription,
   DefaultSubscription,
 } from "@/modules/subscription/CurrentSubscription";
-import { SUBSCRIPTION_STATUS } from "@/services/subscription";
 
 const frequencies = [
   { id: "1", value: "month", label: "Monthly" },
@@ -38,9 +41,10 @@ export const ListSubscription = () => {
   const [frequency, setFrequency] = useState(frequencies[0]);
 
   const { data: plans } = useCallAction({ action: getAllPlan });
-  const { data: userSubscriptions, setLetCall: getCurrentSub } = useCallAction({
+  const { data: userSubscription, setLetCall: getCurrentSub } = useCallAction({
     action: getCurrentSubscription,
   });
+  const { data: userUsage } = useCallAction({ action: getUserUsage });
 
   const filterPlans = useMemo(() => {
     if (!plans) return [];
@@ -49,43 +53,6 @@ export const ListSubscription = () => {
       .filter((plan) => plan.interval === frequency.value && Number(plan.price))
       .sort((a, b) => (parseFloat(a.price) ?? 0) - (parseFloat(b.price) ?? 0));
   }, [frequency, plans]);
-
-  const currentPlan = useMemo(() => {
-    if (!userSubscriptions?.length) return undefined; // No subscriptions, return null (plan free)
-
-    // Check for an active subscription
-    const subscriptionIsActive = userSubscriptions.find(
-      (sub) => sub.status === "active",
-    );
-
-    if (subscriptionIsActive) {
-      return subscriptionIsActive.plan; // Return the active plan
-    }
-
-    // Check for a canceled subscription
-    const subscriptionIsCancelled = userSubscriptions.find((sub) => {
-      const endsAtDate = sub.endsAt ? new Date(sub.endsAt) : null;
-      const now = new Date();
-      console.log("sub 😋", { sub }, "");
-
-      console.log(
-        "endsAtDate 😋",
-        { endsAtDate: endsAtDate?.toString(), now: now.toString() },
-        "",
-      );
-      return (
-        sub.status === SUBSCRIPTION_STATUS.CANCELLED &&
-        endsAtDate &&
-        endsAtDate >= now
-      );
-    });
-
-    if (subscriptionIsCancelled) {
-      return subscriptionIsCancelled.plan; // Return the canceled plan if it hasn't ended yet
-    }
-
-    return undefined; // If no active or valid canceled subscription, return null (plan free)
-  }, [userSubscriptions]);
 
   return (
     <>
@@ -102,19 +69,17 @@ export const ListSubscription = () => {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="mb-4 sm:mb-6">
-          {!userSubscriptions?.length && <DefaultSubscription />}
-          {userSubscriptions?.length &&
-            userSubscriptions?.map((subscription) => {
-              return (
-                <CurrentSubscription
-                  key={subscription.id}
-                  subscription={subscription}
-                  cbSuccess={() => {
-                    getCurrentSub(true);
-                  }}
-                />
-              );
-            })}
+          {!userSubscription ? (
+            <DefaultSubscription userUsage={userUsage} />
+          ) : (
+            <CurrentSubscription
+              subscription={userSubscription}
+              cbSuccess={() => {
+                getCurrentSub(true);
+              }}
+              userUsage={userUsage}
+            />
+          )}
         </div>
         <Card>
           <CardHeader>
@@ -164,7 +129,7 @@ export const ListSubscription = () => {
                 <CardPlan
                   key={plan.id}
                   plan={plan}
-                  currentPlan={currentPlan}
+                  currentPlan={userSubscription?.plan}
                   type="subscription"
                 />
               ))}

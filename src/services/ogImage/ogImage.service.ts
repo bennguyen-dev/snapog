@@ -6,19 +6,32 @@ import {
   IUpdateOGImage,
 } from "@/services/ogImage/ogImage.interface";
 import { storageService } from "@/services/storage";
+import { usageService } from "@/services/usage";
 
 class OGImageService {
   async create({
     src,
     expiresAt,
+    userId,
   }: ICreateOGImage): Promise<IResponse<IOGImageDetail | null>> {
     try {
+      // Check usage first
+      const usageRes = await usageService.incrementUsage({ userId });
+      if (usageRes.status !== 200) {
+        return {
+          message: usageRes.message,
+          status: usageRes.status,
+          data: null,
+        };
+      }
+
       const ogImage = await prisma.oGImage.create({
         data: {
           src,
           expiresAt,
         },
       });
+
       return {
         message: "OG Image created successfully",
         status: 200,
