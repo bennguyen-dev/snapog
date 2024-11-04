@@ -60,8 +60,9 @@ export async function POST(request: Request) {
       });
     }
 
-    // Non-blocking call to process the webhook event.
-    void webhookService.processWebhookEvent(webhookEvent);
+    console.log("webhookEvent 😋", { webhookEvent }, "");
+
+    await webhookService.processWebhookEvent(webhookEvent);
 
     return NextResponse.json({
       message: "Webhook event received and processing started",

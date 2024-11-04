@@ -162,11 +162,15 @@ class WebhookService {
             processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.`;
           }
 
+          console.log("priceData 😋", { priceData }, "");
+
           const isUsageBased =
             attributes.first_subscription_item.is_usage_based;
           const price = isUsageBased
             ? priceData.data?.data.attributes.unit_price_decimal
             : priceData.data?.data.attributes.unit_price;
+
+          console.log("isUsageBased 😋", { isUsageBased, price }, "");
 
           const updateData = {
             lemonSqueezyId: eventBody.data.id,
@@ -228,6 +232,8 @@ class WebhookService {
         error,
       );
     }
+
+    revalidatePath("/");
   }
 
   async storeWebhookEvent(eventName: string, body: INewWebhookEvent["body"]) {

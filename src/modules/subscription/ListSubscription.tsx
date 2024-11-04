@@ -44,7 +44,9 @@ export const ListSubscription = () => {
   const { data: userSubscription, setLetCall: getCurrentSub } = useCallAction({
     action: getCurrentSubscription,
   });
-  const { data: userUsage } = useCallAction({ action: getUserUsage });
+  const { data: userUsage, setLetCall: getUsage } = useCallAction({
+    action: getUserUsage,
+  });
 
   const filterPlans = useMemo(() => {
     if (!plans) return [];
@@ -76,6 +78,7 @@ export const ListSubscription = () => {
               subscription={userSubscription}
               cbSuccess={() => {
                 getCurrentSub(true);
+                getUsage(true);
               }}
               userUsage={userUsage}
             />
