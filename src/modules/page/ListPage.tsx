@@ -247,11 +247,11 @@ export const ListPage = ({ siteId }: IProps) => {
   }, [mounted, getPages, getSite]);
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

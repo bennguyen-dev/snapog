@@ -67,7 +67,7 @@ export const ListSubscription = () => {
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/image-og/public">Home</BreadcrumbLink>
+              <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -141,6 +141,10 @@ export const ListSubscription = () => {
                   plan={plan}
                   currentPlan={userSubscription?.plan}
                   type="subscription"
+                  cbSuccess={() => {
+                    getCurrentSub(true);
+                    getUsage(true);
+                  }}
                 />
               ))}
             </div>

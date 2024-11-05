@@ -17,9 +17,10 @@ interface IProps {
   plan: Plan;
   currentPlan?: Plan;
   type: "sign-up" | "subscription";
+  cbSuccess?: () => void;
 }
 
-export const CardPlan = ({ plan, type, currentPlan }: IProps) => {
+export const CardPlan = ({ plan, type, currentPlan, cbSuccess }: IProps) => {
   const { price, description, productName, packageSize, isPopular } = plan;
 
   return (
@@ -66,6 +67,7 @@ export const CardPlan = ({ plan, type, currentPlan }: IProps) => {
           plan={plan}
           currentPlan={currentPlan}
           type={type}
+          cbSuccess={cbSuccess}
         />
       </CardFooter>
     </Card>

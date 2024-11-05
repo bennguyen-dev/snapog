@@ -7,17 +7,19 @@ import { useSession } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
-import { getCheckoutUrl } from "@/app/actions";
+import { changeSubscription, getCheckoutUrl } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { useCallAction } from "@/hooks/useCallAction";
 import { ICheckoutUrl, ICheckoutUrlResponse } from "@/services/plan";
+import { IChangeSubscription } from "@/services/subscription";
 
 interface IProps {
   plan: Plan;
   currentPlan?: Plan;
   className?: string;
   type: "sign-up" | "subscription";
+  cbSuccess?: () => void;
 }
 
 export const ButtonCardPlan = ({
@@ -25,6 +27,7 @@ export const ButtonCardPlan = ({
   currentPlan,
   className,
   type = "sign-up",
+  cbSuccess,
 }: IProps) => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -40,6 +43,26 @@ export const ButtonCardPlan = ({
       if (data?.url) {
         router.push(data.url);
       }
+    },
+    handleError(_, message) {
+      toast({ variant: "destructive", title: message });
+    },
+  });
+
+  const { loading: changing, promiseFunc: changePlan } = useCallAction<
+    any,
+    any,
+    Omit<IChangeSubscription, "userId">
+  >({
+    action: changeSubscription,
+    nonCallInit: true,
+    handleSuccess: (_, data) => {
+      console.log("data 😋", { data }, "");
+      cbSuccess?.();
+      toast({
+        variant: "success",
+        title: "Plan changed successfully",
+      });
     },
     handleError(_, message) {
       toast({ variant: "destructive", title: message });
@@ -69,15 +92,27 @@ export const ButtonCardPlan = ({
       return;
     }
 
-    getUrl({ variantId: plan.variantId });
-  }, [getUrl, plan.variantId, router, session?.user, type]);
+    if (!currentPlan) {
+      getUrl({ variantId: plan.variantId });
+      return;
+    }
+
+    if (currentPlan.variantId === plan.variantId) {
+      return;
+    }
+
+    if (currentPlan.variantId !== plan.variantId) {
+      changePlan({ currentPlanId: currentPlan.id, newPlanId: plan.id });
+      return;
+    }
+  }, [changePlan, currentPlan, getUrl, plan, router, session?.user, type]);
 
   return (
     <Button
       onClick={onClick}
       className={className}
       variant={plan.isPopular ? "default" : "outline"}
-      loading={loading}
+      loading={loading || changing}
       disabled={disabled}
     >
       {label}

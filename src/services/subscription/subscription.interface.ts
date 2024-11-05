@@ -16,6 +16,12 @@ export interface ICancelSubscription {
   userId: string;
 }
 
+export interface IChangeSubscription {
+  userId: string;
+  currentPlanId: string;
+  newPlanId: string;
+}
+
 export type SubscriptionStatusType =
   Subscription["data"]["attributes"]["status"];
 

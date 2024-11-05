@@ -1,6 +1,7 @@
 import {
   cancelSubscription,
   Subscription,
+  updateSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 
 import { revalidatePath } from "next/cache";
@@ -10,6 +11,7 @@ import { configureLemonSqueezy } from "@/lib/lemonsqueezy";
 import { IResponse } from "@/lib/type";
 import {
   ICancelSubscription,
+  IChangeSubscription,
   IGetUserSubscription,
   IUserSubscription,
   SUBSCRIPTION_STATUS,
@@ -115,6 +117,70 @@ class SubscriptionService {
       status: 200,
       message: `Subscription #${lemonSqueezyId} cancelled successfully.`,
       data: cancelledSub.data,
+    };
+  }
+
+  async changeSub({
+    userId,
+    currentPlanId,
+    newPlanId,
+  }: IChangeSubscription): Promise<IResponse<Subscription | null>> {
+    configureLemonSqueezy();
+
+    const userSubscriptions = await this.getUserSubscription({ userId });
+
+    if (userSubscriptions?.data?.planId !== currentPlanId) {
+      throw new Error(
+        `No subscription with plan id #${currentPlanId} was found.`,
+      );
+    }
+
+    const newPlan = await prisma.plan.findUnique({
+      where: {
+        id: newPlanId,
+      },
+    });
+
+    if (!newPlan?.variantId) {
+      throw new Error(`No plan with id #${newPlanId} was found.`);
+    }
+
+    // Send request to Lemon Squeezy to change the subscription.
+    const updatedSub = await updateSubscription(
+      userSubscriptions.data.lemonSqueezyId,
+      {
+        variantId: newPlan.variantId,
+      },
+    );
+
+    // Update the db
+    try {
+      await prisma.subscription.update({
+        where: { lemonSqueezyId: userSubscriptions.data.lemonSqueezyId },
+        data: {
+          status: updatedSub.data?.data.attributes.status,
+          statusFormatted: updatedSub.data?.data.attributes.status_formatted,
+          endsAt: updatedSub.data?.data.attributes.ends_at,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error
+            ? error.message
+            : `Failed to update Subscription #${userSubscriptions.data.lemonSqueezyId} in the database.`,
+        data: null,
+      };
+    }
+
+    revalidatePath("/");
+
+    return {
+      status: 200,
+      message: `Subscription #${userSubscriptions.data.lemonSqueezyId} updated successfully.`,
+      data: updatedSub.data,
     };
   }
 }
