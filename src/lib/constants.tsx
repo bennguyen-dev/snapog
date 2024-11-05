@@ -1,37 +1,37 @@
-import { LayoutDashboard, ReceiptText, SquareMousePointer } from "lucide-react";
+import { ReceiptText, SquareMousePointer } from "lucide-react";
 
 import { NavItem } from "@/lib/type";
 
-export const ROUTES = [
+export const PUBLIC_ROUTES: NavItem[] = [
   {
-    name: "Demo",
-    path: "/demo",
-    auth: false,
+    title: "Demo",
+    label: "Demo",
+    href: "/demo",
   },
   {
-    name: "Pricing",
-    path: "/pricing",
-    auth: false,
+    title: "Pricing",
+    label: "Pricing",
+    href: "/pricing",
   },
   {
-    name: "How it works",
-    path: "/#how-it-works",
-    auth: false,
+    title: "How it works",
+    label: "How it works",
+    href: "/#how-it-works",
   },
   {
-    name: "FAQs",
-    path: "/#faqs",
-    auth: false,
+    title: "FAQs",
+    label: "FAQs",
+    href: "/#faqs",
   },
 ];
 
-export const navItems: NavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: <LayoutDashboard className="size-5" />,
-    label: "Dashboard",
-  },
+export const AUTH_ROUTES: NavItem[] = [
+  // {
+  //   title: "Dashboard",
+  //   href: "/dashboard",
+  //   icon: <LayoutDashboard className="size-5" />,
+  //   label: "Dashboard",
+  // },
   {
     title: "Sites",
     href: "/dashboard/sites",

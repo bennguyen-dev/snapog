@@ -22,8 +22,8 @@ export const Header = async () => {
           </Link>
         </div>
 
-        <MobileNavbar session={session} />
-        <Navbar session={session} />
+        <MobileNavbar />
+        <Navbar />
 
         {session?.user ? (
           <form

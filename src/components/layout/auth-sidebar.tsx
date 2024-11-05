@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 
 import { ChevronLeft } from "lucide-react";
@@ -13,7 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { navItems } from "@/lib/constants";
+import { AUTH_ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface IProps {
@@ -36,9 +37,17 @@ export const AuthSidebar = ({ className }: IProps) => {
         className,
       )}
     >
-      <div className="hidden p-4 pb-0 pt-5 lg:block">
-        <Link href="/">
+      <div className="hidden px-4 pt-4 md:block">
+        <Link href="/" className="flex items-center space-x-2">
           <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+          <span
+            className={cn(
+              isMinimized && "w-0 opacity-0",
+              "overflow-hidden whitespace-nowrap text-xl font-bold transition-all duration-500",
+            )}
+          >
+            Snap OG
+          </span>
         </Link>
       </div>
       <ChevronLeft
@@ -53,7 +62,7 @@ export const AuthSidebar = ({ className }: IProps) => {
           <div className="space-y-1">
             <nav className="grid items-start gap-2">
               <TooltipProvider>
-                {navItems.map((item, index) => {
+                {AUTH_ROUTES.map((item, index) => {
                   return (
                     item.href && (
                       <Tooltip key={index}>

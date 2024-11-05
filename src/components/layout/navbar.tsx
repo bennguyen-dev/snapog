@@ -1,9 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
-
 import { cx } from "class-variance-authority";
-import { Session } from "next-auth";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,33 +12,22 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ROUTES } from "@/lib/constants";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
-interface IProps {
-  session: Session | null;
-}
-
-export const Navbar = ({ session }: IProps) => {
+export const Navbar = () => {
   const pathname = usePathname();
-
-  const routes = useMemo(() => {
-    if (session?.user) {
-      return ROUTES;
-    }
-    return ROUTES.filter((route) => !route.auth);
-  }, [session?.user]);
 
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
-        {routes.map((route) => (
-          <NavigationMenuItem key={route.name}>
-            <Link href={route.path} legacyBehavior passHref>
+        {PUBLIC_ROUTES.map((route) => (
+          <NavigationMenuItem key={route.title}>
+            <Link href={route.href} legacyBehavior passHref>
               <NavigationMenuLink
                 className={cx(navigationMenuTriggerStyle(), "mx-4")}
-                active={pathname.includes(route.path)}
+                active={pathname.includes(route.href)}
               >
-                {route.name}
+                {route.title}
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

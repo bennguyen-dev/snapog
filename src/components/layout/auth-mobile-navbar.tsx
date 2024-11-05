@@ -9,16 +9,11 @@ import { usePathname } from "next/navigation";
 
 import HamburgerIcon from "@/assets/icons/hamburger.svg";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { PUBLIC_ROUTES } from "@/lib/constants";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AUTH_ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-export const MobileNavbar = () => {
+export const AuthMobileNavbar = () => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -46,17 +41,15 @@ export const MobileNavbar = () => {
       </div>
 
       <SheetContent side="left">
-        <SheetHeader>
-          <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
-            <span className="overflow-hidden whitespace-nowrap text-xl font-bold">
-              Snap OG
-            </span>
-          </Link>
-        </SheetHeader>
+        <Link href="/" className="flex items-center space-x-2">
+          <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+          <span className="overflow-hidden whitespace-nowrap text-xl font-bold">
+            Snap OG
+          </span>
+        </Link>
 
-        <nav className="grid items-start gap-2">
-          {PUBLIC_ROUTES?.map((route) => (
+        <nav className="mt-4 grid items-start gap-2">
+          {AUTH_ROUTES?.map((route) => (
             <Link
               key={route.title}
               href={route.disabled ? "/" : route.href}

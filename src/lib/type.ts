@@ -17,7 +17,7 @@ export type ValuesOf<T> = T[keyof T];
 
 export interface NavItem {
   title: string;
-  href?: string;
+  href: string;
   disabled?: boolean;
   external?: boolean;
   icon?: ReactNode;
