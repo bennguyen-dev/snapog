@@ -51,7 +51,7 @@ export async function cancelSubscription(lemonSqueezyId: string) {
   });
 }
 
-export async function changeSubscription({
+export async function updatePlan({
   currentPlanId,
   newPlanId,
 }: Omit<IChangeSubscription, "userId">) {
@@ -64,7 +64,7 @@ export async function changeSubscription({
     };
   }
 
-  return await subscriptionService.changeSub({
+  return await subscriptionService.updateSub({
     currentPlanId,
     newPlanId,
     userId: session.user.id,

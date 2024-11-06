@@ -1,15 +1,17 @@
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { SubscriptionStatusType } from "@/services/subscription";
 
+interface IProps {
+  status: SubscriptionStatusType;
+  statusFormatted: string;
+  isPaused?: boolean;
+}
+
 export function SubscriptionStatus({
   status,
   statusFormatted,
   isPaused,
-}: {
-  status: SubscriptionStatusType;
-  statusFormatted: string;
-  isPaused?: boolean;
-}) {
+}: IProps) {
   const variantMap: Record<SubscriptionStatusType, BadgeProps["variant"]> = {
     active: "success",
     cancelled: "secondary",

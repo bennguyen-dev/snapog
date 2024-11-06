@@ -82,7 +82,7 @@ export const CardCurrentSubscription = ({
             endsAt={subscription.endsAt}
             interval={plan.interval}
             intervalCount={plan.intervalCount}
-            price={subscription.price}
+            price={plan.price}
             isUsageBased={plan.isUsageBased ?? false}
           />
         </CardHeader>

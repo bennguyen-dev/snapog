@@ -120,7 +120,7 @@ class SubscriptionService {
     };
   }
 
-  async changeSub({
+  async updateSub({
     userId,
     currentPlanId,
     newPlanId,
@@ -129,7 +129,10 @@ class SubscriptionService {
 
     const userSubscriptions = await this.getUserSubscription({ userId });
 
-    if (userSubscriptions?.data?.planId !== currentPlanId) {
+    if (
+      !userSubscriptions?.data ||
+      userSubscriptions?.data?.planId !== currentPlanId
+    ) {
       throw new Error(
         `No subscription with plan id #${currentPlanId} was found.`,
       );
@@ -150,19 +153,50 @@ class SubscriptionService {
       userSubscriptions.data.lemonSqueezyId,
       {
         variantId: newPlan.variantId,
+        invoiceImmediately: true,
       },
     );
 
-    // Update the db
+    // Start a transaction to update both subscription and usage
     try {
-      await prisma.subscription.update({
-        where: { lemonSqueezyId: userSubscriptions.data.lemonSqueezyId },
-        data: {
-          status: updatedSub.data?.data.attributes.status,
-          statusFormatted: updatedSub.data?.data.attributes.status_formatted,
-          endsAt: updatedSub.data?.data.attributes.ends_at,
-        },
+      await prisma.$transaction(async (tx) => {
+        // 1. Update subscription
+        const updatedSubscription = await tx.subscription.update({
+          where: { lemonSqueezyId: userSubscriptions.data?.lemonSqueezyId },
+          data: {
+            status: updatedSub.data?.data.attributes.status,
+            statusFormatted: updatedSub.data?.data.attributes.status_formatted,
+            endsAt: updatedSub.data?.data.attributes.ends_at,
+            planId: newPlanId, // Update the plan ID
+          },
+        });
+
+        // 2. Get current period info for usage tracking
+        const today = new Date();
+        const periodStart = today;
+        const periodEnd = new Date(
+          updatedSub.data?.data.attributes.renews_at || today,
+        );
+
+        // 3. Create new usage record for the new plan period
+        await tx.userUsage.create({
+          data: {
+            userId,
+            subscriptionId: updatedSubscription.id,
+            periodStart,
+            periodEnd,
+            count: 0, // Reset usage count for new plan
+          },
+        });
       });
+
+      revalidatePath("/");
+
+      return {
+        status: 200,
+        message: `Subscription #${userSubscriptions.data.lemonSqueezyId} updated successfully.`,
+        data: updatedSub.data,
+      };
     } catch (error) {
       console.error(error);
       return {
@@ -170,18 +204,10 @@ class SubscriptionService {
         message:
           error instanceof Error
             ? error.message
-            : `Failed to update Subscription #${userSubscriptions.data.lemonSqueezyId} in the database.`,
+            : `Failed to update Subscription #${userSubscriptions.data.lemonSqueezyId}`,
         data: null,
       };
     }
-
-    revalidatePath("/");
-
-    return {
-      status: 200,
-      message: `Subscription #${userSubscriptions.data.lemonSqueezyId} updated successfully.`,
-      data: updatedSub.data,
-    };
   }
 }
 

@@ -1,19 +1,21 @@
 import { Typography } from "@/components/ui/typography";
 import { formatPrice } from "@/lib/utils";
 
+interface IProps {
+  endsAt?: string | null;
+  price: string;
+  interval?: string | null;
+  intervalCount?: number | null;
+  isUsageBased?: boolean;
+}
+
 export function SubscriptionPrice({
   endsAt,
   price,
   interval,
   intervalCount,
   isUsageBased,
-}: {
-  endsAt?: string | null;
-  price: string;
-  interval?: string | null;
-  intervalCount?: number | null;
-  isUsageBased?: boolean;
-}) {
+}: IProps) {
   if (endsAt) return null;
 
   let formattedPrice = formatPrice(price);

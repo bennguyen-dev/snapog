@@ -1,16 +1,14 @@
 import { formatDate } from "@/lib/utils";
 import { SubscriptionStatusType } from "@/services/subscription";
 
-export function SubscriptionDate({
-  endsAt,
-  renewsAt,
-  trialEndsAt,
-}: {
+interface IProps {
   endsAt?: string | null;
   renewsAt?: string | null;
   status: SubscriptionStatusType;
   trialEndsAt?: string | null;
-}) {
+}
+
+export function SubscriptionDate({ endsAt, renewsAt, trialEndsAt }: IProps) {
   const now = new Date();
   const trialEndDate = trialEndsAt ? new Date(trialEndsAt) : null;
   const endsAtDate = endsAt ? new Date(endsAt) : null;

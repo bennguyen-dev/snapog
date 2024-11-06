@@ -11,20 +11,20 @@ interface IProps {
 }
 
 export const CardUserUsage = ({ loading, userUsage }: IProps) => {
-  const current = userUsage?.current;
+  const current = userUsage?.current || 0;
   const limit = userUsage?.limit;
   const periodStart = userUsage?.periodStart;
   const periodEnd = userUsage?.periodEnd;
 
   const percentage =
-    loading || !current || !limit ? 0 : Math.min((current / limit) * 100, 100);
+    loading || !limit ? 0 : Math.min((current / limit) * 100, 100);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="mb-2">OG Image Usage</CardTitle>
         <div className="mb-2 flex w-full items-center justify-between">
-          {loading || !current || !limit ? (
+          {loading || !limit ? (
             <Skeleton className="my-1.5 h-4 w-24" />
           ) : (
             <Typography>

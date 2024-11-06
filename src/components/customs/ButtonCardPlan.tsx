@@ -2,12 +2,13 @@
 
 import { useCallback, useMemo } from "react";
 
+import { Subscription } from "@lemonsqueezy/lemonsqueezy.js";
 import { Plan } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 
-import { changeSubscription, getCheckoutUrl } from "@/app/actions";
+import { getCheckoutUrl, updatePlan } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { useCallAction } from "@/hooks/useCallAction";
@@ -50,14 +51,13 @@ export const ButtonCardPlan = ({
   });
 
   const { loading: changing, promiseFunc: changePlan } = useCallAction<
-    any,
+    Subscription | null,
     any,
     Omit<IChangeSubscription, "userId">
   >({
-    action: changeSubscription,
+    action: updatePlan,
     nonCallInit: true,
-    handleSuccess: (_, data) => {
-      console.log("data 😋", { data }, "");
+    handleSuccess: () => {
       cbSuccess?.();
       toast({
         variant: "success",
