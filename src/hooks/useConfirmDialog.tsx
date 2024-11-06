@@ -1,24 +1,30 @@
 import { ReactNode, useCallback, useState } from "react";
 
+import { DialogContentProps } from "@radix-ui/react-dialog";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Typography } from "@/components/ui/typography";
 
 interface IConfig {
   opened: boolean;
   title: ReactNode;
   content: ReactNode;
-  type: "danger" | "warning";
+  type: "danger" | "warning" | "default";
   onConfirm: () => void;
   confirmText?: string;
   onCancel: () => void;
   cancelText?: string;
+}
+
+interface IConfirmDialog extends DialogContentProps {
+  loading?: boolean;
 }
 
 const initConfig: IConfig = {
@@ -33,6 +39,7 @@ const initConfig: IConfig = {
 const buttonClassName = {
   danger: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   warning: "bg-warning text-warning-foreground hover:bg-warning/90",
+  default: "bg-primary text-primary-foreground hover:bg-primary/90",
 };
 
 export const useConfirmDialog = () => {
@@ -62,7 +69,7 @@ export const useConfirmDialog = () => {
   }, [config, onCancel]);
 
   const ConfirmDialog = useCallback(
-    ({ loading }: { loading?: boolean }) => {
+    ({ loading, ...rest }: IConfirmDialog) => {
       return (
         <Dialog open={opened} onOpenChange={onCloseConfirm}>
           <DialogContent
@@ -73,11 +80,18 @@ export const useConfirmDialog = () => {
             onInteractOutside={(e) => {
               loading && e.preventDefault();
             }}
+            {...rest}
           >
-            <DialogHeader className="mb-4">
+            <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
-              <DialogDescription>{content}</DialogDescription>
             </DialogHeader>
+            <div>
+              {typeof content === "string" ? (
+                <Typography>{content}</Typography>
+              ) : (
+                content
+              )}
+            </div>
             <DialogFooter className="sm:justify-end">
               <Button
                 variant="outline"

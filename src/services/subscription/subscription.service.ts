@@ -153,7 +153,6 @@ class SubscriptionService {
       userSubscriptions.data.lemonSqueezyId,
       {
         variantId: newPlan.variantId,
-        invoiceImmediately: true,
       },
     );
 

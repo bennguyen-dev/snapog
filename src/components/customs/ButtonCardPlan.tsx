@@ -10,7 +10,9 @@ import { useRouter } from "next/navigation";
 
 import { getCheckoutUrl, updatePlan } from "@/app/actions";
 import { Button } from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
+import { useConfirmDialog } from "@/hooks";
 import { useCallAction } from "@/hooks/useCallAction";
 import { ICheckoutUrl, ICheckoutUrlResponse } from "@/services/plan";
 import { IChangeSubscription } from "@/services/subscription";
@@ -32,6 +34,12 @@ export const ButtonCardPlan = ({
 }: IProps) => {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const {
+    confirmDialog: onOpenDialogChangePlan,
+    onCloseConfirm: onCloseDialogChangePlan,
+    ConfirmDialog: DialogChangePlan,
+  } = useConfirmDialog();
 
   const { loading, promiseFunc: getUrl } = useCallAction<
     ICheckoutUrlResponse | null,
@@ -59,6 +67,7 @@ export const ButtonCardPlan = ({
     nonCallInit: true,
     handleSuccess: () => {
       cbSuccess?.();
+      onCloseDialogChangePlan();
       toast({
         variant: "success",
         title: "Plan changed successfully",
@@ -102,20 +111,66 @@ export const ButtonCardPlan = ({
     }
 
     if (currentPlan.variantId !== plan.variantId) {
-      changePlan({ currentPlanId: currentPlan.id, newPlanId: plan.id });
+      onOpenDialogChangePlan({
+        title: `Change plan`,
+        content: (
+          <div>
+            <Typography>
+              Are you sure you want to change subscription to{" "}
+              <strong>
+                {plan.productName}({plan.name})
+              </strong>{" "}
+              plan?
+            </Typography>
+            <ul className="my-4 ml-4 list-disc [&>li]:mt-2 [&>li]:italic [&>li]:text-muted-foreground">
+              <li>The plan change takes effect immediately</li>
+              <li>
+                When changing the plan of a subscription, we prorate the charge
+                for the next billing cycle.
+              </li>
+              <li>
+                If downgrading a subscription, we’ll issue a credit which is
+                then applied on the next invoice.
+              </li>
+            </ul>
+          </div>
+        ),
+        onConfirm: () => {
+          changePlan({ currentPlanId: currentPlan.id, newPlanId: plan.id });
+        },
+        type: "default",
+        confirmText: "Change plan",
+        onCancel() {},
+      });
       return;
     }
-  }, [changePlan, currentPlan, getUrl, plan, router, session?.user, type]);
+  }, [
+    changePlan,
+    currentPlan,
+    getUrl,
+    onOpenDialogChangePlan,
+    plan,
+    router,
+    session?.user,
+    type,
+  ]);
 
   return (
-    <Button
-      onClick={onClick}
-      className={className}
-      variant={plan.isPopular ? "default" : "outline"}
-      loading={loading || changing}
-      disabled={disabled}
-    >
-      {label}
-    </Button>
+    <>
+      <Button
+        onClick={onClick}
+        className={className}
+        variant={plan.isPopular ? "default" : "outline"}
+        loading={loading}
+        disabled={disabled}
+      >
+        {label}
+      </Button>
+
+      <DialogChangePlan
+        loading={changing}
+        className="max-w-screen-md lg:w-2/5"
+      />
+    </>
   );
 };
