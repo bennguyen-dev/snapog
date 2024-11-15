@@ -1,22 +1,15 @@
 import { Provider } from "@auth/core/providers";
 import Google from "@auth/core/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Pool } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+
+import { prisma } from "@/lib/db";
 
 const providers: Provider[] = [
   GitHub({ allowDangerousEmailAccountLinking: true }),
   Google({ allowDangerousEmailAccountLinking: true }),
 ];
-
-const neon = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-const adapter = new PrismaNeon(neon);
-const prisma = new PrismaClient({ adapter });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
