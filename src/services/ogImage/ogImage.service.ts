@@ -38,10 +38,11 @@ class OGImageService {
         data: ogImage as IOGImageDetail,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error creating OG Image: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -77,10 +78,11 @@ class OGImageService {
         data: ogImage as IOGImageDetail,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error updating OG Image: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -119,10 +121,11 @@ class OGImageService {
         data: null,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error deleting OG Image: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }

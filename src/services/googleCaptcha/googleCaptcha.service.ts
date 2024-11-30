@@ -41,7 +41,7 @@ class GoogleCaptchaService {
         };
       }
     } catch (error) {
-      console.log("recaptcha error:", error);
+      console.log(`Error verifying Google Captcha: ${error}`);
       return {
         status: 500,
         message:

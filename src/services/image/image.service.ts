@@ -62,9 +62,11 @@ class ImageService {
         });
       }
     } catch (error) {
+      console.error(`Error while getting image by url ${url}: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }

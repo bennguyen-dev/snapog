@@ -49,7 +49,7 @@ class SubscriptionService {
         data: userSubscription,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error getting user subscriptions: ${error}`);
       return {
         status: 500,
         message:
@@ -100,7 +100,10 @@ class SubscriptionService {
         },
       });
     } catch (error) {
-      console.error(error);
+      console.error(
+        `Failed to cancel Subscription #${lemonSqueezyId} in the database.`,
+        error,
+      );
       return {
         status: 500,
         message:
@@ -197,7 +200,7 @@ class SubscriptionService {
         data: updatedSub.data,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error updating subscription: ${error}`);
       return {
         status: 500,
         message:

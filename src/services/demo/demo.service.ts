@@ -29,7 +29,7 @@ class DemoService {
           domain,
         },
         include: {
-          pages: true,
+          demoPages: true,
         },
       });
 
@@ -44,7 +44,7 @@ class DemoService {
       return {
         status: 200,
         message: "Demo found",
-        data: demo.pages.map(
+        data: demo.demoPages.map(
           (page) =>
             ({
               ...page,
@@ -55,7 +55,7 @@ class DemoService {
         ),
       };
     } catch (error) {
-      console.error("Error generating OG images for domain:", error);
+      console.error(`Error getting demo for url: ${url}`, error);
       return {
         status: 500,
         message:
@@ -153,7 +153,7 @@ class DemoService {
       const newDemo = await prisma.demo.create({
         data: {
           domain,
-          pages: {
+          demoPages: {
             create: results as any,
           }, // Assuming you have an images field to store the results
         },
@@ -165,7 +165,7 @@ class DemoService {
         data: newDemo,
       };
     } catch (error) {
-      console.error(`Error create demo for url: ${url}`, error);
+      console.error(`Error creating demo for url: ${url}`, error);
       return {
         status: 500,
         message:

@@ -45,10 +45,11 @@ class StorageService {
         },
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error uploading image: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -70,10 +71,11 @@ class StorageService {
         data: null,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error deleting images: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -95,10 +97,11 @@ class StorageService {
         data: null,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error deleting folder: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }

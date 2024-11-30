@@ -132,7 +132,7 @@ class PageService {
         data: page as IPageDetail,
       };
     } catch (error) {
-      console.error(`Error creating page: ${url}`, error);
+      console.error(`Error creating page: ${error}`);
       return {
         status: 500,
         message:
@@ -163,9 +163,11 @@ class PageService {
         data: pages as IPageDetail[],
       };
     } catch (error) {
+      console.error(`Error getting pages: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -202,9 +204,11 @@ class PageService {
         data: page as IPageDetail,
       };
     } catch (error) {
+      console.error(`Error getting page: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -274,8 +278,13 @@ class PageService {
         data: updatedPages as IPageDetail[],
       };
     } catch (error) {
-      console.error("Error updating pages:", error);
-      throw error;
+      console.error(`Error updating pages: ${error}`);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
     }
   }
 
@@ -321,9 +330,11 @@ class PageService {
         data: null,
       };
     } catch (error) {
+      console.error(`Error deleting pages: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }

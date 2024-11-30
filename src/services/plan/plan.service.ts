@@ -162,7 +162,7 @@ class PlanService {
         data: productVariants,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error syncing plans: ${error}`);
       return {
         status: 500,
         message:
@@ -233,7 +233,7 @@ class PlanService {
         },
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error creating checkout: ${error}`);
       return {
         status: 500,
         message:
@@ -266,7 +266,7 @@ class PlanService {
         data: plans,
       };
     } catch (error) {
-      console.error(error);
+      console.error(`Error getting plans: ${error}`);
       return {
         status: 500,
         message:

@@ -49,9 +49,11 @@ class SiteService {
         data: site as ISiteDetail,
       };
     } catch (error) {
+      console.error(`Error creating site: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -101,9 +103,11 @@ class SiteService {
         data: sites as ISiteDetail[],
       };
     } catch (error) {
+      console.error(`Error getting sites: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -150,9 +154,11 @@ class SiteService {
         data: site as ISiteDetail,
       };
     } catch (error) {
+      console.error(`Error updating sites: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
@@ -207,9 +213,11 @@ class SiteService {
         data: null,
       };
     } catch (error) {
+      console.error(`Error deleting sites: ${error}`);
       return {
-        message: "Internal Server Error",
         status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
         data: null,
       };
     }
