@@ -1,3 +1,7 @@
+import { Site } from "@prisma/client";
+
+export interface ISiteDetail extends Site {}
+
 export interface ICreateSite {
   userId: string;
   domain: string;
@@ -31,14 +35,4 @@ export interface IDeleteSitesBy {
   domain?: string;
 
   id?: string;
-}
-
-export interface ISiteDetail {
-  id: string;
-  domain: string;
-  userId: string;
-  cacheDurationDays?: number;
-
-  createdAt: Date;
-  updatedAt: Date;
 }

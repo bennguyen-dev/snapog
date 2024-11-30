@@ -7,6 +7,7 @@ import {
   subscriptionService,
 } from "@/services/subscription";
 import { usageService } from "@/services/usage";
+import { userService } from "@/services/user";
 import { webhookService } from "@/services/webhook";
 
 export async function getCheckoutUrl(res: ICheckoutUrl) {
@@ -83,4 +84,18 @@ export async function getUserUsage() {
   }
 
   return await usageService.getUserUsage({ userId: session.user.id });
+}
+
+export async function regenerateApikey() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+
+  return userService.regenerateApiKey({ userId: session.user.id });
 }

@@ -40,10 +40,12 @@ class PageService {
       };
     }
 
-    const existedPage = await prisma.page.findFirst({
+    const existedPage = await prisma.page.findUnique({
       where: {
-        siteId: siteId,
-        url: urlWithoutProtocol,
+        siteId_url: {
+          url: urlWithProtocol,
+          siteId,
+        },
       },
     });
 
@@ -179,15 +181,30 @@ class PageService {
     id,
   }: IGetPageBy): Promise<IResponse<IPageDetail | null>> {
     try {
-      const page = await prisma.page.findFirst({
-        where: {
-          url,
-          siteId,
-          id,
-        },
-        include: {
-          OGImage: true,
-        },
+      let page = null;
+      await prisma.$transaction(async (tx) => {
+        if (siteId && url) {
+          page = await tx.page.findUnique({
+            where: {
+              siteId_url: {
+                siteId,
+                url,
+              },
+            },
+            include: {
+              OGImage: true,
+            },
+          });
+        } else if (id) {
+          page = await tx.page.findUnique({
+            where: {
+              id,
+            },
+            include: {
+              OGImage: true,
+            },
+          });
+        }
       });
 
       if (!page) {

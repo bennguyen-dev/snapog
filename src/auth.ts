@@ -22,6 +22,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "update") token.name = session?.user?.name;
       return token;
     },
+    session({ session, user }) {
+      session.user.apiKey = user.apiKey; //  Add apiKey value to user object so it is passed along with session
+      return session;
+    },
   },
 });
 

@@ -118,17 +118,6 @@ class WebhookService {
     let processingError = "";
     const eventBody = webhookEvent.body;
 
-    console.log(
-      "a 😋",
-      {
-        webhookEvent,
-        eventBody,
-        webhookHasData: webhookHasData(eventBody),
-        webhookHasMeta: webhookHasMeta(eventBody),
-      },
-      "",
-    );
-
     if (!webhookHasMeta(eventBody)) {
       processingError = "Event body is missing the 'meta' property.";
     } else if (webhookHasData(eventBody)) {
@@ -147,8 +136,6 @@ class WebhookService {
           },
         });
 
-        console.log("plan 😋", { plan }, "");
-
         if (!plan) {
           processingError = `Plan with variantId ${variantId} not found.`;
         } else {
@@ -162,15 +149,11 @@ class WebhookService {
             processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.`;
           }
 
-          console.log("priceData 😋", { priceData }, "");
-
           const isUsageBased =
             attributes.first_subscription_item.is_usage_based;
           const price = isUsageBased
             ? priceData.data?.data.attributes.unit_price_decimal
             : priceData.data?.data.attributes.unit_price;
-
-          console.log("isUsageBased 😋", { isUsageBased, price }, "");
 
           const updateData = {
             lemonSqueezyId: eventBody.data.id,
@@ -189,8 +172,6 @@ class WebhookService {
             userId: eventBody.meta.custom_data.user_id,
             planId: plan.id,
           };
-
-          console.log("updateData 😋", { updateData }, "");
 
           // Create/update subscription in the database.
           try {

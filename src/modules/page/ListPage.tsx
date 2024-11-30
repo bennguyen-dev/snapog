@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -43,6 +44,7 @@ interface IProps {
 
 export const ListPage = ({ siteId }: IProps) => {
   const { mounted } = useMounted();
+  const { data: session } = useSession();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
   const editPageRef = useRef<IEditPageDialogRef>(null);
 
@@ -154,6 +156,7 @@ export const ListPage = ({ siteId }: IProps) => {
                   getLinkSmartOGImage({
                     host: window.location.host,
                     url: row.original.url,
+                    apiKey: session?.user.apiKey || "",
                   }),
                   "_blank",
                 );
@@ -236,7 +239,7 @@ export const ListPage = ({ siteId }: IProps) => {
         },
       },
     ],
-    [confirmDialog, deletePage, deleting, updatePage],
+    [confirmDialog, deletePage, deleting, session, updatePage],
   );
 
   useEffect(() => {

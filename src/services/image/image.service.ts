@@ -1,30 +1,40 @@
 import { IResponse } from "@/lib/type";
 import {
+  getDomainName,
   getImageLinkFromAWS,
-  getUrlWithProtocol,
   getUrlWithoutProtocol,
 } from "@/lib/utils";
 import {
+  IGenerateOGImage,
+  IGenerateOGImageResponse,
   IGetImageByImageLink,
   IGetImageByImageLinkResponse,
-  IGetImageByUrl,
-  IGetImageByUrlResponse,
 } from "@/services/image";
 import { pageService } from "@/services/page";
 import { siteService } from "@/services/site";
+import { userService } from "@/services/user";
 
 class ImageService {
-  async getImageByUrl({
+  async generateOGImage({
     url,
-  }: IGetImageByUrl): Promise<IResponse<IGetImageByUrlResponse | null>> {
-    url = getUrlWithoutProtocol(url);
-
-    const urlObj = new URL(getUrlWithProtocol(url) as string);
-    const domain = urlObj.hostname;
+    apiKey,
+  }: IGenerateOGImage): Promise<IResponse<IGenerateOGImageResponse | null>> {
+    const domain = getDomainName(url);
 
     try {
+      // Check exists api key
+      const userRes = await userService.getUser({ apiKey });
+
+      if (!userRes.data) {
+        return {
+          message: userRes.message,
+          status: userRes.status,
+          data: null,
+        };
+      }
+
       // Check if the domain exists in the Site table
-      const site = await siteService.getBy({ domain });
+      const site = await siteService.getBy({ domain, userId: userRes.data.id });
 
       if (!site.data) {
         return {
@@ -35,7 +45,11 @@ class ImageService {
       }
 
       // Check if the URL exists in the Page table for this site
-      const page = await pageService.getBy({ url, siteId: site.data.id });
+      const page = await pageService.getBy({
+        url: getUrlWithoutProtocol(url),
+        siteId: site.data.id,
+      });
+
       if (page.data?.OGImage) {
         // Get image data from S3 image link
         return await this.getImageByImageLink({
