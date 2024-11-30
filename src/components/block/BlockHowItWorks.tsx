@@ -32,7 +32,7 @@ export const BlockHowItWorks = () => {
           {getSnippetHowToUse({
             host,
             domain: "yourwebsite.com",
-            apiKey: "<api_key>",
+            apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
           })}
         </CodeSnippet>
       )}
@@ -44,12 +44,16 @@ export const BlockHowItWorks = () => {
             href={getLinkSmartOGImage({
               host,
               url: host,
-              apiKey: "<api_key>",
+              apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
             })}
             target="_blank"
             className="text-link"
           >
-            {getLinkSmartOGImage({ host, url: host, apiKey: "<api_key>" })}
+            {getLinkSmartOGImage({
+              host,
+              url: host,
+              apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
+            })}
           </Link>
         </Typography>
       )}
