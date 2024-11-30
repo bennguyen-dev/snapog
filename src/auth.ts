@@ -5,6 +5,7 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 
 import { prisma } from "@/lib/db";
+import { userService } from "@/services/user";
 
 const providers: Provider[] = [
   GitHub({ allowDangerousEmailAccountLinking: true }),
@@ -23,8 +24,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     session({ session, user }) {
-      session.user.apiKey = user.apiKey; //  Add apiKey value to user object so it is passed along with session
+      session.user.apiKey = user.apiKey;
       return session;
+    },
+  },
+  events: {
+    signIn: async ({ user }) => {
+      if (!userService.checkValidApiKey(user.apiKey)) {
+        await userService.regenerateApiKey({ userId: user.id! });
+      }
     },
   },
 });

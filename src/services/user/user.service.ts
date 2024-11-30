@@ -64,6 +64,10 @@ class UserService {
     }
   }
 
+  checkValidApiKey = (apiKey: string | null): boolean => {
+    return !!apiKey && apiKey.startsWith("og_");
+  };
+
   async regenerateApiKey({
     userId,
   }: IRegenerateApiKey): Promise<IResponse<IRegenerateApiKeyResponse | null>> {
