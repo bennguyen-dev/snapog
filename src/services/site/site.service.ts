@@ -46,7 +46,7 @@ class SiteService {
       return {
         message: "Site created successfully",
         status: 200,
-        data: site as ISiteDetail,
+        data: site,
       };
     } catch (error) {
       console.error(`Error creating site: ${error}`);
@@ -64,12 +64,25 @@ class SiteService {
     userId,
     id,
   }: IGetSiteBy): Promise<IResponse<ISiteDetail | null>> {
-    const site = await prisma.site.findFirst({
-      where: {
-        id,
-        userId,
-        domain,
-      },
+    let site: ISiteDetail | null = null;
+
+    await prisma.$transaction(async (tx) => {
+      if (userId && domain) {
+        site = await tx.site.findUnique({
+          where: {
+            userId_domain: {
+              userId,
+              domain,
+            },
+          },
+        });
+      } else if (id) {
+        site = await tx.site.findUnique({
+          where: {
+            id,
+          },
+        });
+      }
     });
 
     if (!site) {
@@ -83,7 +96,7 @@ class SiteService {
     return {
       message: "Site found",
       status: 200,
-      data: site as ISiteDetail,
+      data: site,
     };
   }
 
@@ -100,7 +113,7 @@ class SiteService {
       return {
         message: "Sites fetched successfully",
         status: 200,
-        data: sites as ISiteDetail[],
+        data: sites,
       };
     } catch (error) {
       console.error(`Error getting sites: ${error}`);
@@ -151,7 +164,7 @@ class SiteService {
       return {
         message: "Sites updated successfully",
         status: 200,
-        data: site as ISiteDetail,
+        data: site,
       };
     } catch (error) {
       console.error(`Error updating sites: ${error}`);

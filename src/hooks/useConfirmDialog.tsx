@@ -87,7 +87,7 @@ export const useConfirmDialog = () => {
             </DialogHeader>
             <div>
               {typeof content === "string" ? (
-                <Typography>{content}</Typography>
+                <Typography affects="muted">{content}</Typography>
               ) : (
                 content
               )}

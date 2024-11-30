@@ -29,7 +29,11 @@ export const BlockHowItWorks = () => {
 
       {host && (
         <CodeSnippet className="w-full sm:w-fit">
-          {getSnippetHowToUse({ host, domain: "yourwebsite.com" })}
+          {getSnippetHowToUse({
+            host,
+            domain: "yourwebsite.com",
+            apiKey: "<api_key>",
+          })}
         </CodeSnippet>
       )}
 
@@ -37,11 +41,15 @@ export const BlockHowItWorks = () => {
         <Typography variant="p">
           Example:{" "}
           <Link
-            href={getLinkSmartOGImage({ host, url: host })}
+            href={getLinkSmartOGImage({
+              host,
+              url: host,
+              apiKey: "<api_key>",
+            })}
             target="_blank"
             className="text-link"
           >
-            {getLinkSmartOGImage({ host, url: host })}
+            {getLinkSmartOGImage({ host, url: host, apiKey: "<api_key>" })}
           </Link>
         </Typography>
       )}

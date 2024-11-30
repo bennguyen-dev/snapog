@@ -60,8 +60,6 @@ export async function POST(request: Request) {
       });
     }
 
-    console.log("webhookEvent 😋", { webhookEvent }, "");
-
     await webhookService.processWebhookEvent(webhookEvent);
 
     return NextResponse.json({

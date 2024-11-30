@@ -1,8 +1,9 @@
-export interface IGetImageByUrl {
+export interface IGenerateOGImage {
   url: string;
+  apiKey: string;
 }
 
-export interface IGetImageByUrlResponse {
+export interface IGenerateOGImageResponse {
   image: Buffer;
   contentType: string;
 }

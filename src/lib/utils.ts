@@ -7,7 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getUrlWithProtocol(url: string) {
-  return url.startsWith("http") ? url : `https://${url}`;
+  // If the URL starts with http or https, return it as is
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  } else {
+    return `https://${url}`;
+  }
 }
 
 export function cleanUrl(url: string) {
@@ -59,35 +65,29 @@ export function getImageLinkFromAWS(key: string) {
 export function getSnippetHowToUse({
   host,
   domain,
+  apiKey,
 }: {
   host: string;
   domain: string;
+  apiKey: string;
 }) {
   return `<!-- Put in your <head> tag -->
 <meta
   property="og:image"
-  content="${getLinkSmartOGImage({ host, url: domain })}"
+  content="${getLinkSmartOGImage({ host, url: domain, apiKey })}"
 />`;
 }
 
 export function getLinkSmartOGImage({
   host,
   url,
+  apiKey,
 }: {
   host: string;
   url: string;
+  apiKey: string;
 }) {
-  return `https://${host}/api/get-image?url=${getUrlWithoutProtocol(url)}`;
-}
-
-export function getKeyPathsCache({
-  functionName,
-  value,
-}: {
-  functionName: string;
-  value?: any;
-}) {
-  return `${functionName}-${value}`;
+  return `https://${host}/api/get-image?api_key=${apiKey}&url=${getUrlWithoutProtocol(url)}`;
 }
 
 export function formatPrice(priceInCents: string) {

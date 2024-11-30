@@ -15,7 +15,7 @@ class InngestService {
           // Get site
           const site = await siteService.getBy({ id: event.data.siteId });
           if (!site || !site.data) {
-            console.log(`No site found for id: ${event.data.siteId}`);
+            console.error(`No site found for id: ${event.data.siteId}`);
             return { status: "error", message: "Site not found" };
           }
 
@@ -30,7 +30,7 @@ class InngestService {
             !urlsResult.data.links ||
             urlsResult.data.links.length === 0
           ) {
-            console.log(`No URLs found for domain: ${site.data.domain}`);
+            console.error(`No URLs found for domain: ${site.data.domain}`);
             return { status: "error", message: "No URLs found" };
           }
 
@@ -130,7 +130,7 @@ class InngestService {
             });
 
             if (!pageCrawlInfo.data?.screenshot) {
-              console.log(`No screenshot available for ${page.url}`);
+              console.error(`No screenshot available for ${page.url}`);
               return;
             }
 
@@ -140,7 +140,7 @@ class InngestService {
             });
 
             if (!uploadRes.data) {
-              console.log(`Failed to upload image for ${page.url}`);
+              console.error(`Failed to upload image for ${page.url}`);
               return;
             }
 

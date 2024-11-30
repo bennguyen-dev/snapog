@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import Link from "next/link";
 
@@ -40,6 +41,7 @@ import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/services/site";
 export const ListSite = () => {
   const { mounted } = useMounted();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
+  const { data: session } = useSession();
 
   const addSiteRef = useRef<IAddSiteDialogRef>(null);
   const editSiteRef = useRef<IEditSiteDialogRef>(null);
@@ -156,6 +158,7 @@ export const ListSite = () => {
           const urlExample = getLinkSmartOGImage({
             host: window.location.host,
             url: site.domain,
+            apiKey: session?.user.apiKey,
           });
 
           return (
@@ -170,6 +173,7 @@ export const ListSite = () => {
                 {getSnippetHowToUse({
                   host: window.location.host,
                   domain: site.domain,
+                  apiKey: session?.user?.apiKey,
                 })}
               </CodeSnippet>
             </>
@@ -237,7 +241,7 @@ export const ListSite = () => {
         },
       },
     ];
-  }, [confirmDialog, deleteSite, deleting, updateSite]);
+  }, [confirmDialog, deleteSite, deleting, session, updateSite]);
 
   return (
     <div className="p-4 sm:p-6">

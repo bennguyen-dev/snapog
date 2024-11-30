@@ -1,6 +1,5 @@
 import { setupWebhook } from "@/app/actions";
-
-import { ListSubscription } from "../../../modules/subscription";
+import { ListSubscription } from "@/modules/subscription";
 
 export default function BillingPage() {
   setupWebhook();

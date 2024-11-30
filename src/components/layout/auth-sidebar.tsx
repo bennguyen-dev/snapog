@@ -71,7 +71,9 @@ export const AuthSidebar = ({ className }: IProps) => {
                             href={item.disabled ? "/" : item.href}
                             className={cn(
                               "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-accent hover:text-accent-foreground",
-                              path === item.href ? "bg-accent" : "transparent",
+                              path.includes(item.href)
+                                ? "bg-accent"
+                                : "transparent",
                               item.disabled && "cursor-not-allowed opacity-80",
                             )}
                           >
