@@ -28,8 +28,12 @@ export async function GET(req: NextRequest) {
   }
 
   return new Response(Buffer.from(res.data?.image), {
+    status: 200,
     headers: {
       "Content-Type": res.data?.contentType,
+      "Cache-Control": "public, s-maxage=10",
+      "CDN-Cache-Control": "public, s-maxage=60",
+      "Vercel-CDN-Cache-Control": "public, s-maxage=3600",
     },
   });
 }

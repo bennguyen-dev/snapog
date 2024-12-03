@@ -19,6 +19,7 @@ class ScrapeService {
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-store",
         body: JSON.stringify({ url }),
       });
 
@@ -70,6 +71,7 @@ class ScrapeService {
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-store",
         body: JSON.stringify({ url, limit }),
       });
 
