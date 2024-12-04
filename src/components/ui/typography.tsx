@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils";
 export const typographyVariants = cva("text-base", {
   variants: {
     variant: {
-      h1: "scroll-m-20 text-4xl font-bold leading-tight tracking-tighter md:text-5xl lg:text-6xl",
-      h2: "scroll-m-20 text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-5xl",
-      h3: "scroll-m-20 text-xl md:text-2xl font-semibold tracking-tight",
-      h4: "scroll-m-20 text-lg md:text-xl font-semibold tracking-tight",
+      h1: "scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl",
+      h2: "scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0",
+      h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
+      h4: "scroll-m-20 text-xl font-semibold tracking-tight",
       p: "leading-7 [&:not(:first-child)]:mt-2",
-      code: "relative rounded bg-muted px-1 py-0.5 font-mono text-base border",
+      code: "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
     },
     affects: {
       default: "",

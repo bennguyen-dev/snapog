@@ -1,23 +1,23 @@
+import { Plan } from "@prisma/client";
+
 import { ListPlan } from "@/components/block/BlockPricing/ListPlan";
 import { Typography } from "@/components/ui/typography";
-import { planService } from "@/services/plan";
+import { PLANS } from "@/services/plan";
 
 export const BlockPricing = async () => {
-  const { data: plans } = await planService.getAll();
-
   return (
-    <div className="container py-8 sm:py-16">
-      <Typography variant="h2" className="mb-8 text-center">
+    <div className="container max-w-screen-xl py-8 sm:py-16">
+      <Typography variant="h2" className="mb-4 text-center text-base">
         Pricing
       </Typography>
-      <Typography variant="h3" className="text-center">
-        Pricing plans for teams of all sizes
+      <Typography className="mb-4 text-center text-4xl font-bold sm:text-5xl">
+        Get started for free
       </Typography>
-      <Typography className="mx-auto mb-8 text-center md:w-2/3 lg:w-1/2">
-        Choose an affordable plan that’s packed with the best features for
-        engaging your audience, creating customer loyalty, and driving sales.
+      <Typography affects="lead" className="mx-auto mb-8 max-w-2xl text-center">
+        Cancel anytime, without any questions. Try{" "}
+        <strong>all the features</strong> with 30 free pages.
       </Typography>
-      {plans && plans.length > 0 && <ListPlan plans={plans} />}
+      <ListPlan plans={PLANS as Plan[]} />
     </div>
   );
 };

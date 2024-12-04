@@ -45,14 +45,23 @@ export const CardPlan = ({ plan, type, currentPlan, cbSuccess }: IProps) => {
 
       <CardContent>
         <div className="mb-12 text-center">
-          <span className="text-4xl font-bold">{formatPrice(price)}</span>
-          <span className="text-sm text-muted-foreground">/month</span>
+          {price === "contact us" ? (
+            <span className="text-xl font-semibold">Contact us</span>
+          ) : (
+            <>
+              <span className="text-4xl font-bold">{formatPrice(price)}</span>
+              <span className="text-sm text-muted-foreground">/month</span>
+            </>
+          )}
         </div>
         <ul className="space-y-2.5 text-sm">
           <li className="flex space-x-2">
             <CheckIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
             <span className="text-muted-foreground">
-              {new Intl.NumberFormat().format(Number(packageSize))} images/month
+              {packageSize === Infinity
+                ? "Unlimited"
+                : new Intl.NumberFormat().format(Number(packageSize))}{" "}
+              images/month
             </span>
           </li>
           <li className="flex space-x-2">
