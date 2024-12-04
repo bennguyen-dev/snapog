@@ -245,20 +245,20 @@ class PlanService {
 
   async getAll(): Promise<IResponse<Plan[] | null>> {
     try {
-      let plans = await prisma.plan.findMany();
+      const plans = await prisma.plan.findMany();
 
-      if (!plans.length) {
-        const syncResponse = await this.syncPlans();
-
-        if (!syncResponse.data) {
-          return syncResponse;
-        }
-
-        plans = syncResponse.data;
-      }
+      // if (!plans.length) {
+      //   const syncResponse = await this.syncPlans();
+      //
+      //   if (!syncResponse.data) {
+      //     return syncResponse;
+      //   }
+      //
+      //   plans = syncResponse.data;
+      // }
 
       // Sort plans by packageSize
-      plans.sort((a, b) => (a.packageSize ?? 0) - (b.packageSize ?? 0));
+      // plans.sort((a, b) => (a.packageSize ?? 0) - (b.packageSize ?? 0));
 
       return {
         status: 200,
