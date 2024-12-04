@@ -21,7 +21,11 @@ export const BlockHowItWorks = () => {
         your website:
       </Typography>
       <Typography variant="code" className="mb-4">
-        https://{host}/api/get-image?url=
+        https://{host}/api/get-image?api_key=
+        <span className="text-base font-bold text-orange-600">
+          {"<api_key>"}
+        </span>
+        &url=
         <span className="text-base font-bold text-orange-600">
           yourwebsite.com/blogs/article-1
         </span>
@@ -32,13 +36,13 @@ export const BlockHowItWorks = () => {
           {getSnippetHowToUse({
             host,
             domain: "yourwebsite.com",
-            apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
+            apiKey: "<api_key>",
           })}
         </CodeSnippet>
       )}
 
       {host && (
-        <Typography variant="p">
+        <Typography variant="p" className="break-all">
           Example:{" "}
           <Link
             href={getLinkSmartOGImage({

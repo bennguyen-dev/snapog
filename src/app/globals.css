@@ -87,7 +87,12 @@
 @layer base {
   * {
     @apply border-border;
+
+    .grecaptcha-badge {
+      @apply invisible;
+    }
   }
+
   body {
     @apply bg-background text-foreground;
   }

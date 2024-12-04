@@ -75,7 +75,24 @@ export const Footer = () => {
             <Link href="/" className="hover:underline">
               SnapOG™
             </Link>
-            . All Rights Reserved.
+            . All Rights Reserved.{" "}
+            <span>
+              This site is protected by reCAPTCHA and the{" "}
+              <a
+                className="hover:underline"
+                href="https://www.google.com/intl/en/policies/privacy/"
+              >
+                Google Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a
+                className="hover:underline"
+                href="https://www.google.com/intl/en/policies/terms/"
+              >
+                Terms of Service apply
+              </a>
+              .
+            </span>
           </span>
         </div>
       </div>

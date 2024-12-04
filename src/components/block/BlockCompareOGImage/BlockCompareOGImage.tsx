@@ -12,7 +12,7 @@ interface IProps {
 
 export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
   return (
-    <div className="container py-8 sm:py-16">
+    <div className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
       {domain && (
         <Typography
           variant="h1"
@@ -22,52 +22,48 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
           <span className="underline">{domain}</span>
         </Typography>
       )}
-      <div className="grid grid-cols-1 gap-x-12 pb-8 sm:grid-cols-2 sm:gap-8">
-        <div>
-          <Typography variant="h3" className="mb-4 text-center font-bold">
+      <div className="grid grid-cols-1 gap-x-12 gap-y-8 pb-12 sm:grid-cols-2 sm:gap-8">
+        <div className="text-muted-foreground/80 sm:ml-2">
+          <Typography variant="h3" className="mb-4 text-xl text-foreground">
             Normal OG images
           </Typography>
-          <div className="flex items-center justify-center">
-            <ul className="font-medium text-destructive">
-              <li className="flex items-center gap-1 sm:text-lg">
-                <X className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-destructive" />
-                Missing OG image on some pages
-              </li>
-              <li className="flex items-center gap-1 sm:text-lg">
-                <X className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-destructive" />
-                Manually update when the content changes
-              </li>
-              <li className="flex items-center gap-1 sm:text-lg">
-                <X className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-destructive" />
-                Takes time to design an OG image for every page
-              </li>
-              <li className="flex items-center gap-1 sm:text-lg">
-                <X className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-destructive" />
-                Complicated code to generate dynamic OG images
-              </li>
-            </ul>
-          </div>
+          <ul className="space-y-2">
+            <li className="flex items-center gap-2">
+              <X className="inline-block size-5 stroke-2" />
+              Missing OG image on some pages
+            </li>
+            <li className="flex items-center gap-2">
+              <X className="inline-block size-5 stroke-2" />
+              Manually update when the content changes
+            </li>
+            <li className="flex items-center gap-2">
+              <X className="inline-block size-5 stroke-2" />
+              Takes time to design an OG image for every page
+            </li>
+            <li className="flex items-center gap-2">
+              <X className="inline-block size-5 stroke-2" />
+              Complicated code to generate dynamic OG images
+            </li>
+          </ul>
         </div>
-        <div>
-          <Typography variant="h3" className="mb-4 text-center font-bold">
-            OG Smart's OG images
+        <div className="sm:ml-2">
+          <Typography variant="h3" className="mb-4">
+            SnapOG's OG images
           </Typography>
-          <div className="flex items-center justify-center">
-            <ul className="font-medium text-success">
-              <li className="flex items-center gap-1 sm:text-lg">
-                <Check className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-success" />
-                In-context OG image with page screenshot (better CTR)
-              </li>
-              <li className="flex items-center gap-1 sm:text-lg">
-                <Check className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-success" />
-                Fully automated, generated for every page, save time.
-              </li>
-              <li className="flex items-center gap-1 sm:text-lg">
-                <Check className="mr-1 inline-block min-h-6 min-w-6 stroke-2 text-success" />
-                Optimal size, high quality (retina scale), fast loading
-              </li>
-            </ul>
-          </div>
+          <ul className="space-y-2 font-medium">
+            <li className="flex items-center gap-2">
+              <Check className="inline-block size-6 stroke-2 text-success" />
+              In-context OG image with page screenshot (better CTR)
+            </li>
+            <li className="flex items-center gap-2">
+              <Check className="inline-block size-6 stroke-2 text-success" />
+              Fully automated, generated for every page, save time.
+            </li>
+            <li className="flex items-center gap-2">
+              <Check className="inline-block size-6 stroke-2 text-success" />
+              Optimal size, high quality (retina scale), fast loading
+            </li>
+          </ul>
         </div>
       </div>
       <div className="flex flex-col gap-16">
@@ -82,10 +78,6 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
                 image={page.OGImage}
                 title={page.OGTitle}
                 description={page.OGDescription}
-                ribbon={{
-                  type: "error",
-                  content: "Normal",
-                }}
               />
               <PreviewOgImage
                 url={getUrlWithProtocol(page.url)}
