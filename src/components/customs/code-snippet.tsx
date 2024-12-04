@@ -15,6 +15,11 @@ const CodeSnippet = ({ children, className, ...rest }: IProps) => {
         customStyle={{
           margin: 0,
         }}
+        lineProps={{
+          style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+        }}
+        wrapLines
+        wrapLongLines
         {...rest}
       >
         {children}
