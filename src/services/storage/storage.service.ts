@@ -1,4 +1,8 @@
 import {
+  CloudFrontClient,
+  CreateInvalidationCommand,
+} from "@aws-sdk/client-cloudfront";
+import {
   DeleteObjectsCommand,
   PutObjectCommand,
   S3Client,
@@ -21,7 +25,34 @@ const s3Client = new S3Client({
   },
 });
 
+const cloudFrontClient = new CloudFrontClient({
+  region: process.env.AWS_REGION as string,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+  },
+});
+
 class StorageService {
+  private async invalidateCloudFrontCache(paths: string[]) {
+    try {
+      const command = new CreateInvalidationCommand({
+        DistributionId: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID as string,
+        InvalidationBatch: {
+          CallerReference: Date.now().toString(),
+          Paths: {
+            Quantity: paths.length,
+            Items: paths.map((path) => `/${path}`),
+          },
+        },
+      });
+
+      await cloudFrontClient.send(command);
+    } catch (error) {
+      console.error(`Error invalidating CloudFront cache: ${error}`);
+    }
+  }
+
   async uploadImage({
     image,
     key,
@@ -36,6 +67,9 @@ class StorageService {
     // Upload image
     try {
       await s3Client.send(command);
+
+      // Invalidate CloudFront cache
+      await this.invalidateCloudFrontCache([key]);
 
       return {
         message: "Image uploaded successfully",
@@ -65,6 +99,10 @@ class StorageService {
     });
     try {
       await s3Client.send(command);
+
+      // Invalidate CloudFront cache
+      await this.invalidateCloudFrontCache(keys);
+
       return {
         message: "Images deleted successfully",
         status: 200,
@@ -91,6 +129,10 @@ class StorageService {
     });
     try {
       await s3Client.send(command);
+
+      // Invalidate CloudFront cache
+      await this.invalidateCloudFrontCache(prefixes);
+
       return {
         message: "Folder deleted successfully",
         status: 200,
