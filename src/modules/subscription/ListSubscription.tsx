@@ -64,7 +64,7 @@ export const ListSubscription = () => {
             />
           )}
         </div>
-        {plans && plans.length && (
+        {plans && plans.length > 0 && (
           <CardUpdatePlan
             plans={plans}
             cbSuccess={() => {

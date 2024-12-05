@@ -86,7 +86,7 @@ export const CardCurrentSubscription = ({
             isUsageBased={plan.isUsageBased ?? false}
           />
         </CardHeader>
-        <CardContent className="flex-1 pt-6 max-md:hidden">
+        <CardContent className="flex-1 max-md:hidden md:pt-6">
           <Typography className="mb-4">What's included:</Typography>
           <ul className="space-y-2.5 text-sm">
             <li className="flex space-x-2">
