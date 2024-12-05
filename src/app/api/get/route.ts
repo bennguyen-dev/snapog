@@ -31,9 +31,10 @@ export async function GET(req: NextRequest) {
     status: 200,
     headers: {
       "Content-Type": res.data?.contentType,
-      "Cache-Control": "public, s-maxage=10",
-      "CDN-Cache-Control": "public, s-maxage=60",
-      "Vercel-CDN-Cache-Control": "public, s-maxage=3600",
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+      "Surrogate-Control": "no-store",
     },
   });
 }

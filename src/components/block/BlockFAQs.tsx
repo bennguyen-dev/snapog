@@ -23,7 +23,8 @@ export const BlockFAQs = () => {
       ),
       content: (
         <Typography variant="p" className="text-muted-foreground">
-          SnapOG is a tool that allows you to create images for any website.
+          Snap OG is a tool that allows you to generate open graph images for
+          your website.
         </Typography>
       ),
     },
@@ -41,7 +42,9 @@ export const BlockFAQs = () => {
             Very simple, you just need to use this URL as the open graph image:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{host}/api/get-image?url=
+            https://{host}/api/get?api_key=
+            <span className="font-bold text-orange-600">{"<api_key>"}</span>
+            &url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/articles/my-post-123
             </span>
@@ -59,7 +62,7 @@ export const BlockFAQs = () => {
             example:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{host}/api/get-image?url=
+            https://{host}/api/get?url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/{"${router.pathname}"}
             </span>
@@ -72,7 +75,7 @@ export const BlockFAQs = () => {
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
           What kind of URL can I use in the &quot;{host}
-          /api/get-image?url=&quot; parameter?
+          /api/get?url=&quot; parameter?
         </Typography>
       ),
       content: (

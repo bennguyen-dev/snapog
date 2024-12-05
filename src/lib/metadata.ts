@@ -55,7 +55,7 @@ export function getMetadata({
       siteName: defaultMetadata.siteName,
       images: [
         {
-          url: `https://${host}/api/get-image?api_key=${process.env.SNAP_OG_API_KEY}&url=${host}${path}&time=${Date.now()}`,
+          url: `https://${host}/api/get?api_key=${process.env.SNAP_OG_API_KEY}&url=${host}${path}&time=${Date.now()}`,
           width: 1200,
           height: 630,
           alt: finalTitle,

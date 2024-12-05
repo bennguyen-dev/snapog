@@ -49,8 +49,7 @@ export const CardUpdatePlan = ({
         <CardTitle>Upgrade plan</CardTitle>
         <CardDescription>
           Our plans are built to fit the size of your project. Pay a flat rate
-          for a set plan, plus a little extra if you go over. Upgrade to the
-          next tier as your project grows.
+          for a set plan. Upgrade to the next tier as your project grows.
         </CardDescription>
       </CardHeader>
       <CardContent>
