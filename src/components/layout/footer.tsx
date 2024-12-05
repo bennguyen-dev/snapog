@@ -69,30 +69,30 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="w-full border-t border-solid border-t-muted-foreground py-4 sm:flex sm:items-center sm:justify-between sm:py-6">
+        <div className="flex w-full flex-wrap justify-between gap-2 border-t border-solid border-t-muted-foreground py-4 sm:py-6">
           <span className="text-sm text-muted-foreground">
             © {new Date().getFullYear()}{" "}
             <Link href="/" className="hover:underline">
               SnapOG™
             </Link>
             . All Rights Reserved.{" "}
-            <span>
-              This site is protected by reCAPTCHA and the{" "}
-              <a
-                className="hover:underline"
-                href="https://www.google.com/intl/en/policies/privacy/"
-              >
-                Google Privacy Policy
-              </a>{" "}
-              and{" "}
-              <a
-                className="hover:underline"
-                href="https://www.google.com/intl/en/policies/terms/"
-              >
-                Terms of Service apply
-              </a>
-              .
-            </span>
+          </span>
+          <span className="text-sm text-muted-foreground">
+            This site is protected by reCAPTCHA and the{" "}
+            <a
+              className="hover:underline"
+              href="https://www.google.com/intl/en/policies/privacy/"
+            >
+              Google Privacy Policy
+            </a>{" "}
+            and{" "}
+            <a
+              className="hover:underline"
+              href="https://www.google.com/intl/en/policies/terms/"
+            >
+              Terms of Service apply
+            </a>
+            .
           </span>
         </div>
       </div>

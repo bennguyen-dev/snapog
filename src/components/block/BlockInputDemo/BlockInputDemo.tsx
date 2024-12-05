@@ -13,7 +13,7 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
   return (
     <div
       className={cx(
-        "container relative grid grid-cols-1 gap-8 py-8  sm:py-16 sm:max-lg:pb-20",
+        "container relative grid grid-cols-1 gap-8 py-8 sm:py-20",
         hidePreview ? "max-w-screen-lg" : "sm:grid-cols-2",
       )}
     >
