@@ -3,7 +3,6 @@ import { cx } from "class-variance-authority";
 import { CheckIcon } from "lucide-react";
 
 import { ButtonCardPlan } from "@/components/customs/ButtonCardPlan";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -26,12 +25,7 @@ export const CardPlan = ({ plan, type, currentPlan, cbSuccess }: IProps) => {
   return (
     <Card className={cx(isPopular ? "border-foreground" : "")}>
       <CardHeader className="pb-2 text-center">
-        {isPopular && (
-          <Badge className="mb-6 w-max self-center uppercase">
-            Most popular
-          </Badge>
-        )}
-        <CardTitle className="!mb-6">{productName}</CardTitle>
+        <CardTitle className="!mb-8">{productName}</CardTitle>
 
         {description && (
           <div
