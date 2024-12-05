@@ -8,9 +8,8 @@ import { headers } from "next/headers";
 import Script from "next/script";
 
 import { Toaster } from "@/components/ui/toaster";
+import { getMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
-
-import type { Metadata } from "next";
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -18,38 +17,16 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata() {
   const headersList = headers();
-
   const pathname = headersList.get("x-current-path");
   const host = headersList.get("host");
-  const time = new Date().getTime();
 
   return {
-    title: "Snap OG - Automate your Open-Graph social images with screenshots",
-    description:
-      "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
+    ...getMetadata({ host, path: pathname || "" }),
     applicationName: "Snap OG",
     generator: "Snap OG",
     referrer: "origin-when-cross-origin",
-    openGraph: {
-      siteName: "Snap OG",
-      images: [
-        {
-          url: `https://${host}/api/get-image?api_key=${process.env.SNAP_OG_API_KEY}&url=${host}${pathname}&time=${time}`,
-          width: 1200,
-          height: 630,
-          alt: "Snap OG",
-        },
-      ],
-      type: "website",
-      locale: "en",
-      description:
-        "Boost CTR with Snap OG's No-Code Solution. Automate Open-Graph social images for better engagement and clicks. Perfect for marketers—no coding needed.",
-      title:
-        "Snap OG - Automate your Open-Graph social images with screenshots",
-      url: `https://${host}${pathname}`,
-    },
     authors: [{ name: "Snap OG", url: `https://${host}` }],
     category: "Open Graph",
     keywords: [

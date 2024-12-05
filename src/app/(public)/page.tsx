@@ -1,9 +1,29 @@
+import { headers } from "next/headers";
+
 import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
 import { BlockInputDemo } from "@/components/block/BlockInputDemo";
+import { getMetadata } from "@/lib/metadata";
 import { IGetDemoResponse } from "@/services/demo";
+
+export async function generateMetadata() {
+  const headersList = headers();
+  const host = headersList.get("host");
+
+  return getMetadata({
+    host,
+    path: "/",
+    keywords: [
+      "social preview automation",
+      "OG image generation",
+      "social media optimization",
+      "automated meta images",
+      "link preview tool",
+    ],
+  });
+}
 
 export default async function Home() {
   const initPageInfo: IGetDemoResponse[] = [
