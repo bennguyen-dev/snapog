@@ -165,7 +165,11 @@ export const ListSite = () => {
             <>
               <Typography affects="small" className="mb-4">
                 Example URL:{" "}
-                <Link href={urlExample} target="_blank" className="text-link">
+                <Link
+                  href={urlExample}
+                  target="_blank"
+                  className="text-link break-all"
+                >
                   {urlExample}
                 </Link>
               </Typography>

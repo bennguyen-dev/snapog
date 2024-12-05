@@ -13,6 +13,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useCallAction } from "@/hooks/useCallAction";
 import {
   CardCurrentSubscription,
@@ -64,7 +71,7 @@ export const ListSubscription = () => {
             />
           )}
         </div>
-        {plans && plans.length > 0 && (
+        {plans && plans.length > 0 ? (
           <CardUpdatePlan
             plans={plans}
             cbSuccess={() => {
@@ -73,6 +80,20 @@ export const ListSubscription = () => {
             }}
             userSubscription={userSubscription}
           />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upgrade plan</CardTitle>
+              <CardDescription>
+                Our plans are built to fit the size of your project. Pay a flat
+                rate for a set plan. Upgrade to the next tier as your project
+                grows.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Coming soon....</p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </>

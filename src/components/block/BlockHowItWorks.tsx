@@ -20,8 +20,8 @@ export const BlockHowItWorks = () => {
         After signing up, just use this URL as the open-graph of any page on
         your website:
       </Typography>
-      <Typography variant="code" className="mb-4">
-        https://{host}/api/get-image?api_key=
+      <Typography variant="code" className="mb-4 break-all">
+        https://{host}/api/get?api_key=
         <span className="text-base font-bold text-orange-600">
           {"<api_key>"}
         </span>
@@ -51,7 +51,7 @@ export const BlockHowItWorks = () => {
               apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
             })}
             target="_blank"
-            className="text-link"
+            className="text-link break-all"
           >
             {getLinkSmartOGImage({
               host,
