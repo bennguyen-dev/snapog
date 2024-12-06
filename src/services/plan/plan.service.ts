@@ -15,41 +15,6 @@ import { configureLemonSqueezy } from "@/lib/lemonsqueezy";
 import { IResponse } from "@/lib/type";
 import { ICheckoutUrl, ICheckoutUrlResponse, INewPlan } from "@/services/plan";
 
-const defaultPlans: INewPlan[] = [
-  {
-    productId: 0,
-    productName: "Free",
-    variantId: 0,
-    name: "Monthly",
-    description: "<p>For simple websites with less than 10 unique pages</p>",
-    price: "0",
-    isUsageBased: false,
-    interval: "month",
-    intervalCount: 1,
-    trialInterval: null,
-    trialIntervalCount: null,
-    sort: 2,
-    packageSize: 30,
-    isPopular: null,
-  },
-  {
-    productId: 0,
-    productName: "Free",
-    variantId: 1,
-    name: "Annually",
-    description: "<p>For simple websites with less than 10 unique pages</p>",
-    price: "0",
-    isUsageBased: false,
-    interval: "year",
-    intervalCount: 1,
-    trialInterval: null,
-    trialIntervalCount: null,
-    sort: 3,
-    packageSize: 30,
-    isPopular: null,
-  },
-];
-
 class PlanService {
   async syncPlans(): Promise<IResponse<Plan[] | null>> {
     configureLemonSqueezy();
@@ -73,11 +38,6 @@ class PlanService {
         // Ensure the variant is properly typed and includes the id from the plan.
         productVariants.push(plan);
       };
-
-      // Add the default plans
-      for (const plan of defaultPlans) {
-        await _addVariant(plan);
-      }
 
       // Fetch products from the Lemon Squeezy store.
       const products = await listProducts({
