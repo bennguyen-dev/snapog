@@ -10,34 +10,28 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/about-us", "/demo", "/pricing", "/privacy", "/terms"],
-        disallow: [
-          "/dashboard/*",
-          "/api/*",
-          "/_next/*",
-          "/*.json$",
-          "/*.xml$",
-          "/login",
-          "/signup",
-          "/reset-password",
-        ],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
         crawlDelay: 10,
       },
       {
         userAgent: "GPTBot",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "ChatGPT-User",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Claude-Web",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Google-Extended",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Google-Image",
@@ -54,30 +48,33 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Google-Feed",
-        allow: ["/*.xml", "/*.json"],
+        allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Google-Mobile",
         allow: ["/"],
-        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Google-News",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Google-Ads",
         allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Googlebot",
         allow: ["/"],
-        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
       {
         userAgent: "Bingbot",
         allow: ["/"],
-        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
       },
     ],
     host: `https://${host}`,
