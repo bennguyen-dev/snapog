@@ -11,11 +11,10 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: ["/"],
-        disallow: ["/dashboard/*", "/api/*", "/_next/*"],
+        disallow: ["/dashboard/*", "/api/*"],
         crawlDelay: 10,
       },
     ],
-    host: `https://${host}`,
     sitemap: `https://${host}/sitemap.xml`,
   };
 }
