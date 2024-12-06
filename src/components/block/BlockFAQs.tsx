@@ -218,7 +218,7 @@ export const BlockFAQs = () => {
   ];
 
   return (
-    <div
+    <section
       id="faqs"
       className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
     >
@@ -235,6 +235,6 @@ export const BlockFAQs = () => {
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+    </section>
   );
 };

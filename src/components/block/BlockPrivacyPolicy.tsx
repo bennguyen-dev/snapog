@@ -7,7 +7,7 @@ export const BlockPrivacyPolicy = () => {
 
   const host = headersList.get("host");
   return (
-    <div
+    <section
       id="privacy-policy"
       className="container flex max-w-screen-md scroll-mt-20 flex-col gap-4 py-8 sm:py-16"
     >
@@ -53,6 +53,6 @@ export const BlockPrivacyPolicy = () => {
         free to contact us.
       </Typography>
       <Typography>This policy is effective as of 13 May 2024.</Typography>
-    </div>
+    </section>
   );
 };

@@ -6,7 +6,7 @@ import { PLANS } from "@/services/plan";
 
 export const BlockPricing = async () => {
   return (
-    <div className="container max-w-screen-xl py-8 lg:py-12 2xl:py-16">
+    <section className="container max-w-screen-xl py-8 lg:py-12 2xl:py-16">
       <Typography variant="h2" className="mb-4 text-center text-base">
         Pricing
       </Typography>
@@ -18,6 +18,6 @@ export const BlockPricing = async () => {
         <strong>all the features</strong> with 30 free pages.
       </Typography>
       <ListPlan plans={PLANS as Plan[]} />
-    </div>
+    </section>
   );
 };
