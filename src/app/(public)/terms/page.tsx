@@ -11,7 +11,7 @@ export async function generateMetadata() {
   return getMetadata({
     title: "Terms of Service - Snap OG",
     description:
-      "Terms of Service for Snap OG, the leading social preview generator.",
+      "Terms of Service for Snap OG. Learn about our policies, including usage, privacy, and more.",
     host,
     path: "/terms",
   });

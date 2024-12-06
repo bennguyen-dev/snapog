@@ -25,19 +25,59 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "GPTBot",
-        disallow: ["/"],
+        allow: ["/"],
       },
       {
         userAgent: "ChatGPT-User",
-        disallow: ["/"],
+        allow: ["/"],
       },
       {
-        userAgent: "CCBot",
-        disallow: ["/"],
+        userAgent: "Claude-Web",
+        allow: ["/"],
       },
       {
         userAgent: "Google-Extended",
         allow: ["/"],
+      },
+      {
+        userAgent: "Google-Image",
+        allow: [
+          "/*.ip",
+          "/*.jpg",
+          "/*.jpeg",
+          "/*.png",
+          "/*.gif",
+          "/*.bmp",
+          "/*.tiff",
+          "/*.webp",
+        ],
+      },
+      {
+        userAgent: "Google-Feed",
+        allow: ["/*.xml", "/*.json"],
+      },
+      {
+        userAgent: "Google-Mobile",
+        allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
+      },
+      {
+        userAgent: "Google-News",
+        allow: ["/"],
+      },
+      {
+        userAgent: "Google-Ads",
+        allow: ["/"],
+      },
+      {
+        userAgent: "Googlebot",
+        allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
+      },
+      {
+        userAgent: "Bingbot",
+        allow: ["/"],
+        disallow: ["/dashboard/*", "/api/*", "/_next/*", "/*.json$", "/*.xml$"],
       },
     ],
     host: `https://${host}`,

@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Inter as FontSans } from "next/font/google";
+import Head from "next/head";
 import { headers } from "next/headers";
 import Script from "next/script";
 
@@ -57,6 +58,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="mask-icon" href="/logo.png" color="#0f172a" />
+        <link rel="shortcut icon" href="/logo.png" />
+        <link rel="text/plain" href="/humans.txt" />
+      </Head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",

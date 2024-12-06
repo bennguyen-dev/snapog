@@ -8,8 +8,9 @@ export async function generateMetadata() {
   const host = headersList.get("host");
 
   return getMetadata({
-    title: "Pages - Snap OG",
-    description: "Pages for Snap OG, the leading social preview generator.",
+    title: "Manage Your Pages - Snap OG Dashboard",
+    description:
+      "Control and customize social previews for individual pages of your website.",
     host,
     path: "/dashboard/sites/[siteId]",
   });
