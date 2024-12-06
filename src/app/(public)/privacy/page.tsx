@@ -11,7 +11,7 @@ export async function generateMetadata() {
   return getMetadata({
     title: "Privacy Policy - Snap OG",
     description:
-      "Privacy Policy for Snap OG, the leading social preview generator.",
+      "Our commitment to protecting your privacy. Read about how Snap OG handles and safeguards your data.",
     host,
     path: "/privacy",
   });

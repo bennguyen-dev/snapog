@@ -9,9 +9,9 @@ export async function generateMetadata() {
   const host = headersList.get("host");
 
   return getMetadata({
-    title: "Subscription - Snap OG",
+    title: "Subscription - Snap OG Dashboard",
     description:
-      "Subscription for Snap OG, the leading social preview generator.",
+      "Manage your subscription and billing details in one place. Upgrade, downgrade, or cancel your plan at any time.",
     host,
     path: "/dashboard/subscription",
   });

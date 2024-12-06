@@ -1,0 +1,11 @@
+/* TEAM */
+Developer: Ben Nguyen
+Contact: bennguyen.dev.vn@gmail.com
+Website: https://www.snapog.com
+From: Vietnam
+
+/* SITE */
+Last update: 2024/12/06
+Language: English
+Doctype: HTML5
+IDE: Cursor

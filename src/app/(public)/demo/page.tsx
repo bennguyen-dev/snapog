@@ -9,8 +9,9 @@ export async function generateMetadata() {
   const host = headersList.get("host");
 
   return getMetadata({
-    title: "Demo - Snap OG",
-    description: "Demo for Snap OG, the leading social preview generator.",
+    title: "Try Snap OG Demo - See Your Website's Social Preview",
+    description:
+      "Experience the power of automated social previews. See how Snap OG can transform your website's social media appearance instantly.",
     host,
     path: "/demo",
   });

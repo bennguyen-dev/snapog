@@ -10,8 +10,9 @@ export async function generateMetadata() {
   const host = headersList.get("host");
 
   return getMetadata({
-    title: "Pricing - Snap OG",
-    description: "Pricing for Snap OG, the leading social preview generator.",
+    title: "Snap OG Pricing - Simple Plans for Every Business",
+    description:
+      "Choose the perfect plan for your business. Simple, transparent pricing with all the features you need to boost social engagement.",
     host,
     path: "/pricing",
   });

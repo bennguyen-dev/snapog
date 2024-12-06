@@ -8,8 +8,9 @@ export async function generateMetadata() {
   const host = headersList.get("host");
 
   return getMetadata({
-    title: "API Keys - Snap OG",
-    description: "API Keys for Snap OG, the leading social preview generator.",
+    title: "API Keys - Snap OG Dashboard",
+    description:
+      "Manage your API keys for Snap OG. Generate new keys, revoke existing ones, and ensure secure access to our services.",
     host,
     path: "/dashboard/api-keys",
   });

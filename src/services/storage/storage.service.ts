@@ -100,9 +100,6 @@ class StorageService {
     try {
       await s3Client.send(command);
 
-      // Invalidate CloudFront cache
-      await this.invalidateCloudFrontCache(keys);
-
       return {
         message: "Images deleted successfully",
         status: 200,
@@ -129,9 +126,6 @@ class StorageService {
     });
     try {
       await s3Client.send(command);
-
-      // Invalidate CloudFront cache
-      await this.invalidateCloudFrontCache(prefixes);
 
       return {
         message: "Folder deleted successfully",
