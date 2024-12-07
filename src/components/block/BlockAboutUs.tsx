@@ -9,7 +9,7 @@ export const BlockAboutUs = () => {
   const host = headersList.get("host");
 
   return (
-    <div
+    <section
       id="about-us"
       className="container flex max-w-screen-md scroll-mt-20 flex-col gap-4 py-8 sm:py-16"
     >
@@ -48,6 +48,6 @@ export const BlockAboutUs = () => {
           </li>
         </ul>
       </div>
-    </div>
+    </section>
   );
 };

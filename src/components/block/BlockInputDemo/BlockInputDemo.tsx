@@ -11,7 +11,7 @@ interface IProps {
 
 export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
   return (
-    <div
+    <section
       className={cx(
         "container relative grid grid-cols-1 gap-8 py-8 sm:py-20",
         hidePreview ? "max-w-screen-lg" : "sm:grid-cols-2",
@@ -50,6 +50,6 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };

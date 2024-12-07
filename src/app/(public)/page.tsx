@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 
+import { BlockBenefit } from "@/components/block/BlockBenefit";
 import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
@@ -59,6 +60,7 @@ export default async function Home() {
   return (
     <>
       <BlockInputDemo />
+      <BlockBenefit />
       <BlockCompareOGImage pagesInfo={initPageInfo} />
       <BlockHowItWorks />
       <BlockGetStartedNow />

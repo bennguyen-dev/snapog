@@ -12,7 +12,7 @@ interface IProps {
 
 export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
   return (
-    <div className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
+    <section className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
       {domain && (
         <Typography
           variant="h1"
@@ -22,9 +22,12 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
           <span className="underline">{domain}</span>
         </Typography>
       )}
-      <div className="grid grid-cols-1 gap-x-12 gap-y-8 pb-12 sm:grid-cols-2 sm:gap-8">
-        <div className="text-muted-foreground/80 sm:ml-2">
-          <Typography variant="h3" className="mb-4 text-xl text-foreground">
+      <div className="grid grid-cols-1 gap-x-12 gap-y-8 pb-12 md:grid-cols-2 md:gap-8">
+        <div className="flex flex-col items-center text-muted-foreground/80 sm:ml-2">
+          <Typography
+            variant="h4"
+            className="mb-4 text-left text-xl font-normal text-foreground"
+          >
             Normal OG images
           </Typography>
           <ul className="space-y-2">
@@ -46,8 +49,8 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
             </li>
           </ul>
         </div>
-        <div className="sm:ml-2">
-          <Typography variant="h3" className="mb-4">
+        <div className="flex flex-col items-center sm:ml-2">
+          <Typography variant="h4" className="mb-4 text-xl font-normal">
             SnapOG's OG images
           </Typography>
           <ul className="space-y-2 font-medium">
@@ -70,7 +73,7 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
         {pagesInfo?.map((page) => {
           return (
             <div
-              className="grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2"
+              className="grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2"
               key={page.url}
             >
               <PreviewOgImage
@@ -93,6 +96,6 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 };

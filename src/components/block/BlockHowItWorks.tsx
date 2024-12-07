@@ -11,7 +11,7 @@ export const BlockHowItWorks = () => {
   const host = headersList.get("host");
 
   return (
-    <div
+    <section
       id="how-it-works"
       className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
     >
@@ -61,6 +61,6 @@ export const BlockHowItWorks = () => {
           </Link>
         </Typography>
       )}
-    </div>
+    </section>
   );
 };

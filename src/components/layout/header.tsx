@@ -42,7 +42,9 @@ export const Header = async () => {
                 redirect("/signin");
               }}
             >
-              <Button type="submit">Sign in</Button>
+              <Button type="submit" id="getStarted">
+                Get Started
+              </Button>
             </form>
           </div>
         )}

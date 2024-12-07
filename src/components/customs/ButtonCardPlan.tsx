@@ -78,17 +78,21 @@ export const ButtonCardPlan = ({
     },
   });
 
-  const [label, disabled] = useMemo(() => {
+  const [label, disabled, id] = useMemo(() => {
     if (type === "sign-up") {
-      return ["Get started", false];
+      return [
+        "Get started",
+        false,
+        `getStarted-${plan.productName}-${plan.name}`,
+      ];
     }
 
     if (currentPlan?.id === plan.id) {
-      return ["Your plan", true];
+      return ["Your plan", true, undefined];
     } else {
-      return ["Select", false];
+      return ["Select", false, undefined];
     }
-  }, [currentPlan, plan.id, type]);
+  }, [currentPlan, plan, type]);
 
   const onClick = useCallback(async () => {
     if (type === "sign-up" && !session?.user) {
@@ -163,6 +167,7 @@ export const ButtonCardPlan = ({
         variant={plan.isPopular ? "default" : "outline"}
         loading={loading}
         disabled={disabled}
+        id={id}
       >
         {label}
       </Button>

@@ -2,7 +2,7 @@ import { Typography } from "@/components/ui/typography";
 
 export const BlockTermsOfService = () => {
   return (
-    <div
+    <section
       id="terms-of-service"
       className="container flex max-w-screen-md scroll-mt-20 flex-col gap-4 py-8 sm:py-16"
     >
@@ -79,6 +79,6 @@ export const BlockTermsOfService = () => {
         reason of any representation, act or omission to act by you.
       </Typography>
       <Typography className="mt-4">Last updated: 23 August 2024.</Typography>
-    </div>
+    </section>
   );
 };
