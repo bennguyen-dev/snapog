@@ -91,37 +91,60 @@ class ImageService {
   }: IGetImageByImageLink): Promise<
     IResponse<IGetImageByImageLinkResponse | null>
   > {
-    console.time("start fetch image from link S3");
-    const response = await fetch(imageLink, { cache: "no-store" });
-    console.timeEnd("start fetch image from link S3");
+    try {
+      const response = await fetch(imageLink, {
+        cache: "no-store",
+        headers: {
+          Accept: "image/*",
+          "User-Agent":
+            "Mozilla/5.0 (compatible; SnapOG/1.0; +https://www.snapog.com)",
+        },
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        console.error(
+          `Image fetch failed: ${response.status} ${response.statusText}`,
+        );
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType?.startsWith("image/")) {
+        console.error(`Invalid content type: ${contentType}`);
+        throw new Error("Invalid content type");
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+        throw new Error("Empty image buffer received");
+      }
+
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Additional validation
+      if (buffer.length < 100) {
+        // Arbitrary minimum size for a valid image
+        throw new Error("Image data too small to be valid");
+      }
+
       return {
-        message: "Image not found",
-        status: 404,
+        message: "Image found",
+        status: 200,
+        data: {
+          image: buffer,
+          contentType,
+          size: buffer.length,
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return {
+        message:
+          error instanceof Error ? error.message : "Failed to fetch image",
+        status: 500,
         data: null,
       };
     }
-
-    const contentType = response.headers.get("content-type");
-    const buffer = Buffer.from(await response.arrayBuffer());
-
-    if (!contentType) {
-      return {
-        message: "Image not found",
-        status: 404,
-        data: null,
-      };
-    }
-
-    return {
-      message: "Image found",
-      status: 200,
-      data: {
-        image: buffer,
-        contentType,
-      },
-    };
   }
 }
 

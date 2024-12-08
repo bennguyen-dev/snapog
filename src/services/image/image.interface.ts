@@ -15,4 +15,5 @@ export interface IGetImageByImageLink {
 export interface IGetImageByImageLinkResponse {
   image: Buffer;
   contentType: string;
+  size: number;
 }
