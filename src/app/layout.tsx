@@ -77,6 +77,27 @@ export default function RootLayout({
           src="https://app.lemonsqueezy.com/js/lemon.js"
           strategy="beforeInteractive"
         />
+        {/* Load the Hotjar script before the page is interactive. */}
+        {process.env.NODE_ENV === "production" && process.env.HOTJAR_ID && (
+          <Script id="hotjar">
+            {`
+          (function (h, o, t, j, a, r) {
+            h.hj =
+              h.hj ||
+              function () {
+                // eslint-disable-next-line prefer-rest-params
+                (h.hj.q = h.hj.q || []).push(arguments);
+              };
+            h._hjSettings = { hjid: ${process.env.HOTJAR_ID}, hjsv: 6 };
+            a = o.getElementsByTagName("head")[0];
+            r = o.createElement("script");
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+          })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+        `}
+          </Script>
+        )}
         <SpeedInsights />
         <Analytics />
         {children}
