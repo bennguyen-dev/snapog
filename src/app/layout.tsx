@@ -64,6 +64,7 @@ export default function RootLayout({
         <link rel="mask-icon" href="/logo.png" color="#0f172a" />
         <link rel="shortcut icon" href="/logo.png" />
         <link rel="text/plain" href="/humans.txt" />
+        <meta name="msvalidate.01" content="D1936DE08B1AC89E9415E9603037BD5C" />
       </Head>
       <body
         className={cn(
