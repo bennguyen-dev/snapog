@@ -20,7 +20,7 @@ const PAGES = {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const headersList = headers();
-  const host = headersList.get("host");
+  const host = headersList.get("host")?.replace("www.", "");
   const baseUrl = `https://${host}`;
 
   // Generate core pages
