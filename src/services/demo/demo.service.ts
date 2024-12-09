@@ -1,3 +1,5 @@
+import { Demo } from "@prisma/client";
+
 import { IMAGE_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
@@ -64,6 +66,26 @@ class DemoService {
       };
     } finally {
       console.timeEnd(`Get demo for url: ${url}`);
+    }
+  }
+
+  async getAllDemos(): Promise<IResponse<Demo[] | null>> {
+    try {
+      const demos = await prisma.demo.findMany();
+
+      return {
+        status: 200,
+        message: "Demos found",
+        data: demos,
+      };
+    } catch (error) {
+      console.error("Error getting all demos", error);
+      return {
+        status: 500,
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
     }
   }
 
