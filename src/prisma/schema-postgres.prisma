@@ -103,32 +103,22 @@ model Site {
 }
 
 model Page {
-  id                String  @id @default(cuid())
-  url               String
-  siteId            String
-  OGImageId         String? // Nullable foreign key
-  OGTitle           String?
-  OGDescription     String?
+  id             String    @id @default(cuid())
+  url            String
+  siteId         String
+  OGTitle        String?
+  OGDescription  String?
+  imageSrc       String?
+  imageExpiresAt DateTime?
+
   cacheDurationDays Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site    Site     @relation(fields: [siteId], references: [id])
-  OGImage OGImage? @relation(fields: [OGImageId], references: [id])
+  site Site @relation(fields: [siteId], references: [id])
 
   @@unique([siteId, url])
-}
-
-model OGImage {
-  id        String    @id @default(uuid())
-  src       String
-  expiresAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  pages Page[]
 }
 
 // New Demo Model
@@ -152,7 +142,7 @@ model DemoPage {
   OGImage       String?
   OGTitle       String?
   OGDescription String?
-  SnapOGImage   String? // New field to store the new image URL
+  SnapOGImage   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

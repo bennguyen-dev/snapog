@@ -50,10 +50,10 @@ class ImageService {
         siteId: site.data.id,
       });
 
-      if (page.data?.OGImage) {
+      if (page.data?.imageSrc) {
         // Get image data from S3 image link
         return await this.getImageByImageLink({
-          imageLink: getImageLinkFromAWS(page.data.OGImage.src),
+          imageLink: getImageLinkFromAWS(page.data.imageSrc),
         });
       } else {
         // If the URL doesn't exist in the Page table, create a new entry
@@ -62,7 +62,7 @@ class ImageService {
           url,
         });
 
-        if (!newPage.data || !newPage.data.OGImage) {
+        if (!newPage.data || !newPage.data.imageSrc) {
           return {
             message: newPage.message,
             status: newPage.status,
@@ -72,7 +72,7 @@ class ImageService {
 
         // Get image data from S3 image link
         return await this.getImageByImageLink({
-          imageLink: getImageLinkFromAWS(newPage.data.OGImage.src),
+          imageLink: getImageLinkFromAWS(newPage.data.imageSrc),
         });
       }
     } catch (error) {
