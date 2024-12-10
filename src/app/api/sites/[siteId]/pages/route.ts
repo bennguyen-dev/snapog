@@ -1,3 +1,5 @@
+import { Page } from "@prisma/client";
+
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
@@ -29,12 +31,9 @@ export const GET = auth(async function GET(req, res) {
     return NextResponse.json(pages, { status: pages.status });
   }
 
-  const data = pages.data.map((page) => ({
+  const data: Page[] = pages.data.map((page) => ({
     ...page,
-    OGImage: {
-      ...page.OGImage,
-      src: page.OGImage?.src ? getImageLinkFromAWS(page.OGImage?.src) : null,
-    },
+    imageSrc: page.imageSrc ? getImageLinkFromAWS(page.imageSrc) : null,
   }));
 
   return NextResponse.json(

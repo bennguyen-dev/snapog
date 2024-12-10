@@ -86,29 +86,23 @@ class InngestService {
       const today = new Date();
 
       // Step 1: Fetch expired OG Images
-      const { ogImages } = await step.run(
-        "Fetch expired OG Images",
-        async () => {
-          console.log("Fetching expired OG Images");
-          const ogImages = await prisma.oGImage.findMany({
-            where: {
-              expiresAt: {
-                lte: today,
-              },
+      const { pages } = await step.run("Fetch expired OG Images", async () => {
+        console.log("Fetching expired OG Images");
+        const pages = await prisma.page.findMany({
+          where: {
+            imageExpiresAt: {
+              lte: today,
             },
-            include: {
-              pages: true,
-            },
-          });
+          },
+        });
 
-          console.log(
-            `Found ${ogImages.length} images to update on ${today.toISOString()}`,
-          );
-          return { ogImages };
-        },
-      );
+        console.log(
+          `Found ${pages.length} images to update on ${today.toISOString()}`,
+        );
+        return { pages };
+      });
 
-      if (ogImages.length === 0) {
+      if (pages.length === 0) {
         return {
           message: "No OG Images found to update",
           status: 200,
@@ -118,46 +112,44 @@ class InngestService {
 
       // Step 2: Process and update OG Images
       return await step.run("Process and update OG Images", async () => {
-        const updatePromises = ogImages.flatMap((ogImage) =>
-          ogImage.pages.map(async (page) => {
-            if (!page) return;
+        const updatePromises = pages.map(async (page) => {
+          if (!page || !page.imageSrc) return;
 
-            const cacheDurationDays = page.cacheDurationDays ?? 0;
+          const cacheDurationDays = page.cacheDurationDays ?? 0;
 
-            console.log(`Processing page: ${page.url}`);
-            const pageCrawlInfo = await scrapeService.scrapeInfo({
-              url: page.url,
-            });
+          console.log(`Processing page: ${page.url}`);
+          const pageCrawlInfo = await scrapeService.scrapeInfo({
+            url: page.url,
+          });
 
-            if (!pageCrawlInfo.data?.screenshot) {
-              console.error(`No screenshot available for ${page.url}`);
-              return;
-            }
+          if (!pageCrawlInfo.data?.screenshot) {
+            console.error(`No screenshot available for ${page.url}`);
+            return;
+          }
 
-            const uploadRes = await storageService.uploadImage({
-              image: pageCrawlInfo.data.screenshot,
-              key: ogImage.src,
-            });
+          const uploadRes = await storageService.uploadImage({
+            image: pageCrawlInfo.data.screenshot,
+            key: page.imageSrc,
+          });
 
-            if (!uploadRes.data) {
-              console.error(`Failed to upload image for ${page.url}`);
-              return;
-            }
+          if (!uploadRes.data) {
+            console.error(`Failed to upload image for ${page.url}`);
+            return;
+          }
 
-            const newExpiresAt = new Date(
-              today.getTime() + cacheDurationDays * 24 * 60 * 60 * 1000,
-            );
+          const newExpiresAt = new Date(
+            today.getTime() + cacheDurationDays * 24 * 60 * 60 * 1000,
+          );
 
-            return prisma.oGImage.update({
-              where: { id: ogImage.id },
-              data: {
-                src: uploadRes.data.src,
-                expiresAt: newExpiresAt,
-                updatedAt: new Date(),
-              },
-            });
-          }),
-        );
+          return prisma.page.update({
+            where: { id: page.id },
+            data: {
+              imageSrc: uploadRes.data.src,
+              imageExpiresAt: newExpiresAt,
+              updatedAt: new Date(),
+            },
+          });
+        });
 
         const results = await Promise.allSettled(updatePromises);
 
@@ -167,14 +159,14 @@ class InngestService {
         }>(
           (acc, result, index) => {
             if (result.status === "fulfilled") {
-              acc.succeeded.push(ogImages?.[index]?.pages?.[0]?.url as string);
+              acc.succeeded.push(pages?.[index]?.url as string);
             } else {
               acc.failed.push({
-                url: ogImages?.[index]?.pages?.[0]?.url as string,
+                url: pages?.[index]?.url as string,
                 error: result.reason,
               });
               console.error(
-                `Failed to create page for ${ogImages?.[index]?.pages?.[0]?.url}:`,
+                `Failed to create page for ${pages?.[index]?.url}:`,
                 result.reason,
               );
             }

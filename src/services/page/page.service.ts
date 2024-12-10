@@ -1,3 +1,5 @@
+import { Page } from "@prisma/client";
+
 import { IMAGE_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
@@ -6,22 +8,17 @@ import {
   getUrlWithProtocol,
   sanitizeFilename,
 } from "@/lib/utils";
-import { ogImageService } from "@/services/ogImage";
 import {
   ICreatePage,
   IDeletePagesBy,
   IGetPageBy,
-  IPageDetail,
   IUpdatePagesBy,
 } from "@/services/page";
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 
 class PageService {
-  async create({
-    url,
-    siteId,
-  }: ICreatePage): Promise<IResponse<IPageDetail | null>> {
+  async create({ url, siteId }: ICreatePage): Promise<IResponse<Page | null>> {
     const urlWithProtocol = getUrlWithProtocol(url);
     const urlWithoutProtocol = getUrlWithoutProtocol(url);
     const today = new Date();
@@ -100,38 +97,22 @@ class PageService {
     newExpiresAt.setDate(today.getDate() + cacheDurationDays);
 
     try {
-      const ogImage = await ogImageService.create({
-        src: uploadRes.data.src,
-        expiresAt: newExpiresAt,
-        userId: site.userId,
-      });
-
-      if (!ogImage.data) {
-        return {
-          message: ogImage.message,
-          status: ogImage.status,
-          data: null,
-        };
-      }
-
       const page = await prisma.page.create({
         data: {
           url: urlWithoutProtocol,
           siteId,
           cacheDurationDays: site.cacheDurationDays,
-          OGImageId: ogImage.data.id,
+          imageSrc: uploadRes.data.src,
+          imageExpiresAt: newExpiresAt,
           OGTitle: pageCrawlInfo.data.title,
           OGDescription: pageCrawlInfo.data.description,
-        },
-        include: {
-          OGImage: true,
         },
       });
 
       return {
         message: "Page created successfully",
         status: 200,
-        data: page as IPageDetail,
+        data: page,
       };
     } catch (error) {
       console.error(`Error creating page: ${error}`);
@@ -148,21 +129,18 @@ class PageService {
     siteId,
   }: {
     siteId: string;
-  }): Promise<IResponse<IPageDetail[] | null>> {
+  }): Promise<IResponse<Page[] | null>> {
     try {
       const pages = await prisma.page.findMany({
         where: {
           siteId,
-        },
-        include: {
-          OGImage: true,
         },
       });
 
       return {
         message: "Pages found",
         status: 200,
-        data: pages as IPageDetail[],
+        data: pages,
       };
     } catch (error) {
       console.error(`Error getting pages: ${error}`);
@@ -179,7 +157,7 @@ class PageService {
     url,
     siteId,
     id,
-  }: IGetPageBy): Promise<IResponse<IPageDetail | null>> {
+  }: IGetPageBy): Promise<IResponse<Page | null>> {
     try {
       let page = null;
       await prisma.$transaction(async (tx) => {
@@ -191,17 +169,11 @@ class PageService {
                 url,
               },
             },
-            include: {
-              OGImage: true,
-            },
           });
         } else if (id) {
           page = await tx.page.findUnique({
             where: {
               id,
-            },
-            include: {
-              OGImage: true,
             },
           });
         }
@@ -218,7 +190,7 @@ class PageService {
       return {
         message: "Page found",
         status: 200,
-        data: page as IPageDetail,
+        data: page,
       };
     } catch (error) {
       console.error(`Error getting page: ${error}`);
@@ -235,7 +207,7 @@ class PageService {
     id,
     siteId,
     cacheDurationDays,
-  }: IUpdatePagesBy): Promise<IResponse<IPageDetail[] | null>> {
+  }: IUpdatePagesBy): Promise<IResponse<Page[] | null>> {
     if (!id && !siteId) {
       return {
         message: "Missing id or siteId",
@@ -245,54 +217,50 @@ class PageService {
     }
 
     try {
-      // Retrieve updated pages to update `expiresAt` in `OGImage`
-      const updatedPages = await prisma.page.findMany({
+      // First get the pages to update
+      const pagesToUpdate = await prisma.page.findMany({
         where: {
           id,
           siteId,
         },
-        include: { OGImage: true },
       });
 
-      const updatePromises = updatedPages.map((page) => {
-        if (
-          cacheDurationDays &&
-          page.cacheDurationDays &&
-          page.OGImageId &&
-          page?.OGImage?.expiresAt
-        ) {
+      if (!pagesToUpdate.length) {
+        return {
+          message: "No pages found to update",
+          status: 404,
+          data: null,
+        };
+      }
+
+      // Update each page with new expiration time
+      const updatedPages = await Promise.all(
+        pagesToUpdate.map(async (page) => {
+          const currentCacheDuration = page.cacheDurationDays || 0;
           const extendTime =
-            (cacheDurationDays - page.cacheDurationDays) * 24 * 60 * 60 * 1000;
+            ((cacheDurationDays || 0) - currentCacheDuration) *
+            24 *
+            60 *
+            60 *
+            1000; // Convert days to milliseconds
 
-          const expiresAt = new Date(
-            page.OGImage.expiresAt.getTime() + extendTime,
-          );
-
-          return prisma.oGImage.update({
-            where: { id: page.OGImageId },
-            data: { expiresAt },
+          return prisma.page.update({
+            where: { id: page.id },
+            data: {
+              cacheDurationDays,
+              updatedAt: new Date(),
+              imageExpiresAt: page.imageExpiresAt
+                ? new Date(page.imageExpiresAt.getTime() + extendTime)
+                : null,
+            },
           });
-        }
-        return Promise.resolve();
-      });
-
-      await prisma.page.updateMany({
-        where: {
-          id,
-          siteId,
-        },
-        data: {
-          cacheDurationDays,
-          updatedAt: new Date(),
-        },
-      });
-
-      await Promise.all(updatePromises);
+        }),
+      );
 
       return {
         message: "Pages updated successfully",
         status: 200,
-        data: updatedPages as IPageDetail[],
+        data: updatedPages,
       };
     } catch (error) {
       console.error(`Error updating pages: ${error}`);
@@ -312,9 +280,6 @@ class PageService {
           siteId,
           id,
         },
-        include: {
-          OGImage: true,
-        },
       });
 
       if (!pages) {
@@ -331,15 +296,6 @@ class PageService {
           id,
         },
       });
-
-      // delete OGImages
-      await Promise.all(
-        pages
-          .filter((page) => page.OGImageId)
-          .map((page) =>
-            ogImageService.deleteBy({ id: page.OGImageId as string }),
-          ),
-      );
 
       return {
         message: "Pages deleted successfully",
