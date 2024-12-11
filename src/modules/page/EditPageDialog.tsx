@@ -3,6 +3,7 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Page } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DURATION_CACHES } from "@/lib/constants";
-import { IPageDetail, IUpdatePagesBy } from "@/services/page";
+import { IUpdatePagesBy } from "@/services/page";
 
 const formSchema = z.object({
   url: z.string(),
@@ -42,9 +43,7 @@ interface IProps {
 }
 
 export interface IEditPageDialogRef {
-  open: (
-    item: IPageDetail | null,
-  ) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
+  open: (item: Page | null) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
   close: () => void;
 }
 
@@ -79,7 +78,7 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
     };
 
     useImperativeHandle(ref, () => ({
-      open: (item: IPageDetail | null = null) => {
+      open: (item: Page | null = null) => {
         form.reset({
           url: item?.url,
           cacheDurationDays: item?.cacheDurationDays?.toString(),

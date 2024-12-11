@@ -2,20 +2,11 @@ import {
   CloudFrontClient,
   CreateInvalidationCommand,
 } from "@aws-sdk/client-cloudfront";
-import {
-  DeleteObjectsCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { IMAGE_TYPES } from "@/lib/constants";
 import { IResponse } from "@/lib/type";
-import {
-  IDeleteFolders,
-  IDeleteImages,
-  IUploadImage,
-  IUploadImageResponse,
-} from "@/services/storage";
+import { IUploadImage, IUploadImageResponse } from "@/services/storage";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,
@@ -64,7 +55,6 @@ class StorageService {
       ContentType: IMAGE_TYPES.PNG.MIME,
     });
 
-    // Upload image
     try {
       await s3Client.send(command);
 
@@ -80,60 +70,6 @@ class StorageService {
       };
     } catch (error) {
       console.error(`Error uploading image: ${error}`);
-      return {
-        status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
-      };
-    }
-  }
-
-  async deleteImages({ keys }: IDeleteImages): Promise<IResponse<null>> {
-    const command = new DeleteObjectsCommand({
-      Bucket: process.env.AWS_BUCKET_NAME as string,
-      Delete: {
-        Objects: keys.map((key) => ({ Key: key })),
-        Quiet: false,
-      },
-    });
-    try {
-      await s3Client.send(command);
-
-      return {
-        message: "Images deleted successfully",
-        status: 200,
-        data: null,
-      };
-    } catch (error) {
-      console.error(`Error deleting images: ${error}`);
-      return {
-        status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
-      };
-    }
-  }
-
-  async deleteFolders({ prefixes }: IDeleteFolders): Promise<IResponse<null>> {
-    const command = new DeleteObjectsCommand({
-      Bucket: process.env.AWS_BUCKET_NAME as string,
-      Delete: {
-        Objects: prefixes.map((prefix) => ({ Key: prefix })),
-        Quiet: false,
-      },
-    });
-    try {
-      await s3Client.send(command);
-
-      return {
-        message: "Folder deleted successfully",
-        status: 200,
-        data: null,
-      };
-    } catch (error) {
-      console.error(`Error deleting folder: ${error}`);
       return {
         status: 500,
         message:

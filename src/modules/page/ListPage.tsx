@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
+import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -35,7 +36,7 @@ import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
-import { IPageDetail, IUpdatePagesBy } from "@/services/page";
+import { IUpdatePagesBy } from "@/services/page";
 import { ISiteDetail } from "@/services/site";
 
 interface IProps {
@@ -52,7 +53,7 @@ export const ListPage = ({ siteId }: IProps) => {
     data: pages,
     setLetCall: getPages,
     loading: fetching,
-  } = useCallApi<IPageDetail[], object, object>({
+  } = useCallApi<Page[], object, object>({
     url: `/api/sites/${siteId}/pages`,
     options: {
       method: "GET",
@@ -117,7 +118,7 @@ export const ListPage = ({ siteId }: IProps) => {
     },
   });
 
-  const columns: ColumnDef<IPageDetail>[] = useMemo(
+  const columns: ColumnDef<Page>[] = useMemo(
     () => [
       {
         accessorKey: "id",
@@ -145,7 +146,7 @@ export const ListPage = ({ siteId }: IProps) => {
         accessorKey: "OGImage",
         header: "Image",
         cell: ({ row }) => {
-          if (!row.original?.OGImage) {
+          if (!row.original?.imageSrc) {
             return null;
           }
           return (
@@ -161,11 +162,11 @@ export const ListPage = ({ siteId }: IProps) => {
                   "_blank",
                 );
               }}
-              src={row.original.OGImage.src}
+              src={row.original.imageSrc}
               width={120}
               height={62}
               className="aspect-og-facebook max-w-40 cursor-pointer rounded"
-              alt={row.original.OGImage.src}
+              alt={row.original.imageSrc}
             />
           );
         },
@@ -186,12 +187,12 @@ export const ListPage = ({ siteId }: IProps) => {
         accessorKey: "expiredAt",
         header: "Expired at",
         cell: ({ row }) => {
-          if (!row.original?.OGImage?.expiresAt) {
+          if (!row.original?.imageExpiresAt) {
             return null;
           }
           return (
             <Typography affects="muted">
-              {new Date(row.original?.OGImage?.expiresAt).toLocaleString()}
+              {new Date(row.original?.imageExpiresAt).toLocaleString()}
             </Typography>
           );
         },
