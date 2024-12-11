@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { inngest } from "@/lib/inngest";
-import { getUrlWithoutProtocol, getUrlWithProtocol } from "@/lib/utils";
+import { getDomainName, getUrlWithProtocol } from "@/lib/utils";
 import { pageService } from "@/services/page";
 import { siteService } from "@/services/site";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();
 
-  const domain = getUrlWithoutProtocol(body?.domain);
+  const domain = getDomainName(body?.domain);
 
   const cacheDurationDays = body?.cacheDurationDays;
 
@@ -56,10 +55,10 @@ export const POST = auth(async function POST(req) {
   }
 
   // send event to inngest
-  await inngest.send({
-    name: "background/create.site",
-    data: { siteId: site.data.id, cacheDurationDays },
-  });
+  // await inngest.send({
+  //   name: "background/create.site",
+  //   data: { siteId: site.data.id, cacheDurationDays },
+  // });
 
   const res = {
     status: site.status,

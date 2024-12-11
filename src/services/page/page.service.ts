@@ -77,7 +77,7 @@ class PageService {
     // Upload screenshot to S3
     const folderName = sanitizeFilename(site.domain);
     const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
-    const key = `${folderName}/${fileName}`;
+    const key = `${site.userId}/${folderName}/${fileName}`;
 
     const uploadRes = await storageService.uploadImage({
       image: pageCrawlInfo.data?.screenshot,

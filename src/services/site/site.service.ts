@@ -1,7 +1,6 @@
 import { CACHE_DURATION_DAYS } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
-import { sanitizeFilename } from "@/lib/utils";
 import { pageService } from "@/services/page";
 import {
   ICreateSite,
@@ -11,7 +10,6 @@ import {
   ISiteDetail,
   IUpdateSiteBy,
 } from "@/services/site";
-import { storageService } from "@/services/storage";
 
 class SiteService {
   async create({
@@ -213,11 +211,6 @@ class SiteService {
           userId,
           domain,
         },
-      });
-
-      // Delete folder from S3
-      await storageService.deleteFolders({
-        prefixes: sites.map((site) => sanitizeFilename(site.domain)),
       });
 
       return {
