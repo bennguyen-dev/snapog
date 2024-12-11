@@ -1,6 +1,6 @@
-import { MetadataRoute } from "next";
-
 import { headers } from "next/headers";
+
+import { demoService } from "@/services/demo";
 
 const LAST_MODIFIED = new Date();
 
@@ -18,10 +18,12 @@ const PAGES = {
   ],
 };
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap() {
   const headersList = headers();
   const host = headersList.get("host")?.replace("www.", "");
   const baseUrl = `https://${host}`;
+
+  const demos = await demoService.getAllDemos();
 
   // Generate core pages
   const corePages = PAGES.core.map((page) => ({
@@ -39,5 +41,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: page.priority,
   }));
 
-  return [...corePages, ...legalPages];
+  // Generate demo pages
+  const demoPages =
+    demos.data?.map((demo) => ({
+      url: `${baseUrl}/demo/${demo.domain}`,
+      lastModified: demo.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })) || [];
+
+  return [...corePages, ...legalPages, ...demoPages];
 }

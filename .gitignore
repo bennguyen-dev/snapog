@@ -40,3 +40,5 @@ certificates
 .idea
 
 .env
+/.env.dev
+/.env.prod
