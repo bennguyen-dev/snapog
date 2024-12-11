@@ -127,26 +127,6 @@ export const InputDemo = ({ className }: IProps) => {
         >
           View Demo
         </Button>
-        {/*<Button*/}
-        {/*  onClick={() => {*/}
-        {/*    Promise.all([*/}
-        {/*      fetch(*/}
-        {/*        "https://localhost:3000/api/get?api_key=og_144ce9e529b5a585&url=www.snapog.com/demo",*/}
-        {/*      ),*/}
-        {/*      fetch(*/}
-        {/*        "https://localhost:3000/api/get?api_key=og_144ce9e529b5a585&url=www.snapog.com/demo",*/}
-        {/*      ),*/}
-        {/*      fetch(*/}
-        {/*        "https://localhost:3000/api/get?api_key=og_144ce9e529b5a585&url=www.snapog.com/demo",*/}
-        {/*      ),*/}
-        {/*      fetch(*/}
-        {/*        "https://localhost:3000/api/get?api_key=og_144ce9e529b5a585&url=www.snapog.com/demo",*/}
-        {/*      ),*/}
-        {/*    ]);*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  test*/}
-        {/*</Button>*/}
       </div>
     </Form>
   );

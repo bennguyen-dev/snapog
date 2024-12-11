@@ -23,97 +23,135 @@ class PageService {
     const urlWithoutProtocol = getUrlWithoutProtocol(url);
     const today = new Date();
 
-    const site = await prisma.site.findUnique({
-      where: {
-        id: siteId,
-      },
-    });
-
-    if (!site) {
-      return {
-        message: "Site not found",
-        status: 404,
-        data: null,
-      };
-    }
-
-    const existedPage = await prisma.page.findUnique({
-      where: {
-        siteId_url: {
-          url: urlWithProtocol,
-          siteId,
-        },
-      },
-    });
-
-    if (existedPage) {
-      return {
-        message: "Page already exists",
-        status: 400,
-        data: null,
-      };
-    }
-
-    // Check if page already exists
-    const pageCrawlInfo = await scrapeService.scrapeInfo({
-      url: urlWithProtocol,
-    });
-    if (!pageCrawlInfo.data) {
-      return {
-        message: pageCrawlInfo.message,
-        status: pageCrawlInfo.status,
-        data: null,
-      };
-    }
-
-    if (!pageCrawlInfo.data.screenshot) {
-      return {
-        message: "Failed to generate image",
-        status: 400,
-        data: null,
-      };
-    }
-
-    // Upload screenshot to S3
-    const folderName = sanitizeFilename(site.domain);
-    const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
-    const key = `${site.userId}/${folderName}/${fileName}`;
-
-    const uploadRes = await storageService.uploadImage({
-      image: pageCrawlInfo.data?.screenshot,
-      key: key,
-    });
-
-    if (!uploadRes.data) {
-      return {
-        message: uploadRes.message,
-        status: uploadRes.status,
-        data: null,
-      };
-    }
-
-    const newExpiresAt = new Date();
-    const cacheDurationDays = site.cacheDurationDays ?? 0;
-    newExpiresAt.setDate(today.getDate() + cacheDurationDays);
-
     try {
-      const page = await prisma.page.create({
-        data: {
-          url: urlWithoutProtocol,
-          siteId,
-          cacheDurationDays: site.cacheDurationDays,
-          imageSrc: uploadRes.data.src,
-          imageExpiresAt: newExpiresAt,
-          OGTitle: pageCrawlInfo.data.title,
-          OGDescription: pageCrawlInfo.data.description,
-        },
-      });
+      // Wrap everything in a transaction
+      return await prisma.$transaction(
+        async (tx) => {
+          // Generate a lock key based on siteId and URL
+          const lockKey = Buffer.from(`${siteId}-${urlWithProtocol}`).reduce(
+            (a, b) => a + b,
+            0,
+          );
 
-      return {
-        message: "Page created successfully",
-        status: 200,
-        data: page,
-      };
+          // Acquire advisory lock
+          await tx.$executeRaw`SELECT pg_advisory_xact_lock(${lockKey})`;
+
+          const site = await tx.site.findUnique({
+            where: {
+              id: siteId,
+            },
+          });
+
+          if (!site) {
+            return {
+              message: "Site not found",
+              status: 404,
+              data: null,
+            };
+          }
+
+          // Check if page already exists - now protected by lock
+          const existedPage = await tx.page.findUnique({
+            where: {
+              siteId_url: {
+                url: urlWithProtocol,
+                siteId,
+              },
+            },
+          });
+
+          if (existedPage) {
+            return {
+              message: "Page already exists",
+              status: 200,
+              data: existedPage,
+            };
+          }
+
+          // Check if page already exists
+          const pageCrawlInfo = await scrapeService.scrapeInfo({
+            url: urlWithProtocol,
+          });
+
+          if (!pageCrawlInfo.data) {
+            return {
+              message: pageCrawlInfo.message,
+              status: pageCrawlInfo.status,
+              data: null,
+            };
+          }
+
+          if (!pageCrawlInfo.data.screenshot) {
+            return {
+              message: "Failed to generate image",
+              status: 400,
+              data: null,
+            };
+          }
+
+          // Upload screenshot to S3
+          const folderName = sanitizeFilename(site.domain);
+          const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
+          const key = `${site.userId}/${folderName}/${fileName}`;
+
+          const uploadRes = await storageService.uploadImage({
+            image: pageCrawlInfo.data?.screenshot,
+            key: key,
+          });
+
+          if (!uploadRes.data) {
+            return {
+              message: uploadRes.message,
+              status: uploadRes.status,
+              data: null,
+            };
+          }
+
+          const newExpiresAt = new Date();
+          const cacheDurationDays = site.cacheDurationDays ?? 0;
+          newExpiresAt.setDate(today.getDate() + cacheDurationDays);
+
+          // Do one final check before creating to handle any race conditions
+          const finalCheck = await tx.page.findUnique({
+            where: {
+              siteId_url: {
+                url: urlWithProtocol,
+                siteId,
+              },
+            },
+          });
+
+          if (finalCheck) {
+            return {
+              message: "Page already exists",
+              status: 200,
+              data: finalCheck,
+            };
+          }
+
+          const page = await tx.page.create({
+            data: {
+              url: urlWithProtocol,
+              siteId,
+              cacheDurationDays: site.cacheDurationDays,
+              imageSrc: uploadRes.data.src,
+              imageExpiresAt: newExpiresAt,
+              OGTitle: pageCrawlInfo.data.title,
+              OGDescription: pageCrawlInfo.data.description,
+            },
+          });
+
+          return {
+            message: "Page created successfully",
+            status: 200,
+            data: page,
+          };
+        },
+        {
+          maxWait: 30000, // maximum time to wait for transaction
+          timeout: 30000, // maximum time to hold transaction
+        },
+      );
     } catch (error) {
       console.error(`Error creating page: ${error}`);
       return {
