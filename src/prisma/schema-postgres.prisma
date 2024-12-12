@@ -27,6 +27,8 @@ model User {
   sites         Site[]
   subscriptions Subscription[]
   userUsages    UserUsage[]
+  balance       UserBalance?
+  purchases     PurchaseHistory[]
 
   @@index([email])
   @@index([apiKey])
@@ -223,4 +225,49 @@ model WebhookEvent {
   processed       Boolean  @default(false)
   body            Json
   processingError String?
+}
+
+model Purchase {
+  id          String   @id @default(cuid())
+  name        String   // Tên gói credit (ví dụ: "Basic Pack", "Pro Pack")
+  description String?  // Mô tả gói
+  creditAmount Int     // Số credit được cung cấp trong gói
+  price       Float    // Giá tiền
+  active      Boolean  @default(true) // Có thể mua hay không
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  purchaseHistories PurchaseHistory[]
+}
+
+model PurchaseHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  purchaseId  String
+  paidAmount  Float    // Số tiền đã thanh toán
+  creditAmount Int     // Số credit đã mua
+  
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchase    Purchase @relation(fields: [purchaseId], references: [id])
+
+  @@index([userId])
+  @@index([purchaseId])
+}
+
+model UserBalance {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  paidCredits Int      // Số credit đã mua còn lại
+  freeCredits Int      @default(10) // Free credits cho user mới
+  usedCredits Int      @default(0) // Tổng số credit đã sử dụng (cả free và paid)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

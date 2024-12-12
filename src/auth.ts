@@ -6,6 +6,7 @@ import GitHub from "next-auth/providers/github";
 
 import { prisma } from "@/lib/db";
 import { userService } from "@/services/user";
+import { userBalanceService } from "@/services/userBalance"; // Add this line
 
 const providers: Provider[] = [
   GitHub({ allowDangerousEmailAccountLinking: true }),
@@ -32,6 +33,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: async ({ user }) => {
       if (!userService.checkValidApiKey(user.apiKey)) {
         await userService.regenerateApiKey({ userId: user.id! });
+      }
+
+      // Create UserBalance for new user with 10 free credits
+      const balance = await userBalanceService.getByUserId({
+        userId: user.id!,
+      });
+      if (!balance.data) {
+        await userBalanceService.create({ userId: user.id! });
       }
     },
   },

@@ -39,10 +39,10 @@ export const AUTH_ROUTES: NavItem[] = [
     label: "Sites",
   },
   {
-    title: "Subscription",
-    href: "/dashboard/subscription",
+    title: "Credits",
+    href: "/dashboard/credits",
     icon: <ReceiptText className="size-5" />,
-    label: "Subscription",
+    label: "Credits",
   },
   {
     title: "API Keys",
@@ -68,3 +68,5 @@ export const IMAGE_TYPES = Object.freeze({
     EXTENSION: "jpg",
   },
 });
+
+export const DEFAULT_FREE_CREDIT = 10;

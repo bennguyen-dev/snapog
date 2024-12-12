@@ -23,7 +23,9 @@ export const ListApiKey = () => {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="mb-4 sm:mb-6">
-        <CardPublicApiKey />
+        <div className="w-full lg:w-1/2">
+          <CardPublicApiKey />
+        </div>
       </div>
     </div>
   );

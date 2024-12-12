@@ -8,6 +8,7 @@ import {
 } from "@/services/subscription";
 import { usageService } from "@/services/usage";
 import { userService } from "@/services/user";
+import { userBalanceService } from "@/services/userBalance";
 import { webhookService } from "@/services/webhook";
 
 export async function getCheckoutUrl(res: ICheckoutUrl) {
@@ -98,4 +99,17 @@ export async function regenerateApikey() {
   }
 
   return userService.regenerateApiKey({ userId: session.user.id });
+}
+
+export async function getUserBalance() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+      data: null,
+    };
+  }
+
+  return await userBalanceService.getByUserId({ userId: session.user.id });
 }
