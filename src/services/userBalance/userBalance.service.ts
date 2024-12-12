@@ -1,5 +1,6 @@
 import { UserBalance } from "@prisma/client";
 
+import { DEFAULT_FREE_CREDIT } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import { IResponse } from "@/lib/type";
 import {
@@ -13,7 +14,7 @@ class UserBalanceService {
   async create({
     userId,
     paidCredits = 0,
-    freeCredits = 10, // Default free credits for new users
+    freeCredits = DEFAULT_FREE_CREDIT, // Default free credits for new users
   }: ICreateUserBalance): Promise<IResponse<UserBalance | null>> {
     try {
       const userBalance = await prisma.userBalance.create({

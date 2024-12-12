@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 import { getMetadata } from "@/lib/metadata";
-import { ListCredit } from "@/modules/credit";
+import { ListCredit } from "@/modules/credits";
 
 export async function generateMetadata() {
   const headersList = headers();
@@ -9,8 +9,7 @@ export async function generateMetadata() {
 
   return getMetadata({
     title: "Credit - Snap OG Dashboard",
-    description:
-      "Manage your subscription and billing details in one place. Upgrade, downgrade, or cancel your plan at any time.",
+    description: "See your credit balance for Snap OG.",
     host,
     path: "/dashboard/credit",
   });
