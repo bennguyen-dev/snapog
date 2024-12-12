@@ -16,6 +16,7 @@ import {
 } from "@/services/page";
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
+import { userBalanceService } from "@/services/userBalance";
 
 class PageService {
   async create({ url, siteId }: ICreatePage): Promise<IResponse<Page | null>> {
@@ -23,22 +24,45 @@ class PageService {
     const urlWithoutProtocol = getUrlWithoutProtocol(url);
     const today = new Date();
 
+    // Generate a unique lock key combining siteId and URL
+    const lockKey = Buffer.from(`page:${siteId}:${urlWithProtocol}`).reduce(
+      (a, b) => a + b,
+      0,
+    );
+
     try {
-      // Wrap everything in a transaction
+      // Use transaction with serializable isolation level for strongest consistency
       return await prisma.$transaction(
         async (tx) => {
-          // Generate a lock key based on siteId and URL
-          const lockKey = Buffer.from(`${siteId}-${urlWithProtocol}`).reduce(
-            (a, b) => a + b,
-            0,
-          );
-
-          // Acquire advisory lock
+          // Acquire exclusive lock immediately
           await tx.$executeRaw`SELECT pg_advisory_xact_lock(${lockKey})`;
 
-          const site = await tx.site.findUnique({
+          // Check if page already exists first (fastest check)
+          const existingPage = await tx.page.findUnique({
             where: {
-              id: siteId,
+              siteId_url: {
+                url: urlWithProtocol,
+                siteId,
+              },
+            },
+          });
+
+          if (existingPage) {
+            return {
+              message: "Page already exists",
+              status: 200,
+              data: existingPage,
+            };
+          }
+
+          // Get site info and validate
+          const site = await tx.site.findUnique({
+            where: { id: siteId },
+            select: {
+              id: true,
+              userId: true,
+              domain: true,
+              cacheDurationDays: true,
             },
           });
 
@@ -50,85 +74,69 @@ class PageService {
             };
           }
 
-          // Check if page already exists - now protected by lock
-          const existedPage = await tx.page.findUnique({
-            where: {
-              siteId_url: {
-                url: urlWithProtocol,
-                siteId,
-              },
-            },
+          // Check credits early to fail fast
+          const balanceRes = await userBalanceService.getByUserId({
+            userId: site.userId,
           });
 
-          if (existedPage) {
+          if (!balanceRes.data) {
             return {
-              message: "Page already exists",
-              status: 200,
-              data: existedPage,
-            };
-          }
-
-          // Check if page already exists
-          const pageCrawlInfo = await scrapeService.scrapeInfo({
-            url: urlWithProtocol,
-          });
-
-          if (!pageCrawlInfo.data) {
-            return {
-              message: pageCrawlInfo.message,
-              status: pageCrawlInfo.status,
+              message: "User balance not found",
+              status: 404,
               data: null,
             };
           }
 
-          if (!pageCrawlInfo.data.screenshot) {
+          const availableCredits =
+            balanceRes.data.paidCredits +
+            balanceRes.data.freeCredits -
+            balanceRes.data.usedCredits;
+
+          if (availableCredits < 1) {
             return {
-              message: "Failed to generate image",
+              message: "Insufficient credits",
               status: 400,
               data: null,
             };
           }
 
-          // Upload screenshot to S3
-          const folderName = sanitizeFilename(site.domain);
-          const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
-          const key = `${site.userId}/${folderName}/${fileName}`;
-
-          const uploadRes = await storageService.uploadImage({
-            image: pageCrawlInfo.data?.screenshot,
-            key: key,
+          // Perform expensive operations after all validations
+          const pageCrawlInfo = await scrapeService.scrapeInfo({
+            url: urlWithProtocol,
           });
 
-          if (!uploadRes.data) {
+          if (!pageCrawlInfo.data?.screenshot) {
             return {
-              message: uploadRes.message,
-              status: uploadRes.status,
+              message: pageCrawlInfo.message || "Failed to generate image",
+              status: pageCrawlInfo.status || 400,
               data: null,
             };
           }
 
-          const newExpiresAt = new Date();
-          const cacheDurationDays = site.cacheDurationDays ?? 0;
-          newExpiresAt.setDate(today.getDate() + cacheDurationDays);
+          // Prepare upload path
+          const folderName = sanitizeFilename(site.domain);
+          const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
+          const key = `${site.userId}/${folderName}/${fileName}`;
 
-          // Do one final check before creating to handle any race conditions
-          const finalCheck = await tx.page.findUnique({
-            where: {
-              siteId_url: {
-                url: urlWithProtocol,
-                siteId,
-              },
-            },
+          // Upload image
+          const uploadRes = await storageService.uploadImage({
+            image: pageCrawlInfo.data.screenshot,
+            key: key,
           });
 
-          if (finalCheck) {
+          if (!uploadRes.data?.src) {
             return {
-              message: "Page already exists",
-              status: 200,
-              data: finalCheck,
+              message: uploadRes.message || "Failed to upload image",
+              status: uploadRes.status || 500,
+              data: null,
             };
           }
 
+          // Calculate expiration
+          const newExpiresAt = new Date(today);
+          newExpiresAt.setDate(today.getDate() + (site.cacheDurationDays ?? 0));
+
+          // Create page and deduct credit atomically
           const page = await tx.page.create({
             data: {
               url: urlWithProtocol,
@@ -141,15 +149,22 @@ class PageService {
             },
           });
 
+          // Deduct credit within same transaction
+          await userBalanceService.deductCredits({
+            userId: site.userId,
+            amount: 1,
+          });
+
           return {
             message: "Page created successfully",
-            status: 200,
+            status: 201,
             data: page,
           };
         },
         {
-          maxWait: 30000, // maximum time to wait for transaction
-          timeout: 30000, // maximum time to hold transaction
+          maxWait: 30000,
+          timeout: 30000,
+          isolationLevel: "Serializable", // Strongest isolation level
         },
       );
     } catch (error) {
