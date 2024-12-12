@@ -168,7 +168,7 @@ class PageService {
         },
       );
     } catch (error) {
-      console.error(`Error creating page: ${error}`);
+      console.error(`Error creating page:`, error);
       return {
         status: 500,
         message:

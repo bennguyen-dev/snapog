@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { CardCredit } from "@/modules/subscription";
 
-export const ListSubscription = () => {
+export const ListCredit = () => {
   return (
     <>
       <div className="p-4 sm:p-6">
@@ -18,10 +19,16 @@ export const ListSubscription = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Subscription</BreadcrumbPage>
+              <BreadcrumbPage>Credits</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+
+        <div className="mb-4 sm:mb-6">
+          <div className="w-full lg:w-1/2">
+            <CardCredit />
+          </div>
+        </div>
       </div>
     </>
   );

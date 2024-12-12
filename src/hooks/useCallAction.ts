@@ -16,7 +16,7 @@ export const useCallAction = <T, E = object, B = object>({
   handleSuccess?: (message: string, data: T) => void;
   nonCallInit?: boolean;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<T>();
   const [error, setError] = useState<E>();
   const [letCall, setLetCall] = useState<boolean>(!nonCallInit);
