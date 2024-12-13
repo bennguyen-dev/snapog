@@ -1,8 +1,4 @@
-import { Plan } from "@prisma/client";
-
-import { ListPlan } from "@/components/block/BlockPricing/ListPlan";
 import { Typography } from "@/components/ui/typography";
-import { PLANS } from "@/services/plan";
 
 export const BlockPricing = async () => {
   return (
@@ -17,7 +13,6 @@ export const BlockPricing = async () => {
         Cancel anytime, without any questions. Try{" "}
         <strong>all the features</strong> with 30 free pages.
       </Typography>
-      <ListPlan plans={PLANS as Plan[]} />
     </section>
   );
 };
