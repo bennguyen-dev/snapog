@@ -72,11 +72,6 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        {/* Load the Lemon Squeezy's Lemon.js script before the page is interactive. */}
-        <Script
-          src="https://app.lemonsqueezy.com/js/lemon.js"
-          strategy="beforeInteractive"
-        />
         {/* Load the Hotjar script before the page is interactive. */}
         {process.env.NODE_ENV === "production" && process.env.HOTJAR_ID && (
           <Script id="hotjar">
