@@ -5,8 +5,8 @@ import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/Bloc
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
-import { getMetadata } from "@/lib/metadata";
 import { demoService } from "@/services/demo";
+import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata({
   params,

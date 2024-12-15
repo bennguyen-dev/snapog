@@ -10,8 +10,8 @@ import { usePathname } from "next/navigation";
 import HamburgerIcon from "@/assets/icons/hamburger.svg";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { AUTH_ROUTES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { AUTH_ROUTES } from "@/constants";
+import { cn } from "@/utils";
 
 export const AuthMobileNavbar = () => {
   const pathname = usePathname();

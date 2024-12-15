@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
-import { getMetadata } from "@/lib/metadata";
 import { ListPage } from "@/modules/page";
+import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   const headersList = headers();

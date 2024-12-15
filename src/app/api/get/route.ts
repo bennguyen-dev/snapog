@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { cleanUrl, getUrlWithProtocol } from "@/lib/utils";
 import { imageService } from "@/services/image";
+import { cleanUrl, getUrlWithProtocol } from "@/utils";
 
 export async function GET(req: NextRequest) {
   try {

@@ -2,8 +2,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { getMetadata } from "@/lib/metadata";
 import { SignIn } from "@/modules/auth";
+import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   const headersList = headers();

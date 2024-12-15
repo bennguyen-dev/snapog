@@ -31,13 +31,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
-import { getLinkSmartOGImage, getUrlWithProtocol } from "@/lib/utils";
 import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
 import { IUpdatePagesBy } from "@/services/page";
 import { ISiteDetail } from "@/services/site";
+import { getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
 
 interface IProps {
   siteId: string;

@@ -1,6 +1,6 @@
 import { ReceiptText, SquareMousePointer, KeyRound } from "lucide-react";
 
-import { NavItem } from "@/lib/type";
+import { NavItem } from "@/types/global";
 
 export const PUBLIC_ROUTES: NavItem[] = [
   {

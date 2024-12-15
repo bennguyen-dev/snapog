@@ -11,7 +11,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
 import { useCallAction } from "@/hooks/useCallAction";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 export const CardCredit = () => {
   const { data: balance, loading } = useCallAction({

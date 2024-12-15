@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { getMetadata } from "@/lib/metadata";
+import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   const headersList = headers();

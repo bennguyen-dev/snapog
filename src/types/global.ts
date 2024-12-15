@@ -1,12 +1,5 @@
 import { ReactNode } from "react";
 
-declare global {
-  interface Window {
-    createLemonSqueezy: any;
-    LemonSqueezy: any;
-  }
-}
-
 export interface IResponse<T> {
   message: string;
   status: number;

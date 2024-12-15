@@ -9,8 +9,8 @@ import { headers } from "next/headers";
 import Script from "next/script";
 
 import { Toaster } from "@/components/ui/toaster";
-import { getMetadata } from "@/lib/metadata";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
+import { getMetadata } from "@/utils/metadata";
 import "./globals.css";
 
 const fontSans = FontSans({

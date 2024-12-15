@@ -1,13 +1,13 @@
 import { Purchase } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
 import {
   ICreatePurchase,
   IGetActivePurchases,
   IGetPurchaseById,
   IUpdatePurchase,
 } from "@/services/purchase";
+import { IResponse } from "@/types/global";
 
 class PurchaseService {
   async create({

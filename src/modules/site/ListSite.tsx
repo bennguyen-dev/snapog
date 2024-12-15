@@ -29,7 +29,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
 import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
-import { getLinkSmartOGImage, getSnippetHowToUse } from "@/lib/utils";
 import {
   AddSiteDialog,
   EditSiteDialog,
@@ -37,6 +36,7 @@ import {
   IEditSiteDialogRef,
 } from "@/modules/site";
 import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/services/site";
+import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
 export const ListSite = () => {
   const { mounted } = useMounted();

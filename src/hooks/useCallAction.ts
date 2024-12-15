@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useMounted } from "@/hooks";
-import { IResponse } from "@/lib/type";
+import { IResponse } from "@/types/global";
 
 export const useCallAction = <T, E = object, B = object>({
   action,

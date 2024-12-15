@@ -3,8 +3,8 @@ import { Page } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { getImageLinkFromAWS } from "@/lib/utils";
 import { pageService } from "@/services/page";
+import { getImageLinkFromAWS } from "@/utils";
 
 export const GET = auth(async function GET(req, res) {
   if (!req.auth?.user?.id) {

@@ -1,14 +1,14 @@
 import { UserBalance } from "@prisma/client";
 
-import { DEFAULT_FREE_CREDIT } from "@/lib/constants";
+import { DEFAULT_FREE_CREDIT } from "@/constants";
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
 import {
   ICreateUserBalance,
   IDeductCredits,
   IGetUserBalanceByUserId,
   IUpdateUserBalance,
 } from "@/services/userBalance";
+import { IResponse } from "@/types/global";
 
 class UserBalanceService {
   async create({

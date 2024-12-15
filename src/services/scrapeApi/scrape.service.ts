@@ -1,10 +1,10 @@
-import { IResponse } from "@/lib/type";
 import {
   IScrapeInternalLinks,
   IScrapeInternalLinksResponse,
   IScraperInfo,
   IScraperInfoResponse,
 } from "@/services/scrapeApi/scrape.interface";
+import { IResponse } from "@/types/global";
 
 class ScrapeService {
   public async scrapeInfo({

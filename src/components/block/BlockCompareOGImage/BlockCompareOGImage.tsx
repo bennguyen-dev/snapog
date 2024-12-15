@@ -2,8 +2,8 @@ import { Check, X } from "lucide-react";
 
 import { PreviewOgImage } from "@/components/customs/preview-og-image";
 import { Typography } from "@/components/ui/typography";
-import { getUrlWithProtocol } from "@/lib/utils";
 import { IGetDemoResponse } from "@/services/demo";
+import { getUrlWithProtocol } from "@/utils";
 
 interface IProps {
   pagesInfo?: IGetDemoResponse[];

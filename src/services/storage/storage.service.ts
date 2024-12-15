@@ -4,9 +4,9 @@ import {
 } from "@aws-sdk/client-cloudfront";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
-import { IMAGE_TYPES } from "@/lib/constants";
-import { IResponse } from "@/lib/type";
+import { IMAGE_TYPES } from "@/constants";
 import { IUploadImage, IUploadImageResponse } from "@/services/storage";
+import { IResponse } from "@/types/global";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION as string,

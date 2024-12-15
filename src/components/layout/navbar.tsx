@@ -12,7 +12,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { PUBLIC_ROUTES } from "@/lib/constants";
+import { PUBLIC_ROUTES } from "@/constants";
 
 export const Navbar = () => {
   const pathname = usePathname();

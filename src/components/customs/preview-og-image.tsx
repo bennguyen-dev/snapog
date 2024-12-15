@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, InfoIcon, RotateCw } from "lucide-react";
 import Image from "next/image";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUrlWithoutProtocol } from "@/lib/utils";
+import { getUrlWithoutProtocol } from "@/utils";
 
 interface IProps {
   url?: string;

@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DURATION_CACHES } from "@/lib/constants";
+import { DURATION_CACHES } from "@/constants";
 import { IUpdatePagesBy } from "@/services/page";
 
 const formSchema = z.object({

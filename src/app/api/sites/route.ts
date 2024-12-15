@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { getDomainName, getUrlWithProtocol } from "@/lib/utils";
 import { pageService } from "@/services/page";
 import { siteService } from "@/services/site";
+import { getDomainName, getUrlWithProtocol } from "@/utils";
 
 export const POST = auth(async function POST(req) {
   const body = await req.json();

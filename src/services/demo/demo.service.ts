@@ -1,14 +1,7 @@
 import { Demo } from "@prisma/client";
 
-import { IMAGE_TYPES } from "@/lib/constants";
+import { IMAGE_TYPES } from "@/constants";
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
-import {
-  getDomainName,
-  getImageLinkFromAWS,
-  getUrlWithoutProtocol,
-  sanitizeFilename,
-} from "@/lib/utils";
 import {
   ICreateDemo,
   ICreateDemoResponse,
@@ -17,6 +10,13 @@ import {
 } from "@/services/demo";
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
+import { IResponse } from "@/types/global";
+import {
+  getDomainName,
+  getImageLinkFromAWS,
+  getUrlWithoutProtocol,
+  sanitizeFilename,
+} from "@/utils";
 
 class DemoService {
   async getDemo({

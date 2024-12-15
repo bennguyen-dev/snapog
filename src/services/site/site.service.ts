@@ -1,6 +1,5 @@
-import { CACHE_DURATION_DAYS } from "@/lib/constants";
+import { CACHE_DURATION_DAYS } from "@/constants";
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
 import { pageService } from "@/services/page";
 import {
   ICreateSite,
@@ -10,6 +9,7 @@ import {
   ISiteDetail,
   IUpdateSiteBy,
 } from "@/services/site";
+import { IResponse } from "@/types/global";
 
 class SiteService {
   async create({

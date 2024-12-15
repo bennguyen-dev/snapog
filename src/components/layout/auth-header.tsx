@@ -1,6 +1,6 @@
 import { AuthMobileNavbar } from "@/components/layout/auth-mobile-navbar";
 import { AuthNavbar } from "@/components/layout/auth-navbar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 export const AuthHeader = () => {
   return (

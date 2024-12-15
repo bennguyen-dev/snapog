@@ -1,8 +1,8 @@
-import { IResponse } from "@/lib/type";
 import {
   IVerifyCaptcha,
   IVerifyCaptchaResponse,
 } from "@/services/googleCaptcha/googleCaptcha.interface";
+import { IResponse } from "@/types/global";
 
 class GoogleCaptchaService {
   async verifyCaptcha({

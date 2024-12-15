@@ -15,8 +15,8 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { PUBLIC_ROUTES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/constants";
+import { cn } from "@/utils";
 
 export const MobileNavbar = () => {
   const pathname = usePathname();

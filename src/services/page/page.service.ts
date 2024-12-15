@@ -1,13 +1,7 @@
 import { Page } from "@prisma/client";
 
-import { IMAGE_TYPES } from "@/lib/constants";
+import { IMAGE_TYPES } from "@/constants";
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
-import {
-  getUrlWithoutProtocol,
-  getUrlWithProtocol,
-  sanitizeFilename,
-} from "@/lib/utils";
 import {
   ICreatePage,
   IDeletePagesBy,
@@ -17,6 +11,12 @@ import {
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 import { userBalanceService } from "@/services/userBalance";
+import { IResponse } from "@/types/global";
+import {
+  getUrlWithoutProtocol,
+  getUrlWithProtocol,
+  sanitizeFilename,
+} from "@/utils";
 
 class PageService {
   async create({ url, siteId }: ICreatePage): Promise<IResponse<Page | null>> {

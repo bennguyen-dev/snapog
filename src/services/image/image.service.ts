@@ -1,9 +1,3 @@
-import { IResponse } from "@/lib/type";
-import {
-  getDomainName,
-  getImageLinkFromAWS,
-  getUrlWithoutProtocol,
-} from "@/lib/utils";
 import {
   IGenerateOGImage,
   IGenerateOGImageResponse,
@@ -13,6 +7,12 @@ import {
 import { pageService } from "@/services/page";
 import { siteService } from "@/services/site";
 import { userService } from "@/services/user";
+import { IResponse } from "@/types/global";
+import {
+  getDomainName,
+  getImageLinkFromAWS,
+  getUrlWithoutProtocol,
+} from "@/utils";
 
 class ImageService {
   async generateOGImage({

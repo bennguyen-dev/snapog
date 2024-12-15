@@ -14,8 +14,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AUTH_ROUTES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { AUTH_ROUTES } from "@/constants";
+import { cn } from "@/utils";
 
 interface IProps {
   className?: string;

@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCallApi } from "@/hooks";
-import { getDomainName } from "@/lib/utils";
 import { ICreateDemo, ICreateDemoResponse } from "@/services/demo";
 import { IVerifyCaptcha } from "@/services/googleCaptcha";
+import { getDomainName } from "@/utils";
 
 const formSchema = z.object({
   url: z.string().min(1, {

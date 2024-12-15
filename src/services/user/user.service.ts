@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
 
 import { prisma } from "@/lib/db";
-import { IResponse } from "@/lib/type";
 import {
   IGetUser,
   IRegenerateApiKey,
   IRegenerateApiKeyResponse,
   IUser,
 } from "@/services/user";
+import { IResponse } from "@/types/global";
 
 class UserService {
   async getUser({
