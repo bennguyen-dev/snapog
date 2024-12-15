@@ -8,11 +8,11 @@ export const PUBLIC_ROUTES: NavItem[] = [
     label: "Demo",
     href: "/demo",
   },
-  {
-    title: "Pricing",
-    label: "Pricing",
-    href: "/pricing",
-  },
+  // {
+  //   title: "Pricing",
+  //   label: "Pricing",
+  //   href: "/pricing",
+  // },
   {
     title: "How it works",
     label: "How it works",
