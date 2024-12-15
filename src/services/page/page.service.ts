@@ -157,7 +157,7 @@ class PageService {
 
           return {
             message: "Page created successfully",
-            status: 201,
+            status: 200,
             data: page,
           };
         },

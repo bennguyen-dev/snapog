@@ -124,10 +124,10 @@ class SiteService {
     }
   }
 
-  async updateManyBy({
+  async updateBy({
     id,
     cacheDurationDays,
-    overridePage,
+    overridePage = false,
   }: IUpdateSiteBy): Promise<IResponse<ISiteDetail | null>> {
     try {
       if (!id) {

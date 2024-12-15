@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 
+import { Site } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -28,18 +29,16 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
-import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
+import { useConfirmDialog, useDeleteSiteById, useGetSites } from "@/hooks";
 import {
   AddSiteDialog,
   EditSiteDialog,
   IAddSiteDialogRef,
   IEditSiteDialogRef,
 } from "@/modules/site";
-import { ICreateSite, ISiteDetail, IUpdateSiteBy } from "@/services/site";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
 export const ListSite = () => {
-  const { mounted } = useMounted();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
   const { data: session } = useSession();
 
@@ -48,87 +47,12 @@ export const ListSite = () => {
 
   const {
     data: sites,
-    setLetCall: getSites,
-    loading: fetching,
-  } = useCallApi<ISiteDetail[], object, object>({
-    url: `/api/sites`,
-    options: {
-      method: "GET",
-    },
-    nonCallInit: true,
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
+    isFetching: fetching,
+    refetch: getSites,
+  } = useGetSites();
+  const { mutate: deleteSite, isPending: deleting } = useDeleteSiteById();
 
-  const { promiseFunc: createSite, loading: creating } = useCallApi<
-    object,
-    object,
-    Omit<ICreateSite, "userId">
-  >({
-    url: `/api/sites`,
-    options: {
-      method: "POST",
-    },
-    nonCallInit: true,
-    handleSuccess() {
-      getSites(true);
-
-      addSiteRef.current?.close();
-      toast({ variant: "success", title: "Create successfully" });
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
-
-  const { promiseFunc: deleteSite, loading: deleting } = useCallApi<
-    object,
-    object,
-    null
-  >({
-    url: `/api/sites`,
-    options: {
-      method: "DELETE",
-    },
-    nonCallInit: true,
-    handleSuccess() {
-      getSites(true);
-
-      onCloseConfirm();
-      toast({ variant: "success", title: "Delete successfully" });
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
-
-  const { promiseFunc: updateSite, loading: updating } = useCallApi<
-    object,
-    null,
-    Omit<IUpdateSiteBy, "id">
-  >({
-    url: `/api/sites`,
-    options: {
-      method: "PUT",
-    },
-    nonCallInit: true,
-    handleSuccess() {
-      getSites(true);
-
-      editSiteRef.current?.close();
-      toast({ variant: "success", title: "Update successfully" });
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
-
-  useEffect(() => {
-    mounted && getSites(true);
-  }, [mounted, getSites]);
-
-  const columns: ColumnDef<ISiteDetail>[] = useMemo(() => {
+  const columns: ColumnDef<Site>[] = useMemo(() => {
     return [
       {
         accessorKey: "id",
@@ -218,7 +142,24 @@ export const ListSite = () => {
                     title: "Delete site",
                     content: "Are you sure you want to delete this site?",
                     onConfirm: () => {
-                      deleteSite(null, `/api/sites/${site.id}`);
+                      deleteSite(
+                        { id: site.id },
+                        {
+                          onSuccess() {
+                            onCloseConfirm();
+                            toast({
+                              variant: "success",
+                              title: "Delete successfully",
+                            });
+                          },
+                          onError() {
+                            toast({
+                              variant: "destructive",
+                              title: "Delete failed",
+                            });
+                          },
+                        },
+                      );
                     },
                     type: "danger",
                     onCancel: () => {},
@@ -230,12 +171,8 @@ export const ListSite = () => {
               </Button>
               <Button
                 size="icon"
-                onClick={async () => {
-                  const data = await editSiteRef.current?.open(site);
-
-                  if (data) {
-                    updateSite(data, `/api/sites/${site.id}`);
-                  }
+                onClick={() => {
+                  editSiteRef.current?.open(site);
                 }}
               >
                 <Pencil className="icon" />
@@ -245,7 +182,7 @@ export const ListSite = () => {
         },
       },
     ];
-  }, [confirmDialog, deleteSite, deleting, session, updateSite]);
+  }, [confirmDialog, deleteSite, deleting, onCloseConfirm, session]);
 
   return (
     <div className="p-4 sm:p-6">
@@ -260,41 +197,42 @@ export const ListSite = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="mb-4 flex items-center justify-end space-x-4">
-        <Button
-          variant="outline"
-          onClick={() => getSites(true)}
-          icon={<RefreshCw className="icon" />}
-          loading={fetching}
-        >
-          Refresh
-        </Button>
-        <Button
-          onClick={async () => {
-            const data = await addSiteRef.current?.open();
-            if (data) {
-              createSite(data, "/api/sites");
-            }
-          }}
-          icon={<Plus className="icon" />}
-        >
-          Add site
-        </Button>
-      </div>
       <Card>
-        <CardHeader>
-          <CardTitle>Sites</CardTitle>
-          <CardDescription>
-            List of sites where you can use social images
-          </CardDescription>
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
+          <div className="flex flex-col space-y-1.5 max-md:w-full">
+            <CardTitle>Sites</CardTitle>
+            <CardDescription>
+              List of sites where you can use social images
+            </CardDescription>
+          </div>
+          <div className="flex items-center justify-end gap-4 max-md:w-full">
+            <Button
+              variant="outline"
+              onClick={async () => {
+                await getSites();
+              }}
+              icon={<RefreshCw className="icon" />}
+              loading={fetching}
+            >
+              Refresh
+            </Button>
+            <Button
+              onClick={() => {
+                addSiteRef.current?.open();
+              }}
+              icon={<Plus className="icon" />}
+            >
+              Add site
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable columns={columns} data={sites || []} loading={fetching} />
         </CardContent>
       </Card>
 
-      <AddSiteDialog ref={addSiteRef} loading={creating} />
-      <EditSiteDialog ref={editSiteRef} loading={updating} />
+      <AddSiteDialog ref={addSiteRef} />
+      <EditSiteDialog ref={editSiteRef} />
       <ConfirmDialog loading={deleting} />
     </div>
   );

@@ -34,8 +34,7 @@ export const PUT = auth(async function PUT(req, res) {
   const siteId = res?.params?.siteId as string;
   const body = await req.json();
 
-  const sites = await siteService.updateManyBy({
-    userId: req.auth.user.id,
+  const sites = await siteService.updateBy({
     id: siteId,
     ...body,
   });
