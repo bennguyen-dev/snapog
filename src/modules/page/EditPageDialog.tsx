@@ -30,82 +30,77 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 import { DURATION_CACHES } from "@/constants";
-import { IUpdatePagesBy } from "@/services/page";
+import { useUpdatePageById } from "@/hooks";
 
 const formSchema = z.object({
+  id: z.string(),
   url: z.string(),
   cacheDurationDays: z.string(),
 });
 
 interface IProps {
-  loading?: boolean;
+  siteId: string;
 }
 
 export interface IEditPageDialogRef {
-  open: (item: Page | null) => Promise<Omit<IUpdatePagesBy, "id" | "siteId">>;
-  close: () => void;
-}
-
-interface IPromiseCallback {
-  resolve: (value: Omit<IUpdatePagesBy, "id" | "siteId">) => void;
-  reject: (value: null) => void;
+  open: (item: Page) => void;
 }
 
 export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
-  (props, ref) => {
-    const { loading } = props;
-
-    const [promiseCallback, setPromiseCallback] =
-      useState<IPromiseCallback | null>(null);
+  ({ siteId }, ref) => {
     const [opened, setOpened] = useState(false);
+    const { mutate: updatePage, isPending: updating } = useUpdatePageById({
+      siteId,
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {},
     });
 
-    const onSave = (data: z.infer<typeof formSchema>) => {
-      promiseCallback?.resolve({
-        ...data,
-        cacheDurationDays: parseInt(data.cacheDurationDays, 10),
-      });
+    const onSave = (formData: z.infer<typeof formSchema>) => {
+      updatePage(
+        {
+          id: formData.id,
+          cacheDurationDays: Number(formData.cacheDurationDays),
+        },
+        {
+          onSuccess(data) {
+            toast({
+              variant: "success",
+              title: data.message,
+            });
+            onClose();
+          },
+          onError(data) {
+            toast({ variant: "destructive", title: data.message });
+          },
+        },
+      );
     };
 
-    const onCancel = () => {
-      promiseCallback?.reject(null);
+    const onClose = () => {
+      if (updating) return;
+      form.reset({});
       setOpened(false);
     };
 
     useImperativeHandle(ref, () => ({
-      open: (item: Page | null = null) => {
+      open: (item: Page) => {
         form.reset({
-          url: item?.url,
+          id: item.id,
+          url: item.url,
           cacheDurationDays: item?.cacheDurationDays?.toString(),
         });
         setOpened(true);
-        return new Promise((resolve, reject) => {
-          setPromiseCallback({ resolve, reject });
-        });
-      },
-      close: () => {
-        form.reset({});
-        setOpened(false);
-        setPromiseCallback(null);
       },
     }));
 
     return (
       <Dialog open={opened} onOpenChange={setOpened}>
-        <DialogContent
-          className="sm:max-w-screen-xs"
-          onPointerDownOutside={(e) => {
-            loading && e.preventDefault();
-          }}
-          onInteractOutside={(e) => {
-            loading && e.preventDefault();
-          }}
-        >
+        <DialogContent className="sm:max-w-screen-xs">
           <Form {...form}>
             <DialogHeader className="mb-4">
               <DialogTitle>{form.getValues("url")}</DialogTitle>
@@ -119,7 +114,7 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
                   <FormLabel>Cache duration (days)</FormLabel>
                   <FormControl>
                     <Select
-                      disabled={loading}
+                      disabled={updating}
                       onValueChange={field.onChange}
                       defaultValue={field.value?.toString()}
                       value={field.value?.toString()}
@@ -143,13 +138,13 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
               )}
             />
             <DialogFooter className="sm:justify-end">
-              <Button variant="outline" disabled={loading} onClick={onCancel}>
+              <Button variant="outline" disabled={updating} onClick={onClose}>
                 Cancel
               </Button>
               <Button
                 variant="default"
                 type="submit"
-                loading={loading}
+                loading={updating}
                 onClick={form.handleSubmit(onSave)}
                 disabled={!form.formState.isDirty}
               >

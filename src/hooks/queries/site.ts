@@ -5,17 +5,35 @@ import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
 import { IResponse } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
-export const keys = generateQueryKey("site");
+export const siteKeys = generateQueryKey("site");
 
 export const useGetSites = () => {
   return useQuery({
-    queryKey: keys.all,
+    queryKey: siteKeys.all,
     queryFn: async () => {
-      const res = await fetch("/api/sites");
-      const result: IResponse<Site[]> = await res.json();
+      const result = await fetch("/api/sites");
+      const response: IResponse<Site[]> = await result.json();
 
-      return result.data;
+      if (response.status === 200) {
+        return response;
+      }
+      throw new Error(response.message);
     },
+  });
+};
+
+export const useGetSiteById = ({ siteId }: { siteId: string }) => {
+  return useQuery({
+    queryKey: siteKeys.detail(siteId),
+    queryFn: async () => {
+      const result = await fetch(`/api/sites/${siteId}`);
+      const response: IResponse<Site> = await result.json();
+      if (response.status === 200) {
+        return response;
+      }
+      throw new Error(response.message);
+    },
+    enabled: !!siteId,
   });
 };
 
@@ -30,7 +48,7 @@ export const useCreateSite = () => {
         method: "POST",
         body: JSON.stringify({ cacheDurationDays, domain }),
       });
-      const response: IResponse<Site | null> = await result.json();
+      const response: IResponse<Site> = await result.json();
 
       if (response.status === 200) {
         return response;
@@ -39,7 +57,7 @@ export const useCreateSite = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: keys.all,
+        queryKey: siteKeys.all,
       });
     },
   });
@@ -57,7 +75,7 @@ export const useUpdateSiteById = () => {
         method: "PUT",
         body: JSON.stringify({ cacheDurationDays, overridePage }),
       });
-      const response: IResponse<Site | null> = await result.json();
+      const response: IResponse<Site> = await result.json();
 
       if (response.status === 200) {
         return response;
@@ -66,7 +84,7 @@ export const useUpdateSiteById = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: keys.all,
+        queryKey: siteKeys.all,
       });
     },
   });
@@ -88,7 +106,7 @@ export const useDeleteSiteById = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: keys.all,
+        queryKey: siteKeys.all,
       });
     },
   });

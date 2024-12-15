@@ -145,17 +145,17 @@ export const ListSite = () => {
                       deleteSite(
                         { id: site.id },
                         {
-                          onSuccess() {
-                            onCloseConfirm();
+                          onSuccess(data) {
                             toast({
                               variant: "success",
-                              title: "Delete successfully",
+                              title: data.message,
                             });
+                            onCloseConfirm();
                           },
-                          onError() {
+                          onError(data) {
                             toast({
                               variant: "destructive",
-                              title: "Delete failed",
+                              title: data.message,
                             });
                           },
                         },
@@ -227,7 +227,11 @@ export const ListSite = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={sites || []} loading={fetching} />
+          <DataTable
+            columns={columns}
+            data={sites?.data || []}
+            loading={fetching}
+          />
         </CardContent>
       </Card>
 

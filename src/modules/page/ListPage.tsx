@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
@@ -30,13 +30,16 @@ import { DataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
-import { useCallApi, useConfirmDialog, useMounted } from "@/hooks";
+import {
+  useConfirmDialog,
+  useDeletePageById,
+  useGetPages,
+  useGetSiteById,
+} from "@/hooks";
 import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
-import { IUpdatePagesBy } from "@/services/page";
-import { ISiteDetail } from "@/services/site";
 import { getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
 
 interface IProps {
@@ -44,78 +47,18 @@ interface IProps {
 }
 
 export const ListPage = ({ siteId }: IProps) => {
-  const { mounted } = useMounted();
   const { data: session } = useSession();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
   const editPageRef = useRef<IEditPageDialogRef>(null);
 
   const {
     data: pages,
-    setLetCall: getPages,
-    loading: fetching,
-  } = useCallApi<Page[], object, object>({
-    url: `/api/sites/${siteId}/pages`,
-    options: {
-      method: "GET",
-    },
-    nonCallInit: true,
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
-
-  const {
-    data: site,
-    setLetCall: getSite,
-    loading: fetchingSite,
-  } = useCallApi<ISiteDetail, object, object>({
-    url: `/api/sites/${siteId}`,
-    options: {
-      method: "GET",
-    },
-    nonCallInit: true,
-  });
-
-  const { promiseFunc: deletePage, loading: deleting } = useCallApi<
-    object,
-    object,
-    null
-  >({
-    url: `/api/pages`,
-    options: {
-      method: "DELETE",
-    },
-    nonCallInit: true,
-    handleSuccess() {
-      getPages(true);
-
-      onCloseConfirm();
-      toast({ variant: "success", title: "Delete successfully" });
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
-
-  const { promiseFunc: updatePage, loading: updating } = useCallApi<
-    object,
-    null,
-    Omit<IUpdatePagesBy, "id" | "siteId">
-  >({
-    url: `/api/pages`,
-    options: {
-      method: "PUT",
-    },
-    nonCallInit: true,
-    handleSuccess() {
-      getPages(true);
-
-      editPageRef.current?.close();
-      toast({ variant: "success", title: "Update successfully" });
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
+    isFetching: fetching,
+    refetch: getPages,
+  } = useGetPages({ siteId });
+  const { data: site, isFetching: fetchingSite } = useGetSiteById({ siteId });
+  const { mutate: deletePage, isPending: deleting } = useDeletePageById({
+    siteId,
   });
 
   const columns: ColumnDef<Page>[] = useMemo(
@@ -213,7 +156,24 @@ export const ListPage = ({ siteId }: IProps) => {
                     title: "Delete page",
                     content: "Are you sure you want to delete this page?",
                     onConfirm: () => {
-                      deletePage(null, `/api/pages/${page.id}`);
+                      deletePage(
+                        { id: page.id },
+                        {
+                          onSuccess(data) {
+                            toast({
+                              variant: "success",
+                              title: data.message,
+                            });
+                            onCloseConfirm();
+                          },
+                          onError(data) {
+                            toast({
+                              variant: "destructive",
+                              title: data.message,
+                            });
+                          },
+                        },
+                      );
                     },
                     type: "danger",
                     onCancel: () => {},
@@ -225,12 +185,8 @@ export const ListPage = ({ siteId }: IProps) => {
               </Button>
               <Button
                 size="icon"
-                onClick={async () => {
-                  const data = await editPageRef.current?.open(page);
-
-                  if (data) {
-                    updatePage(data, `/api/pages/${page.id}`);
-                  }
+                onClick={() => {
+                  editPageRef.current?.open(page);
                 }}
               >
                 <Pencil className="icon" />
@@ -240,30 +196,25 @@ export const ListPage = ({ siteId }: IProps) => {
         },
       },
     ],
-    [confirmDialog, deletePage, deleting, session, updatePage],
+    [confirmDialog, deletePage, deleting, onCloseConfirm, session],
   );
-
-  useEffect(() => {
-    if (mounted) {
-      getSite(true);
-      getPages(true);
-    }
-  }, [mounted, getPages, getSite]);
 
   return (
     <div className="p-4 sm:p-6">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href="/dashboard/sites">Home</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             {fetchingSite ? (
               <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
             ) : (
-              <BreadcrumbLink href={`/dashboard/sites`}>
-                {site?.domain}
+              <BreadcrumbLink asChild>
+                <Link href="/dashboard/sites">{site?.data.domain}</Link>
               </BreadcrumbLink>
             )}
           </BreadcrumbItem>
@@ -271,42 +222,49 @@ export const ListPage = ({ siteId }: IProps) => {
           <BreadcrumbPage>All pages</BreadcrumbPage>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="mb-4 flex items-center justify-end space-x-4">
-        <Button
-          variant="outline"
-          onClick={() => getPages(true)}
-          icon={<RefreshCw className="icon" />}
-          loading={fetching}
-        >
-          Refresh
-        </Button>
-      </div>
+
       <Card>
-        <CardHeader className="px-7">
-          <CardTitle>Pages</CardTitle>
-          <CardDescription>
-            List of pages for the site{" "}
-            {site && (
-              <Link
-                href={getUrlWithProtocol(site.domain)}
-                target="_blank"
-                className="text-link"
-              >
-                {site.domain}
-              </Link>
-            )}
-            {fetchingSite && (
-              <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
-            )}
-          </CardDescription>
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
+          <div className="flex flex-col space-y-1.5 max-md:w-full">
+            <CardTitle>Pages</CardTitle>
+            <CardDescription>
+              List of pages for the site{" "}
+              {site && (
+                <Link
+                  href={getUrlWithProtocol(site.data.domain)}
+                  target="_blank"
+                  className="text-link"
+                >
+                  {site.data.domain}
+                </Link>
+              )}
+              {fetchingSite && (
+                <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
+              )}
+            </CardDescription>
+          </div>
+          <div className="flex items-center justify-end gap-4 max-md:w-full">
+            <Button
+              variant="outline"
+              onClick={() => getPages()}
+              icon={<RefreshCw className="icon" />}
+              loading={fetching}
+            >
+              Refresh
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={pages || []} loading={fetching} />
+          <DataTable
+            columns={columns}
+            data={pages?.data || []}
+            loading={fetching}
+          />
         </CardContent>
       </Card>
 
       <ConfirmDialog loading={deleting} />
-      <EditPageDialog ref={editPageRef} loading={updating} />
+      <EditPageDialog ref={editPageRef} siteId={siteId} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +17,9 @@ export const ListCredit = () => {
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
+              <BreadcrumbLink asChild>
+                <Link href="/dashboard/sites">Home</Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
