@@ -33,14 +33,32 @@ class PageService {
     );
 
     try {
-      // Use transaction with serializable isolation level for strongest consistency
+      // First check if page exists outside transaction
+      const existingPage = await prisma.page.findUnique({
+        where: {
+          siteId_url: {
+            url: urlWithProtocol,
+            siteId,
+          },
+        },
+      });
+
+      if (existingPage) {
+        return {
+          message: "Page already exists",
+          status: 200,
+          data: existingPage,
+        };
+      }
+
+      // Use transaction with increased timeout
       return await prisma.$transaction(
         async (tx) => {
           // Acquire exclusive lock immediately
           await tx.$executeRaw`SELECT pg_advisory_xact_lock(${lockKey})`;
 
-          // Check if page already exists first (fastest check)
-          const existingPage = await tx.page.findUnique({
+          // Double check if page was created while we were waiting for lock
+          const pageAfterLock = await tx.page.findUnique({
             where: {
               siteId_url: {
                 url: urlWithProtocol,
@@ -49,11 +67,11 @@ class PageService {
             },
           });
 
-          if (existingPage) {
+          if (pageAfterLock) {
             return {
               message: "Page already exists",
               status: 200,
-              data: existingPage,
+              data: pageAfterLock,
             };
           }
 
@@ -164,17 +182,16 @@ class PageService {
           };
         },
         {
-          maxWait: 30000,
-          timeout: 30000,
-          isolationLevel: "Serializable", // Strongest isolation level
+          maxWait: 60000, // Maximum time to wait for transaction to start
+          timeout: 120000, // Maximum time for transaction to complete
         },
       );
     } catch (error) {
-      console.error(`Error creating page:`, error);
+      console.error("Error creating page:", error);
       return {
-        status: 500,
         message:
-          error instanceof Error ? error.message : "Internal Server Error",
+          error instanceof Error ? error.message : "Unknown error occurred",
+        status: 500,
         data: null,
       };
     }
