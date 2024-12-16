@@ -161,15 +161,11 @@ export const ListPage = ({ siteId }: IProps) => {
                   "_blank",
                 );
               }}
-              src={getLinkSmartOGImage({
-                host: window.location.host,
-                url: row.original.url,
-                apiKey: session?.user.apiKey || "",
-              })}
+              src={row.original.imageSrc}
               width={120}
               height={62}
               className="aspect-og-facebook max-w-40 cursor-pointer rounded"
-              alt={row.original.imageSrc}
+              alt={row.original.url}
             />
           );
         },
