@@ -21,3 +21,8 @@ export interface IDeletePagesBy {
 
   id?: string;
 }
+
+export interface IInvalidateCachePageBy {
+  id: string;
+  userId: string;
+}

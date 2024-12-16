@@ -1,10 +1,7 @@
-import { Page } from "@prisma/client";
-
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { pageService } from "@/services/page";
-import { getImageLinkFromAWS } from "@/utils";
 
 export const GET = auth(async function GET(req, res) {
   if (!req.auth?.user?.id) {
@@ -31,16 +28,5 @@ export const GET = auth(async function GET(req, res) {
     return NextResponse.json(pages, { status: pages.status });
   }
 
-  const data: Page[] = pages.data.map((page) => ({
-    ...page,
-    imageSrc: page.imageSrc ? getImageLinkFromAWS(page.imageSrc) : null,
-  }));
-
-  return NextResponse.json(
-    {
-      ...pages,
-      data: data,
-    },
-    { status: pages.status },
-  );
+  return NextResponse.json(pages, { status: pages.status });
 });

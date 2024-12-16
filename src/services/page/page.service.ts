@@ -6,6 +6,7 @@ import {
   ICreatePage,
   IDeletePagesBy,
   IGetPageBy,
+  IInvalidateCachePageBy,
   IUpdatePagesBy,
 } from "@/services/page";
 import { scrapeService } from "@/services/scrapeApi";
@@ -13,6 +14,7 @@ import { storageService } from "@/services/storage";
 import { userBalanceService } from "@/services/userBalance";
 import { IResponse } from "@/types/global";
 import {
+  getDomainName,
   getUrlWithoutProtocol,
   getUrlWithProtocol,
   sanitizeFilename,
@@ -361,6 +363,87 @@ class PageService {
         status: 500,
         message:
           error instanceof Error ? error.message : "Internal Server Error",
+        data: null,
+      };
+    }
+  }
+
+  async regenerate({
+    id,
+    userId,
+  }: IInvalidateCachePageBy): Promise<IResponse<Page | null>> {
+    try {
+      const page = await prisma.page.findUnique({
+        where: { id },
+      });
+
+      if (!page) {
+        return {
+          message: "Page not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      // Generate new screenshot
+      const pageCrawlInfo = await scrapeService.scrapeInfo({
+        url: page.url,
+      });
+
+      if (!pageCrawlInfo.data?.screenshot) {
+        return {
+          message: pageCrawlInfo.message || "Failed to generate image",
+          status: pageCrawlInfo.status || 400,
+          data: null,
+        };
+      }
+
+      // Prepare upload path
+      const domain = getDomainName(page.url);
+      const urlWithoutProtocol = getUrlWithoutProtocol(page.url);
+      const folderName = sanitizeFilename(domain);
+      const fileName = `${sanitizeFilename(urlWithoutProtocol)}.${IMAGE_TYPES.PNG.EXTENSION}`;
+      const key = `${userId}/${folderName}/${fileName}`;
+
+      // Upload new image
+      const uploadRes = await storageService.uploadImage({
+        image: pageCrawlInfo.data.screenshot,
+        key: key,
+      });
+
+      if (!uploadRes.data) {
+        return {
+          message: uploadRes.message || "Failed to upload image",
+          status: uploadRes.status || 500,
+          data: null,
+        };
+      }
+
+      // Update page with new image and metadata
+      const today = new Date();
+      const newExpiresAt = new Date(today);
+      newExpiresAt.setDate(today.getDate() + (page.cacheDurationDays ?? 0));
+
+      const updatedPage = await prisma.page.update({
+        where: { id },
+        data: {
+          imageSrc: uploadRes.data?.src,
+          imageExpiresAt: newExpiresAt,
+          OGTitle: pageCrawlInfo.data?.title,
+          OGDescription: pageCrawlInfo.data?.description,
+        },
+      });
+
+      return {
+        message: "Image regenerated successfully",
+        status: 200,
+        data: updatedPage,
+      };
+    } catch (error) {
+      console.error("Error regenerating page image:", error);
+      return {
+        message: "Failed to regenerate image",
+        status: 500,
         data: null,
       };
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
@@ -35,6 +35,7 @@ import {
   useDeletePageById,
   useGetPages,
   useGetSiteById,
+  useInvalidateCachePageById,
 } from "@/hooks";
 import {
   EditPageDialog,
@@ -49,6 +50,11 @@ interface IProps {
 export const ListPage = ({ siteId }: IProps) => {
   const { data: session } = useSession();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
+  const {
+    confirmDialog: confirmInvalidate,
+    onCloseConfirm: onCloseInvalidate,
+    ConfirmDialog: InvalidateCacheDialog,
+  } = useConfirmDialog();
   const editPageRef = useRef<IEditPageDialogRef>(null);
 
   const {
@@ -60,6 +66,56 @@ export const ListPage = ({ siteId }: IProps) => {
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
     siteId,
   });
+  const { mutate: invalidateCache, isPending: invalidating } =
+    useInvalidateCachePageById({ siteId });
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      deletePage(
+        { id },
+        {
+          onSuccess(data) {
+            toast({
+              variant: "success",
+              title: data.message,
+            });
+            onCloseConfirm();
+          },
+          onError(data) {
+            toast({
+              variant: "destructive",
+              title: data.message,
+            });
+          },
+        },
+      );
+    },
+    [deletePage, onCloseConfirm],
+  );
+
+  const handleInvalidateCache = useCallback(
+    (id: string) => {
+      invalidateCache(
+        { id },
+        {
+          onSuccess(data) {
+            toast({
+              variant: "success",
+              title: data.message,
+            });
+            onCloseInvalidate();
+          },
+          onError(data) {
+            toast({
+              variant: "destructive",
+              title: data.message,
+            });
+          },
+        },
+      );
+    },
+    [invalidateCache, onCloseInvalidate],
+  );
 
   const columns: ColumnDef<Page>[] = useMemo(
     () => [
@@ -105,7 +161,11 @@ export const ListPage = ({ siteId }: IProps) => {
                   "_blank",
                 );
               }}
-              src={row.original.imageSrc}
+              src={getLinkSmartOGImage({
+                host: window.location.host,
+                url: row.original.url,
+                apiKey: session?.user.apiKey || "",
+              })}
               width={120}
               height={62}
               className="aspect-og-facebook max-w-40 cursor-pointer rounded"
@@ -149,40 +209,25 @@ export const ListPage = ({ siteId }: IProps) => {
           return (
             <div className="flex gap-2">
               <Button
-                variant="destructive"
+                variant="outline"
                 size="icon"
                 onClick={() => {
-                  confirmDialog({
-                    title: "Delete page",
-                    content: "Are you sure you want to delete this page?",
+                  confirmInvalidate({
+                    title: "Invalidate cache",
+                    content:
+                      "Are you sure you want to invalidate cache for this page?",
                     onConfirm: () => {
-                      deletePage(
-                        { id: page.id },
-                        {
-                          onSuccess(data) {
-                            toast({
-                              variant: "success",
-                              title: data.message,
-                            });
-                            onCloseConfirm();
-                          },
-                          onError(data) {
-                            toast({
-                              variant: "destructive",
-                              title: data.message,
-                            });
-                          },
-                        },
-                      );
+                      return handleInvalidateCache(page.id);
                     },
-                    type: "danger",
+                    type: "default",
                     onCancel: () => {},
                   });
                 }}
                 disabled={deleting}
               >
-                <TrashIcon className="icon" />
+                <RefreshCw className="icon" />
               </Button>
+
               <Button
                 size="icon"
                 onClick={() => {
@@ -191,12 +236,36 @@ export const ListPage = ({ siteId }: IProps) => {
               >
                 <Pencil className="icon" />
               </Button>
+
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  confirmDialog({
+                    title: "Delete page",
+                    content: "Are you sure you want to delete this page?",
+                    onConfirm: () => handleDelete(page.id),
+                    type: "danger",
+                    onCancel: () => {},
+                  });
+                }}
+                disabled={deleting}
+              >
+                <TrashIcon className="icon" />
+              </Button>
             </div>
           );
         },
       },
     ],
-    [confirmDialog, deletePage, deleting, onCloseConfirm, session],
+    [
+      confirmDialog,
+      confirmInvalidate,
+      deleting,
+      handleDelete,
+      handleInvalidateCache,
+      session,
+    ],
   );
 
   return (
@@ -264,6 +333,7 @@ export const ListPage = ({ siteId }: IProps) => {
       </Card>
 
       <ConfirmDialog loading={deleting} />
+      <InvalidateCacheDialog loading={invalidating} />
       <EditPageDialog ref={editPageRef} siteId={siteId} />
     </div>
   );
