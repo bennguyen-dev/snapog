@@ -3,6 +3,7 @@ import { cx } from "class-variance-authority";
 import { InputDemo } from "@/components/block/BlockInputDemo/InputDemo";
 import { PreviewOgImage } from "@/components/customs/preview-og-image";
 import { GoogleCaptchaProvider } from "@/components/provider/googleCaptchaProvider";
+import { ReactQueryProvider } from "@/components/provider/reactQueryProvider";
 import { Typography } from "@/components/ui/typography";
 
 interface IProps {
@@ -35,7 +36,9 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
         </Typography>
 
         <GoogleCaptchaProvider>
-          <InputDemo className="sm:max-lg:absolute sm:max-lg:bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+          <ReactQueryProvider>
+            <InputDemo className="sm:max-lg:absolute sm:max-lg:bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+          </ReactQueryProvider>
         </GoogleCaptchaProvider>
       </div>
       {!hidePreview && (

@@ -5,15 +5,13 @@ import { useState } from "react";
 import { Clipboard, Eye, EyeOff } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-import { regenerateApikey } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { useConfirmDialog } from "@/hooks";
-import { useCallAction } from "@/hooks/useCallAction";
+import { useConfirmDialog, useRegenerateApiKey } from "@/hooks";
 
 export const InputPublicApiKey = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [show, setShow] = useState<boolean>(false);
 
   const {
@@ -21,28 +19,7 @@ export const InputPublicApiKey = () => {
     onCloseConfirm: onCloseConfirmGenerate,
     ConfirmDialog: ConfirmGenerateDialog,
   } = useConfirmDialog();
-
-  const { promiseFunc: regenerate, loading: generating } = useCallAction({
-    action: regenerateApikey,
-    nonCallInit: true,
-    handleSuccess: async (_, data) => {
-      if (data?.apiKey) {
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            apiKey: data.apiKey,
-          },
-        });
-
-        onCloseConfirmGenerate();
-        toast({ variant: "success", title: "Regenerate successfully" });
-      }
-    },
-    handleError(_, message) {
-      toast({ variant: "destructive", title: message });
-    },
-  });
+  const { mutate: regenerate, isPending: generating } = useRegenerateApiKey();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(session?.user?.apiKey || "");
@@ -59,7 +36,24 @@ export const InputPublicApiKey = () => {
         "This action cannot be undone. You will lose access to the API with the current API key immediately and you will need to change it to the new one.",
       type: "danger",
       onConfirm() {
-        regenerate({});
+        regenerate(
+          {},
+          {
+            onSuccess(data) {
+              toast({
+                variant: "success",
+                title: data.message,
+              });
+              onCloseConfirmGenerate();
+            },
+            onError(data) {
+              toast({
+                variant: "destructive",
+                title: data.message,
+              });
+            },
+          },
+        );
       },
       confirmText: "Regenerate",
       onCancel() {},

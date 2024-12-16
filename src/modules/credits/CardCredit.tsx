@@ -1,6 +1,5 @@
 "use client";
 
-import { getUserBalance } from "@/app/actions";
 import {
   Card,
   CardContent,
@@ -10,17 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
-import { useCallAction } from "@/hooks/useCallAction";
+import { useGetCredits } from "@/hooks";
 import { cn } from "@/utils";
 
 export const CardCredit = () => {
-  const { data: balance, loading } = useCallAction({
-    action: getUserBalance,
-  });
+  const { data: balance, isFetching: loading } = useGetCredits();
 
   const totalCredits =
-    (balance?.paidCredits ?? 0) + (balance?.freeCredits ?? 0);
-  const usedCredits = balance?.usedCredits ?? 0;
+    (balance?.data.paidCredits ?? 0) + (balance?.data.freeCredits ?? 0);
+  const usedCredits = balance?.data.usedCredits ?? 0;
   const remainingCredits = totalCredits - usedCredits;
 
   return (
@@ -76,7 +73,7 @@ export const CardCredit = () => {
             <li>Each new page creation uses 1 credit</li>
             <li>Updating existing page images is free</li>
             <li>Free credits are used after paid credits are depleted</li>
-            <li>Purchase more credits when running low</li>
+            {/*<li>Purchase more credits when running low</li>*/}
           </ul>
         </div>
 

@@ -16,7 +16,7 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
       {domain && (
         <Typography
           variant="h1"
-          className="mx-auto max-w-screen-md pb-12 text-center sm:pb-16"
+          className="mx-auto max-w-screen-md pb-12 text-center sm:pb-8"
         >
           Open-graph image review for{" "}
           <span className="underline">{domain}</span>
@@ -31,10 +31,6 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
             Normal OG images
           </Typography>
           <ul className="space-y-2">
-            <li className="flex items-center gap-2">
-              <X className="inline-block size-5 stroke-2" />
-              Missing OG image on some pages
-            </li>
             <li className="flex items-center gap-2">
               <X className="inline-block size-5 stroke-2" />
               Manually update when the content changes

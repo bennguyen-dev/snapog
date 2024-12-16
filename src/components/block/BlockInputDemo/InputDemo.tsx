@@ -18,9 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCallApi } from "@/hooks";
-import { ICreateDemo, ICreateDemoResponse } from "@/services/demo";
-import { IVerifyCaptcha } from "@/services/googleCaptcha";
+import { useCreateDemo } from "@/hooks";
 import { getDomainName } from "@/utils";
 
 const formSchema = z.object({
@@ -33,11 +31,11 @@ interface IProps {
   className?: string;
 }
 
-interface ICreateDemoPayload extends ICreateDemo, IVerifyCaptcha {}
-
 export const InputDemo = ({ className }: IProps) => {
   const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const { mutate: createDemo, isPending: creating } = useCreateDemo();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,24 +43,6 @@ export const InputDemo = ({ className }: IProps) => {
       url: "",
     },
     mode: "onChange",
-  });
-
-  const { promiseFunc: createDemo, loading: creating } = useCallApi<
-    ICreateDemoResponse,
-    object,
-    ICreateDemoPayload
-  >({
-    url: `/api/demo`,
-    options: {
-      method: "POST",
-    },
-    nonCallInit: true,
-    handleSuccess(_, data) {
-      router.push(`/demo/${getDomainName(data?.domain)}`);
-    },
-    handleError(_, message) {
-      form.setError("url", { message });
-    },
   });
 
   const onViewDemo = async (data: z.infer<typeof formSchema>) => {
@@ -77,10 +57,22 @@ export const InputDemo = ({ className }: IProps) => {
     try {
       const gReCaptchaToken = await executeRecaptcha("createDemo");
 
-      createDemo({
-        url: data.url,
-        gReCaptchaToken,
-      });
+      createDemo(
+        {
+          url: data.url,
+          gReCaptchaToken,
+        },
+        {
+          onSuccess: (data) => {
+            router.push(`/demo/${getDomainName(data?.data?.domain)}`);
+          },
+          onError: (data) => {
+            form.setError("url", {
+              message: data?.message,
+            });
+          },
+        },
+      );
     } catch (error) {
       form.setError("url", {
         message: "Failed to create demo. Please try again.",
