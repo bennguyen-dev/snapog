@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 
 import { CodeSnippet } from "@/components/customs/code-snippet";
@@ -6,9 +5,7 @@ import { Typography } from "@/components/ui/typography";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
 export const BlockHowItWorks = () => {
-  const headersList = headers();
-
-  const host = headersList.get("host");
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return (
     <section
@@ -21,7 +18,7 @@ export const BlockHowItWorks = () => {
         your website:
       </Typography>
       <Typography variant="code" className="mb-4 break-all">
-        https://{host}/api/get?api_key=
+        https://{domain}/api/get?api_key=
         <span className="text-base font-bold text-orange-600">
           {"<api_key>"}
         </span>
@@ -31,31 +28,31 @@ export const BlockHowItWorks = () => {
         </span>
       </Typography>
 
-      {host && (
+      {domain && (
         <CodeSnippet className="w-full sm:w-fit">
           {getSnippetHowToUse({
-            host,
+            host: domain,
             domain: "yourwebsite.com",
             apiKey: "<api_key>",
           })}
         </CodeSnippet>
       )}
 
-      {host && (
+      {domain && (
         <Typography variant="p" className="break-all">
           Example:{" "}
           <Link
             href={getLinkSmartOGImage({
-              host,
-              url: host,
+              host: domain,
+              url: domain,
               apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
             })}
             target="_blank"
             className="text-link break-all"
           >
             {getLinkSmartOGImage({
-              host,
-              url: host,
+              host: domain,
+              url: domain,
               apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
             })}
           </Link>

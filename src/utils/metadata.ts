@@ -35,7 +35,6 @@ export function getMetadata({
   title,
   description,
   path = "",
-  host,
   keywords = [],
 }: GenerateMetadataProps): Metadata {
   const finalTitle = title
@@ -43,6 +42,7 @@ export function getMetadata({
     : defaultMetadata.baseTitle;
   const finalDescription = description || defaultMetadata.baseDescription;
   const finalKeywords = [...defaultMetadata.baseKeywords, ...keywords];
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return {
     title: finalTitle,
@@ -55,12 +55,13 @@ export function getMetadata({
       siteName: defaultMetadata.siteName,
       images: [
         {
-          url: `https://www.snapog.com/api/get?api_key=${process.env.SNAP_OG_API_KEY}&url=${host}${path}&time=${Date.now()}`,
+          url: `https://${domain}/api/get?api_key=${process.env.SNAP_OG_API_KEY}&url=${domain}${path}&time=${Date.now()}`,
           width: 1200,
           height: 630,
           alt: finalTitle,
         },
       ],
+      url: `https://${domain}${path}`,
       locale: "en_US",
     },
     twitter: {
@@ -70,7 +71,7 @@ export function getMetadata({
       creator: "@snapog",
     },
     alternates: {
-      canonical: `https://${host}${path}`,
+      canonical: `https://${domain}${path}`,
     },
     robots: {
       index: true,

@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-
 import {
   Accordion,
   AccordionContent,
@@ -9,9 +7,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 
 export const BlockFAQs = () => {
-  const headersList = headers();
-
-  const host = headersList.get("host");
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   const FAQs = [
     {
@@ -42,7 +38,7 @@ export const BlockFAQs = () => {
             Very simple, you just need to use this URL as the open graph image:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{host}/api/get?api_key=
+            https://{domain}/api/get?api_key=
             <span className="font-bold text-orange-600">{"<api_key>"}</span>
             &url=
             <span className="font-bold text-orange-600">
@@ -62,7 +58,7 @@ export const BlockFAQs = () => {
             example:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{host}/api/get?url=
+            https://{domain}/api/get?url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/{"${router.pathname}"}
             </span>
@@ -74,7 +70,7 @@ export const BlockFAQs = () => {
       key: "question-3",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          What kind of URL can I use in the &quot;{host}
+          What kind of URL can I use in the &quot;{domain}
           /api/get?url=&quot; parameter?
         </Typography>
       ),

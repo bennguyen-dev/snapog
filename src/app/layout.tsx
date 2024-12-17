@@ -21,14 +21,14 @@ const fontSans = FontSans({
 export async function generateMetadata() {
   const headersList = headers();
   const pathname = headersList.get("x-current-path");
-  const host = headersList.get("host");
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return {
-    ...getMetadata({ host, path: pathname || "" }),
+    ...getMetadata({ path: pathname || "" }),
     applicationName: "Snap OG",
     generator: "Snap OG",
     referrer: "origin-when-cross-origin",
-    authors: [{ name: "Snap OG", url: `https://${host}` }],
+    authors: [{ name: "Snap OG", url: `https://${domain}` }],
     category: "Open Graph",
     keywords: [
       "Open Graph",
@@ -59,9 +59,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo.png" />
-        <link rel="mask-icon" href="/logo.png" color="#0f172a" />
+        <link rel="mask-icon" href="/logo.svg" color="#0f172a" />
         <link rel="shortcut icon" href="/logo.png" />
         <link rel="text/plain" href="/humans.txt" />
         <meta name="msvalidate.01" content="D1936DE08B1AC89E9415E9603037BD5C" />

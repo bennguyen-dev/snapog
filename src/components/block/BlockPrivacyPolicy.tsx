@@ -1,11 +1,8 @@
-import { headers } from "next/headers";
-
 import { Typography } from "@/components/ui/typography";
 
 export const BlockPrivacyPolicy = () => {
-  const headersList = headers();
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
-  const host = headersList.get("host");
   return (
     <section
       id="privacy-policy"
@@ -17,7 +14,7 @@ export const BlockPrivacyPolicy = () => {
       <Typography>
         Your privacy is important to us. It is snap OG's policy to respect your
         privacy regarding any information we may collect from you across our
-        website, https:{host}, and other sites we own and operate.
+        website, https://{domain}, and other sites we own and operate.
       </Typography>
       <Typography>
         We only ask for personal information when we truly need it to provide a

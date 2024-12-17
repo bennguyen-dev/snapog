@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-
 import { BlockBenefit } from "@/components/block/BlockBenefit";
 import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { BlockFAQs } from "@/components/block/BlockFAQs";
@@ -10,11 +8,7 @@ import { IGetDemoResponse } from "@/services/demo";
 import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
-  const headersList = headers();
-  const host = headersList.get("host");
-
   return getMetadata({
-    host,
     path: "/",
     keywords: [
       "social preview automation",

@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-
 import { demoService } from "@/services/demo";
 
 const LAST_MODIFIED = new Date();
@@ -19,15 +17,13 @@ const PAGES = {
 };
 
 export default async function sitemap() {
-  const headersList = headers();
-  const host = headersList.get("host")?.replace("www.", "");
-  const baseUrl = `https://${host}`;
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   const demos = await demoService.getAllDemos();
 
   // Generate core pages
   const corePages = PAGES.core.map((page) => ({
-    url: `${baseUrl}${page.path}`,
+    url: `https://${domain}${page.path}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: page.changeFreq,
     priority: page.priority,
@@ -35,7 +31,7 @@ export default async function sitemap() {
 
   // Generate legal pages
   const legalPages = PAGES.legal.map((page) => ({
-    url: `${baseUrl}${page.path}`,
+    url: `https://${domain}${page.path}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: page.changeFreq,
     priority: page.priority,
@@ -44,7 +40,7 @@ export default async function sitemap() {
   // Generate demo pages
   const demoPages =
     demos.data?.map((demo) => ({
-      url: `${baseUrl}/demo/${demo.domain}`,
+      url: `https://${domain}/demo/${demo.domain}`,
       lastModified: demo.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.7,

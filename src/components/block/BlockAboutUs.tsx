@@ -1,12 +1,9 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 
 import { Typography } from "@/components/ui/typography";
 
 export const BlockAboutUs = () => {
-  const headersList = headers();
-
-  const host = headersList.get("host");
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return (
     <section
@@ -28,7 +25,7 @@ export const BlockAboutUs = () => {
           <li className="text-foreground">
             Automate open-graph social image:{" "}
             <Link className="hover:underline" target="_blank" href="/">
-              https://{host}
+              https://{domain}
             </Link>
           </li>
         </ul>

@@ -1,11 +1,7 @@
 import { MetadataRoute } from "next";
 
-import { headers } from "next/headers";
-
 export default function robots(): MetadataRoute.Robots {
-  const headersList = headers();
-  const host = headersList.get("host");
-
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
   return {
     rules: [
       {
@@ -13,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/dashboard/*"],
       },
     ],
-    sitemap: `https://${host}/sitemap.xml`,
+    sitemap: `https://${domain}/sitemap.xml`,
   };
 }

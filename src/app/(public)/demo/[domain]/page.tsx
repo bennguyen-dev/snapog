@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
@@ -13,14 +12,11 @@ export async function generateMetadata({
 }: {
   params: { domain: string };
 }) {
-  const headersList = headers();
-  const host = headersList.get("host");
   const domain = params.domain;
 
   return getMetadata({
     title: `See How ${domain} Could Look With Automated OG Images`,
     description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference Snap OG makes in social sharing previews.`,
-    host,
     path: `/demo/${domain}`,
     keywords: [
       `${domain} social preview`,

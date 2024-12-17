@@ -1,18 +1,16 @@
-import { headers } from "next/headers";
-
 import { ListPage } from "@/modules/page";
 import { getMetadata } from "@/utils/metadata";
 
-export async function generateMetadata() {
-  const headersList = headers();
-  const host = headersList.get("host");
-
+export async function generateMetadata({
+  params,
+}: {
+  params: { siteId: string };
+}) {
   return getMetadata({
     title: "Manage Your Pages - Snap OG Dashboard",
     description:
       "Control and customize social previews for individual pages of your website.",
-    host,
-    path: "/dashboard/sites/[siteId]",
+    path: `/dashboard/sites/${params.siteId}`,
   });
 }
 
