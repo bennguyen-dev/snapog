@@ -1,4 +1,7 @@
+import sharp from "sharp";
+
 import {
+  AddFrameImage,
   IGenerateOGImage,
   IGenerateOGImageResponse,
   IGetImageByImageLink,
@@ -144,6 +147,101 @@ class ImageService {
         status: 500,
         data: null,
       };
+    }
+  }
+
+  // Add frame
+  async addFrame({ config, image, text }: AddFrameImage) {
+    try {
+      // Lấy template config dựa trên templateId
+      const template = config;
+
+      // Đọc background image của template
+      const backgroundImage = sharp(
+        `${process.cwd()}/src/assets/${template.frame.backgroundImage}`,
+      ).resize(template.frame.width, template.frame.height, {
+        fit: "cover",
+        position: "center",
+      });
+
+      // Xử lý input image
+      const userImage = sharp(image).resize(
+        template.imagePlaceholder.width,
+        template.imagePlaceholder.height,
+        {
+          fit: "cover",
+          position: "center",
+        },
+      );
+
+      if (template.imagePlaceholder.borderRadius > 0) {
+        userImage.composite([
+          {
+            input: Buffer.from(`
+          <svg>
+            <rect 
+              x="0" 
+              y="0" 
+              width="${template.imagePlaceholder.width}" 
+              height="${template.imagePlaceholder.height}" 
+              rx="${template.imagePlaceholder.borderRadius}" 
+              ry="${template.imagePlaceholder.borderRadius}"
+            />
+          </svg>`),
+            blend: "dest-in",
+          },
+        ]);
+      }
+
+      // Tạo SVG cho text
+      const textSVG = `
+      <svg width="${template.frame.width}" height="${template.frame.height}">
+        ${
+          text?.title
+            ? `
+          <text 
+            x="${template.text.title.position.left}" 
+            y="${template.text.title.position.top}"
+            font-size="${template.text.title.fontSize}px"
+            fill="${template.text.title.color}"
+          >${text.title}</text>
+        `
+            : ""
+        }
+        ${
+          text?.description
+            ? `
+          <text 
+            x="${template.text.description.position.left}" 
+            y="${template.text.description.position.top}"
+            font-size="${template.text.description.fontSize}px"
+            fill="${template.text.description.color}"
+          >${text.description}</text>
+        `
+            : ""
+        }
+      </svg>
+    `;
+
+      // Composite tất cả lại với nhau
+      const finalImage = backgroundImage.composite([
+        {
+          input: await userImage.toBuffer(),
+          top: template.imagePlaceholder.position.top,
+          left: template.imagePlaceholder.position.left,
+        },
+        {
+          input: Buffer.from(textSVG),
+          top: 0,
+          left: 0,
+        },
+      ]);
+
+      // Optimize output
+      return finalImage.jpeg({ quality: 85, progressive: true }).toBuffer();
+    } catch (error) {
+      console.error("Error generating image:", error);
+      throw error;
     }
   }
 }
