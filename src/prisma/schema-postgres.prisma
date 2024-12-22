@@ -185,7 +185,7 @@ model UserBalance {
   id          String @id @default(cuid())
   userId      String @unique
   paidCredits Int
-  freeCredits Int    @default(10)
+  freeCredits Int    @default(30)
   usedCredits Int    @default(0)
 
   createdAt DateTime @default(now())

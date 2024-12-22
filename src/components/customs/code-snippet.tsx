@@ -14,6 +14,7 @@ const CodeSnippet = ({ children, className, ...rest }: IProps) => {
         language="html"
         customStyle={{
           margin: 0,
+          minWidth: 350,
         }}
         lineProps={{
           style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },

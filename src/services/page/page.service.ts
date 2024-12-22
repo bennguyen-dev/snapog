@@ -402,6 +402,31 @@ class PageService {
         };
       }
 
+      const balanceRes = await userBalanceService.getByUserId({
+        userId,
+      });
+
+      if (!balanceRes.data) {
+        return {
+          message: "User balance not found",
+          status: 404,
+          data: null,
+        };
+      }
+
+      const availableCredits =
+        balanceRes.data.paidCredits +
+        balanceRes.data.freeCredits -
+        balanceRes.data.usedCredits;
+
+      if (availableCredits < 1) {
+        return {
+          message: "Insufficient credits",
+          status: 400,
+          data: null,
+        };
+      }
+
       // Generate new screenshot
       const pageCrawlInfo = await scrapeService.scrapeInfo({
         url: page.url,
@@ -449,6 +474,12 @@ class PageService {
           OGTitle: pageCrawlInfo.data?.title,
           OGDescription: pageCrawlInfo.data?.description,
         },
+      });
+
+      // Deduct credit within same transaction
+      await userBalanceService.deductCredits({
+        userId,
+        amount: 1,
       });
 
       return {

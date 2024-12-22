@@ -98,7 +98,7 @@
   }
 
   .text-link {
-    @apply cursor-pointer text-blue-500 hover:underline active:underline;
+    @apply cursor-pointer leading-5 text-blue-500 hover:underline active:underline;
   }
 
   .icon {

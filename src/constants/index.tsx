@@ -69,4 +69,4 @@ export const IMAGE_TYPES = Object.freeze({
   },
 });
 
-export const DEFAULT_FREE_CREDIT = 10;
+export const DEFAULT_FREE_CREDIT = 30;

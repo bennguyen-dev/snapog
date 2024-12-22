@@ -210,8 +210,17 @@ export const ListPage = ({ siteId }: IProps) => {
                 onClick={() => {
                   confirmInvalidate({
                     title: "Invalidate cache",
-                    content:
-                      "Are you sure you want to invalidate cache for this page?",
+                    content: (
+                      <>
+                        <Typography affects="muted">
+                          Regenerating the image will cost{" "}
+                          <strong>1 credit</strong>. If you don’t see the
+                          updated image right away, check back in{" "}
+                          <strong>5 minutes</strong> to allow the cache to
+                          update. Are you sure you want to proceed?
+                        </Typography>
+                      </>
+                    ),
                     onConfirm: () => {
                       return handleInvalidateCache(page.id);
                     },
