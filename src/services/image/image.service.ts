@@ -151,77 +151,101 @@ class ImageService {
   }
 
   // Add frame
-  async addFrame({ config, image, text }: AddFrameImage) {
+  async addFrame({ config, image }: AddFrameImage) {
     try {
       // Lấy template config dựa trên templateId
       const template = config;
 
       // Đọc background image của template
       const backgroundImage = sharp(
-        `${process.cwd()}/src/assets/${template.frame.backgroundImage}`,
+        `${process.cwd()}/public/${template.frame.backgroundImage}`,
       ).resize(template.frame.width, template.frame.height, {
         fit: "cover",
         position: "center",
       });
 
       // Xử lý input image
-      const userImage = sharp(image).resize(
+      let imageBuffer: Buffer;
+
+      if (typeof image === "string" && image.startsWith("http")) {
+        // Nếu là URL, tải ảnh về
+        const response = await fetch(image);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        imageBuffer = Buffer.from(await response.arrayBuffer());
+      } else if (Buffer.isBuffer(image)) {
+        // Nếu là Buffer, sử dụng trực tiếp
+        imageBuffer = image;
+      } else if (typeof image === "string") {
+        // Nếu là local path
+        imageBuffer = Buffer.from(image);
+      } else {
+        throw new Error("Invalid image input: must be URL string or Buffer");
+      }
+
+      const userImage = sharp(imageBuffer).resize(
         template.imagePlaceholder.width,
         template.imagePlaceholder.height,
         {
           fit: "cover",
-          position: "center",
+          position: "top",
         },
       );
 
-      if (template.imagePlaceholder.borderRadius > 0) {
+      // Kiểm tra nếu có bất kỳ border radius nào
+      if (
+        template.imagePlaceholder.borderRadius?.topLeft ||
+        template.imagePlaceholder.borderRadius?.topRight ||
+        template.imagePlaceholder.borderRadius?.bottomLeft ||
+        template.imagePlaceholder.borderRadius?.bottomRight
+      ) {
+        // Lấy giá trị border radius cho từng góc
+        const borderRadiusTopLeft =
+          template.imagePlaceholder.borderRadius.topLeft || 0;
+        const borderRadiusTopRight =
+          template.imagePlaceholder.borderRadius.topRight || 0;
+        const borderRadiusBottomLeft =
+          template.imagePlaceholder.borderRadius.bottomLeft || 0;
+        const borderRadiusBottomRight =
+          template.imagePlaceholder.borderRadius.bottomRight || 0;
+
+        // Tạo SVG với cả shadow và border radius
+        const maskSVG = `
+        <svg>
+          <defs>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="${template.imagePlaceholder.shadow?.blur || 5}"/>
+              <feOffset dx="${template.imagePlaceholder.shadow?.offsetX || 0}" dy="${template.imagePlaceholder.shadow?.offsetY || 5}" result="offsetblur"/>
+              <feFlood flood-color="${template.imagePlaceholder.shadow?.color || "rgba(0,0,0,0.3)"}"/>
+              <feComposite in2="offsetblur" operator="in"/>
+              <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <path d="
+            M ${borderRadiusTopLeft} 0
+            H ${template.imagePlaceholder.width - borderRadiusTopRight}
+            Q ${template.imagePlaceholder.width} 0 ${template.imagePlaceholder.width} ${borderRadiusTopRight}
+            V ${template.imagePlaceholder.height - borderRadiusBottomRight}
+            Q ${template.imagePlaceholder.width} ${template.imagePlaceholder.height} ${template.imagePlaceholder.width - borderRadiusBottomRight} ${template.imagePlaceholder.height}
+            H ${borderRadiusBottomLeft}
+            Q 0 ${template.imagePlaceholder.height} 0 ${template.imagePlaceholder.height - borderRadiusBottomLeft}
+            V ${borderRadiusTopLeft}
+            Q 0 0 ${borderRadiusTopLeft} 0
+            Z
+          " fill="white" filter="url(#shadow)"/>
+        </svg>`;
+
         userImage.composite([
           {
-            input: Buffer.from(`
-          <svg>
-            <rect 
-              x="0" 
-              y="0" 
-              width="${template.imagePlaceholder.width}" 
-              height="${template.imagePlaceholder.height}" 
-              rx="${template.imagePlaceholder.borderRadius}" 
-              ry="${template.imagePlaceholder.borderRadius}"
-            />
-          </svg>`),
+            input: Buffer.from(maskSVG),
             blend: "dest-in",
           },
         ]);
       }
-
-      // Tạo SVG cho text
-      const textSVG = `
-      <svg width="${template.frame.width}" height="${template.frame.height}">
-        ${
-          text?.title
-            ? `
-          <text 
-            x="${template.text.title.position.left}" 
-            y="${template.text.title.position.top}"
-            font-size="${template.text.title.fontSize}px"
-            fill="${template.text.title.color}"
-          >${text.title}</text>
-        `
-            : ""
-        }
-        ${
-          text?.description
-            ? `
-          <text 
-            x="${template.text.description.position.left}" 
-            y="${template.text.description.position.top}"
-            font-size="${template.text.description.fontSize}px"
-            fill="${template.text.description.color}"
-          >${text.description}</text>
-        `
-            : ""
-        }
-      </svg>
-    `;
 
       // Composite tất cả lại với nhau
       const finalImage = backgroundImage.composite([
@@ -230,15 +254,10 @@ class ImageService {
           top: template.imagePlaceholder.position.top,
           left: template.imagePlaceholder.position.left,
         },
-        {
-          input: Buffer.from(textSVG),
-          top: 0,
-          left: 0,
-        },
       ]);
 
       // Optimize output
-      return finalImage.jpeg({ quality: 85, progressive: true }).toBuffer();
+      return finalImage.webp({ quality: 100 }).toBuffer();
     } catch (error) {
       console.error("Error generating image:", error);
       throw error;

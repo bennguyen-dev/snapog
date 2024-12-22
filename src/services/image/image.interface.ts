@@ -20,8 +20,8 @@ export interface IGetImageByImageLinkResponse {
 
 // add frame
 interface Shadow {
-  x: number;
-  y: number;
+  offsetX: number;
+  offsetY: number;
   blur: number;
   color: string;
 }
@@ -38,11 +38,18 @@ interface TextConfig {
   position: Position;
 }
 
+interface BorderRadius {
+  topLeft: number;
+  topRight: number;
+  bottomRight: number;
+  bottomLeft: number;
+}
+
 interface ImagePlaceholder {
   width: number;
   height: number;
   position: Position;
-  borderRadius: number;
+  borderRadius: BorderRadius;
   shadow: Shadow;
 }
 
@@ -66,7 +73,7 @@ export interface TemplateConfig {
 // Input từ người dùng
 export interface AddFrameImage {
   config: TemplateConfig;
-  image: Buffer;
+  image: string | Buffer;
   text?: {
     title?: string;
     description?: string;
