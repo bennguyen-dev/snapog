@@ -156,13 +156,28 @@ class ImageService {
       // Lấy template config dựa trên templateId
       const template = config;
 
-      // Đọc background image của template
-      const backgroundImage = sharp(
-        `${process.cwd()}/public/${template.frame.backgroundImage}`,
-      ).resize(template.frame.width, template.frame.height, {
-        fit: "cover",
-        position: "center",
-      });
+      // Fetch background image từ CDN thay vì đọc từ local
+      let backgroundBuffer: Buffer;
+      if (template.frame.backgroundImage.startsWith("http")) {
+        const response = await fetch(template.frame.backgroundImage);
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch background image: ${response.statusText}`,
+          );
+        }
+        backgroundBuffer = Buffer.from(await response.arrayBuffer());
+      } else {
+        throw new Error("Background image must be a URL");
+      }
+
+      const backgroundImage = sharp(backgroundBuffer).resize(
+        template.frame.width,
+        template.frame.height,
+        {
+          fit: "cover",
+          position: "center",
+        },
+      );
 
       // Xử lý input image
       let imageBuffer: Buffer;
