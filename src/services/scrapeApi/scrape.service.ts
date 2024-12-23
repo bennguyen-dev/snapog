@@ -12,6 +12,10 @@ class ScrapeService {
   }: IScraperInfo): Promise<IResponse<IScraperInfoResponse | null>> {
     console.time(`Execute time scrape api get info for ${url}`);
     const apiUrl = `${process.env.SCRAPE_API_URL}/api/scrape-info`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 45000); // 45 seconds timeout
 
     try {
       const res = await fetch(apiUrl, {
@@ -21,6 +25,7 @@ class ScrapeService {
         },
         cache: "no-store",
         body: JSON.stringify({ url }),
+        signal: controller.signal,
       });
 
       if (!res.ok) {
@@ -45,6 +50,14 @@ class ScrapeService {
     } catch (error) {
       console.error(`Error fetching info for ${url}:`, error);
 
+      if (error instanceof Error && error.name === "AbortError") {
+        return {
+          status: 408,
+          message: "Request timeout - operation took longer than 45 seconds",
+          data: null,
+        };
+      }
+
       return {
         status: 500,
         message:
@@ -52,6 +65,7 @@ class ScrapeService {
         data: null,
       };
     } finally {
+      clearTimeout(timeout);
       console.timeEnd(`Execute time scrape api get info for ${url}`);
     }
   }
