@@ -46,7 +46,7 @@ export const AuthSidebar = ({ className }: IProps) => {
               "overflow-hidden whitespace-nowrap text-xl font-bold transition-all duration-500",
             )}
           >
-            Snap OG
+            SnapOG
           </span>
         </Link>
       </div>

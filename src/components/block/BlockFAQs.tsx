@@ -14,12 +14,12 @@ export const BlockFAQs = () => {
       key: "question-1",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          What is Snap OG?
+          What is SnapOG?
         </Typography>
       ),
       content: (
         <Typography variant="p" className="text-muted-foreground">
-          Snap OG is a tool that allows you to generate open graph images for
+          SnapOG is a tool that allows you to generate open graph images for
           your website.
         </Typography>
       ),

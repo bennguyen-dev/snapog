@@ -7,7 +7,7 @@ export async function generateMetadata({
   params: { siteId: string };
 }) {
   return getMetadata({
-    title: "Manage Your Pages - Snap OG Dashboard",
+    title: "Manage Your Pages - SnapOG Dashboard",
     description:
       "Control and customize social previews for individual pages of your website.",
     path: `/dashboard/sites/${params.siteId}`,

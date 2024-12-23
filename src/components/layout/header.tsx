@@ -17,7 +17,7 @@ export const Header = async () => {
           <Link className="flex items-center space-x-2" href="/">
             <Image src="/logo.svg" alt="Logo" width={64} height={64} />
             <span className="hidden text-xl font-bold sm:inline-block">
-              Snap OG
+              SnapOG
             </span>
           </Link>
         </div>

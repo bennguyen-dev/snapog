@@ -3,7 +3,7 @@ import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Manage Your Sites - Snap OG Dashboard",
+    title: "Manage Your Sites - SnapOG Dashboard",
     description:
       "Manage and optimize social previews for all your websites in one place.",
     path: "/dashboard/sites",

@@ -44,7 +44,7 @@ export const AuthMobileNavbar = () => {
         <Link href="/" className="flex items-center space-x-2">
           <Image src="/logo.svg" alt="Logo" width={64} height={64} />
           <span className="overflow-hidden whitespace-nowrap text-xl font-bold">
-            Snap OG
+            SnapOG
           </span>
         </Link>
 

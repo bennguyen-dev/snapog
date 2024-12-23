@@ -16,7 +16,7 @@ export async function generateMetadata({
 
   return getMetadata({
     title: `See How ${domain} Could Look With Automated OG Images`,
-    description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference Snap OG makes in social sharing previews.`,
+    description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference SnapOG makes in social sharing previews.`,
     path: `/demo/${domain}`,
     keywords: [
       `${domain} social preview`,

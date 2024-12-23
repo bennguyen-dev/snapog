@@ -25,10 +25,10 @@ export async function generateMetadata() {
 
   return {
     ...getMetadata({ path: pathname || "" }),
-    applicationName: "Snap OG",
-    generator: "Snap OG",
+    applicationName: "SnapOG",
+    generator: "SnapOG",
     referrer: "origin-when-cross-origin",
-    authors: [{ name: "Snap OG", url: `https://${domain}` }],
+    authors: [{ name: "SnapOG", url: `https://${domain}` }],
     category: "Open Graph",
     keywords: [
       "Open Graph",
@@ -38,8 +38,8 @@ export async function generateMetadata() {
       "boost CTR",
       "engage social media",
       "OG images",
-      "Snap OG",
-      "Snap OG Generator",
+      "SnapOG",
+      "SnapOG Generator",
       "Social media optimization",
       "image automation tools",
       "enhance click-through rates",

@@ -6,8 +6,8 @@ import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Sign In - Snap OG",
-    description: "Sign in to your account to access all features of Snap OG.",
+    title: "Sign In - SnapOG",
+    description: "Sign in to your account to access all features of SnapOG.",
     path: "/signin",
   });
 }

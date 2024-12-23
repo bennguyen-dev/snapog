@@ -9,7 +9,7 @@ interface GenerateMetadataProps {
 }
 
 const defaultMetadata = {
-  siteName: "Snap OG",
+  siteName: "SnapOG",
   baseTitle: "Generate social media previews automatically",
   baseDescription:
     "Transform your social media presence with automated OG images. Boost engagement by up to 40% with AI-powered social previews.",

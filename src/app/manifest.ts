@@ -1,9 +1,9 @@
 export default function manifest() {
   return {
-    name: "Snap OG",
-    short_name: "Snap OG",
+    name: "SnapOG",
+    short_name: "SnapOG",
     description:
-      "Snap OG is a platform for generating social media previews automatically.",
+      "SnapOG is a platform for generating social media previews automatically.",
     icons: [
       {
         src: "/logo.png",

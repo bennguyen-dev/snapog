@@ -4,9 +4,9 @@ import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Try Snap OG Demo - See Your Website's Social Preview",
+    title: "Try SnapOG Demo - See Your Website's Social Preview",
     description:
-      "Experience the power of automated social previews. See how Snap OG can transform your website's social media appearance instantly.",
+      "Experience the power of automated social previews. See how SnapOG can transform your website's social media appearance instantly.",
     path: "/demo",
   });
 }
