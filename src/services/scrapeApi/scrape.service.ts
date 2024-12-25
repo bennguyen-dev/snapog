@@ -18,18 +18,28 @@ class ScrapeService {
     }, 45000); // 45 seconds timeout
 
     try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
+      const params = new URLSearchParams({ url });
+      const res = await fetch(`${apiUrl}?${params}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
-        body: JSON.stringify({ url }),
+        next: {
+          revalidate: 5 * 60, // 5 minutes
+        },
         signal: controller.signal,
       });
 
+      if (res.status === 404) {
+        return {
+          status: 404,
+          message: "Page not found",
+          data: null,
+        };
+      }
+
       if (!res.ok) {
-        throw new Error(`Failed to fetch screenshot: ${res.status}`);
+        throw new Error(`Failed to fetch page info: ${res.status}`);
       }
 
       const data = (await res?.json()).data;
@@ -79,18 +89,32 @@ class ScrapeService {
     console.time(`Execute time scrape api get internal links for ${url}`);
     const apiUrl = `${process.env.SCRAPE_API_URL}/api/scrape-internal-links`;
 
+    const params = new URLSearchParams({ url });
+    if (limit) {
+      params.append("limit", limit.toString());
+    }
+
     try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
+      const res = await fetch(`${apiUrl}?${params}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
-        body: JSON.stringify({ url, limit }),
+        next: {
+          revalidate: 5 * 60, // 5 minutes
+        },
       });
 
+      if (res.status === 404) {
+        return {
+          status: 404,
+          message: "Page not found",
+          data: null,
+        };
+      }
+
       if (!res.ok) {
-        throw new Error(`Failed to fetch screenshot: ${res.status}`);
+        throw new Error(`Failed to get internal links`);
       }
 
       const data = (await res?.json()).data;

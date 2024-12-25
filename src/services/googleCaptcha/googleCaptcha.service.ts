@@ -18,6 +18,7 @@ class GoogleCaptchaService {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
+          cache: "no-cache",
           body: `secret=${secretKey}&response=${gReCaptchaToken}`,
         },
       );
@@ -44,8 +45,7 @@ class GoogleCaptchaService {
       console.error(`Error verifying Google Captcha: ${error}`);
       return {
         status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
+        message: "Error verifying Google Captcha. Please try again later.",
         data: null,
       };
     }

@@ -117,8 +117,16 @@ class DemoService {
         limit: numberOfImages,
       });
 
+      if (linksRes.status === 404) {
+        return {
+          status: 404,
+          message: linksRes.message,
+          data: null,
+        };
+      }
+
       if (!linksRes.data) {
-        throw new Error("Failed to get internal links");
+        throw new Error(linksRes.message);
       }
 
       // Step 2: Get info of URLs
