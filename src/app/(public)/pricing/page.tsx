@@ -1,5 +1,6 @@
 import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
+import { BlockPricing } from "@/components/block/BlockPricing";
 import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
@@ -14,6 +15,7 @@ export async function generateMetadata() {
 export default function PricingPage() {
   return (
     <>
+      <BlockPricing />
       <BlockFAQs />
       <BlockGetStartedNow />
     </>
