@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cx } from "class-variance-authority";
 import { EyeIcon } from "lucide-react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCreateDemo } from "@/hooks";
-import { getDomainName } from "@/utils";
+import { cn, getDomainName } from "@/utils";
 
 const formSchema = z.object({
   url: z.string().min(1, {
@@ -83,7 +82,7 @@ export const InputDemo = ({ className }: IProps) => {
   return (
     <Form {...form}>
       <div
-        className={cx(
+        className={cn(
           "mt-8 flex w-full max-w-lg space-x-2 sm:mt-12",
           className,
         )}

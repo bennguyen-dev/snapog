@@ -1,4 +1,3 @@
-import { cx } from "class-variance-authority";
 import { Check } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { cn } from "@/utils";
 
 const PRICING_PLANS = [
   {
@@ -48,7 +48,7 @@ const PRICING_PLANS = [
     description: "For high-volume marketers with up to 1,000 images.",
     originalPrice: 149,
     price: 99,
-    credits: 1000,
+    credits: 1200,
     features: [
       "Bulk SEO-friendly images",
       "Advanced templates",
@@ -81,7 +81,7 @@ export const BlockPricing = async () => {
             return (
               <Card
                 key={plan.name}
-                className={cx(
+                className={cn(
                   plan.isPopular
                     ? "border-foreground/30 shadow-foreground/30"
                     : "",

@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
 
-import { cx } from "class-variance-authority";
 import { ArrowLeft, ArrowRight, InfoIcon, RotateCw } from "lucide-react";
 
 import Image from "next/image";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUrlWithoutProtocol } from "@/utils";
+import { cn, getUrlWithoutProtocol } from "@/utils";
 
 interface IProps {
   url?: string;
@@ -37,13 +36,13 @@ export const PreviewOgImage = ({
 
   return (
     <div
-      className={cx(
+      className={cn(
         "relative rounded-md border-2 border-border bg-background/80 p-1 pt-0",
         className,
       )}
     >
       {ribbon && (
-        <div className={cx("ribbon", ribbonClass)}>
+        <div className={cn("ribbon", ribbonClass)}>
           <span>{ribbon.content}</span>
         </div>
       )}
@@ -51,7 +50,7 @@ export const PreviewOgImage = ({
       <div className="my-2 flex items-center justify-between gap-4 pl-3 pr-1">
         <ArrowLeft className="h-5 w-5" />
         <ArrowRight className="h-5 w-5 text-neutral-300" />
-        <RotateCw className={cx("h-5 w-5", loading && "animate-spin")} />
+        <RotateCw className={cn("h-5 w-5", loading && "animate-spin")} />
         {loading ? (
           <Skeleton className="h-10 w-full rounded-full bg-muted" />
         ) : (
@@ -68,20 +67,20 @@ export const PreviewOgImage = ({
             src={image}
             width={1200}
             height={630}
-            className="aspect-og-facebook"
+            className="aspect-open-graph"
             alt={url || ""}
             unoptimized={image.startsWith("http") || image.startsWith("https")}
             priority
           />
         )}{" "}
         {!loading && !image && (
-          <div className="flex aspect-og-facebook h-full flex-col items-center justify-center bg-muted">
+          <div className="flex aspect-open-graph h-full flex-col items-center justify-center bg-muted">
             <InfoIcon className="mb-4 h-10 w-10 text-muted-foreground" />
             <p className="text-sm">You're missing an image 🙁</p>
           </div>
         )}
         {loading && (
-          <Skeleton className="aspect-og-facebook h-full rounded-none" />
+          <Skeleton className="aspect-open-graph h-full rounded-none" />
         )}
         <div className="border-t border-border bg-slate-200 px-4 py-3">
           <div className="truncate text-xs uppercase text-gray-600">

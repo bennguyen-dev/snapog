@@ -1,7 +1,5 @@
 "use client";
 
-import { cx } from "class-variance-authority";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,6 +11,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { PUBLIC_ROUTES } from "@/constants";
+import { cn } from "@/utils";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -24,7 +23,7 @@ export const Navbar = () => {
           <NavigationMenuItem key={route.title}>
             <Link href={route.href} legacyBehavior passHref>
               <NavigationMenuLink
-                className={cx(navigationMenuTriggerStyle(), "mx-4")}
+                className={cn(navigationMenuTriggerStyle(), "mx-4")}
                 active={pathname.includes(route.href)}
               >
                 {route.title}

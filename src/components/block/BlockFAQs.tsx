@@ -11,20 +11,6 @@ export const BlockFAQs = () => {
 
   const FAQs = [
     {
-      key: "question-1",
-      title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
-          What is SnapOG?
-        </Typography>
-      ),
-      content: (
-        <Typography variant="p" className="text-muted-foreground">
-          SnapOG is a tool that allows you to generate open graph images for
-          your website.
-        </Typography>
-      ),
-    },
-    {
       key: "question-2",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
@@ -86,20 +72,6 @@ export const BlockFAQs = () => {
         </Typography>
       ),
     },
-    // {
-    //   key: "question-4",
-    //   title: (
-    //     <Typography variant="h4" className="text-left text-base font-medium">
-    //       How does the authentication work? I don&apos;t see any API key.
-    //     </Typography>
-    //   ),
-    //   content: (
-    //     <Typography variant="p" className="text-muted-foreground">
-    //       An API key is not needed by design. We use the domain you added in the
-    //       admin panel to count the usage to your account.
-    //     </Typography>
-    //   ),
-    // },
     {
       key: "question-5",
       title: (

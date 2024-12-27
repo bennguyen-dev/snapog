@@ -87,7 +87,7 @@ const config = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       aspectRatio: {
-        "og-facebook": "1200 / 630",
+        "open-graph": "1200 / 630",
       },
     },
   },
