@@ -32,7 +32,7 @@ export const Header = async () => {
               redirect("/dashboard/sites");
             }}
           >
-            <Button>Dashboard</Button>
+            <Button className="h-11">Dashboard</Button>
           </form>
         ) : (
           <div className="flex items-center justify-between space-x-2 md:justify-end">

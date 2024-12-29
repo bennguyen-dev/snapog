@@ -32,7 +32,7 @@ export const PreviewOgImage = ({
   const domain = url && new URL(url).hostname;
 
   const ribbonClass =
-    ribbon?.type === "error" ? "ribbon-error" : "ribbon-success";
+    ribbon?.type === "error" ? "ribbon-error" : "ribbon-primary";
 
   return (
     <div
@@ -67,20 +67,20 @@ export const PreviewOgImage = ({
             src={image}
             width={1200}
             height={630}
-            className="aspect-open-graph"
+            className="aspect-[1200/630]"
             alt={url || ""}
             unoptimized={image.startsWith("http") || image.startsWith("https")}
             priority
           />
         )}{" "}
         {!loading && !image && (
-          <div className="flex aspect-open-graph h-full flex-col items-center justify-center bg-muted">
+          <div className="flex aspect-[1200/630] h-full flex-col items-center justify-center bg-muted">
             <InfoIcon className="mb-4 h-10 w-10 text-muted-foreground" />
             <p className="text-sm">You're missing an image 🙁</p>
           </div>
         )}
         {loading && (
-          <Skeleton className="aspect-open-graph h-full rounded-none" />
+          <Skeleton className="aspect-[1200/630] h-full rounded-none" />
         )}
         <div className="border-t border-border bg-slate-200 px-4 py-3">
           <div className="truncate text-xs uppercase text-gray-600">

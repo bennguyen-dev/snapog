@@ -24,7 +24,7 @@ export const SlackPreview = ({
           <p className="line-clamp-2 text-sm text-gray-700">{description}</p>
           <p className="mt-1 text-xs text-gray-500">{siteName}</p>
         </div>
-        <div className="relative aspect-open-graph">
+        <div className="relative aspect-[1200/630]">
           {image ? (
             <Image
               src={image}

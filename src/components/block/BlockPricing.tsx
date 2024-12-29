@@ -82,9 +82,7 @@ export const BlockPricing = async () => {
               <Card
                 key={plan.name}
                 className={cn(
-                  plan.isPopular
-                    ? "border-foreground/30 shadow-foreground/30"
-                    : "",
+                  plan.isPopular ? "border-primary/30 shadow-primary/30" : "",
                   "relative shadow-xl",
                 )}
               >
@@ -120,7 +118,7 @@ export const BlockPricing = async () => {
                     )}
                   </div>
                   <div className="mt-2">
-                    <div className="text-lg font-semibold text-blue-600">
+                    <div className="text-lg font-semibold text-primary">
                       {plan.credits} credits
                     </div>
                     <div className="mt-1 text-sm text-gray-500">

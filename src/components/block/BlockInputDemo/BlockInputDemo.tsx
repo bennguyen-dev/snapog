@@ -18,36 +18,37 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
     <section
       className={cn(
         "container relative grid grid-cols-1 gap-8 py-8 sm:py-16",
-        hidePreview ? "max-w-screen-lg" : "sm:grid-cols-2",
+        hidePreview ? "max-w-screen-lg" : "sm:grid-cols-10",
       )}
     >
       <div
         className={cn(
-          "flex flex-col justify-center align-middle",
+          "col-span-5 flex flex-col justify-center align-middle xl:col-span-6",
           hidePreview ? "items-center text-center" : "",
         )}
       >
         <Typography
           variant="h1"
-          className="mb-2 text-2xl sm:text-xl md:text-3xl xl:text-5xl"
+          className="mb-2 break-keep text-2xl sm:text-xl lg:text-3xl xl:text-5xl xl:leading-tight"
         >
-          Automate your open-graph: Dynamic screenshots by URL, zero code
+          Automate your open-graph: <br />
+          Dynamic screenshots by URL,
+          <br className={cn(hidePreview ? "hidden" : "")} />
+          zero code
         </Typography>
-        <Typography
-          className={cn("lg:text-xl", hidePreview ? "max-w-screen-md" : "")}
-        >
+        <Typography className="max-w-screen-md lg:text-xl">
           Turn any URL into engaging social previews instantly. Auto-generate OG
           screenshots without code.
         </Typography>
 
         <GoogleCaptchaProvider>
           <ReactQueryProvider>
-            <InputDemo className="sm:max-lg:absolute sm:max-lg:bottom-2 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+            <InputDemo className="sm:max-lg:absolute sm:max-lg:-bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
           </ReactQueryProvider>
         </GoogleCaptchaProvider>
       </div>
       {!hidePreview && (
-        <div className="self-center ">
+        <div className="col-span-5 self-center xl:col-span-4">
           <div className="ml-auto grid grid-cols-5 gap-4 2xl:gap-8">
             <div className="col-span-3 max-lg:hidden">
               <FacebookPreview

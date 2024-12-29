@@ -94,6 +94,7 @@ export const InputDemo = ({ className }: IProps) => {
             <FormItem className="flex-1 text-left">
               <FormControl>
                 <Input
+                  className="xl:h-11"
                   title="Enter your website URL to see a live demo:"
                   type="text"
                   placeholder="yoursite.com"
@@ -112,6 +113,7 @@ export const InputDemo = ({ className }: IProps) => {
         />
         <Button
           type="submit"
+          className="xl:h-11"
           onClick={form.handleSubmit(onViewDemo)}
           icon={<EyeIcon className="icon" />}
           loading={creating}

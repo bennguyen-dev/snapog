@@ -17,7 +17,7 @@ export const DiscordPreview = ({
   return (
     <Link href={url} className="no-underline">
       <div className="overflow-hidden rounded-md bg-[#2f3136]">
-        <div className="relative aspect-open-graph">
+        <div className="relative aspect-[1200/630]">
           {image ? (
             <Image
               src={image}

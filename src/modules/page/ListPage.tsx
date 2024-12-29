@@ -164,7 +164,7 @@ export const ListPage = ({ siteId }: IProps) => {
               src={row.original.imageSrc}
               width={120}
               height={62}
-              className="aspect-open-graph max-w-40 cursor-pointer rounded"
+              className="aspect-[1200/630] max-w-40 cursor-pointer rounded"
               alt={row.original.url}
             />
           );

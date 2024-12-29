@@ -16,8 +16,8 @@ export const FacebookPreview = ({
 
   return (
     <Link href={url} target="_blank" className="no-underline">
-      <div className="overflow-hidden rounded-lg border border-gray-300">
-        <div className="relative aspect-open-graph">
+      <div className="overflow-hidden rounded-lg border border-gray-300 drop-shadow">
+        <div className="relative aspect-[1200/630]">
           {image ? (
             <Image
               src={image}
