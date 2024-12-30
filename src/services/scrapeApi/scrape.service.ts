@@ -30,10 +30,10 @@ class ScrapeService {
         signal: controller.signal,
       });
 
-      if (res.status === 404) {
+      if (res.status === 400) {
         return {
-          status: 404,
-          message: "Page not found",
+          status: 400,
+          message: (await res.json()).message,
           data: null,
         };
       }

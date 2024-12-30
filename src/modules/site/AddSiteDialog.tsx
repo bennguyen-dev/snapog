@@ -73,6 +73,7 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
             variant: "success",
             title: data.message,
           });
+          onCancel();
         },
         onError(data) {
           toast({ variant: "destructive", title: data.message });
