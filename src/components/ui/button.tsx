@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 gap-2",
   {
     variants: {
       variant: {
@@ -65,8 +65,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {loading && <Loader2 className="icon mr-2 animate-spin" />}
-        {icon && !loading && <span className="mr-2">{icon}</span>}
+        {loading && <Loader2 className="icon animate-spin" />}
+        {icon && !loading && icon}
         <Slottable>{children}</Slottable>
       </Comp>
     );

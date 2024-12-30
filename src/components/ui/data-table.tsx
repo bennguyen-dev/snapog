@@ -62,9 +62,9 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody className={cn(loading && "pointer-events-none", "relative")}>
           {loading && (
-            <TableRow className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-primary-foreground/70">
+            <TableRow className="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-primary-foreground/70">
               <TableCell colSpan={columns.length}>
-                <Loader2 className="icon animate-spin" />
+                <Loader2 className="icon animate-spin text-primary" />
               </TableCell>
             </TableRow>
           )}

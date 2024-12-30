@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { CodeSnippet } from "@/components/customs/code-snippet";
+import { CodeBlock } from "@/components/ui/code-block";
 import { Typography } from "@/components/ui/typography";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
@@ -29,13 +29,17 @@ export const BlockHowItWorks = () => {
       </Typography>
 
       {domain && (
-        <CodeSnippet className="w-full sm:w-fit">
-          {getSnippetHowToUse({
-            host: domain,
-            domain: "yourwebsite.com",
-            apiKey: "<api_key>",
-          })}
-        </CodeSnippet>
+        <div className="w-full sm:w-fit">
+          <CodeBlock
+            language="html"
+            filename="index.html"
+            code={getSnippetHowToUse({
+              host: domain,
+              domain: "yourwebsite.com",
+              apiKey: "<api_key>",
+            })}
+          />
+        </div>
       )}
 
       {domain && (
