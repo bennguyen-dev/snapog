@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 
 import Link from "next/link";
 
-import { CodeSnippet } from "@/components/customs/code-snippet";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CodeBlock } from "@/components/ui/code-block";
 import { DataTable } from "@/components/ui/data-table";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
@@ -97,13 +97,15 @@ export const ListSite = () => {
                   {urlExample}
                 </Link>
               </Typography>
-              <CodeSnippet>
-                {getSnippetHowToUse({
+              <CodeBlock
+                language="html"
+                filename="index.html"
+                code={getSnippetHowToUse({
                   host: window.location.host,
                   domain: site.domain,
                   apiKey: session?.user?.apiKey,
                 })}
-              </CodeSnippet>
+              />
             </>
           );
         },
@@ -189,7 +191,9 @@ export const ListSite = () => {
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href="/dashboard/sites">Home</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -198,14 +202,14 @@ export const ListSite = () => {
         </BreadcrumbList>
       </Breadcrumb>
       <Card>
-        <CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
-          <div className="flex flex-col space-y-1.5 max-md:w-full">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 sm:items-start">
+          <div className="flex flex-col space-y-1.5">
             <CardTitle>Sites</CardTitle>
-            <CardDescription>
+            <CardDescription className="max-sm:hidden">
               List of sites where you can use social images
             </CardDescription>
           </div>
-          <div className="flex items-center justify-end gap-4 max-md:w-full">
+          <div className="flex items-center justify-end gap-2 sm:gap-4">
             <Button
               variant="outline"
               onClick={async () => {
@@ -214,7 +218,7 @@ export const ListSite = () => {
               icon={<RefreshCw className="icon" />}
               loading={fetching}
             >
-              Refresh
+              <span className="max-sm:hidden">Refresh</span>
             </Button>
             <Button
               onClick={() => {
@@ -222,7 +226,7 @@ export const ListSite = () => {
               }}
               icon={<Plus className="icon" />}
             >
-              Add site
+              <span className="max-sm:hidden">Add site</span>
             </Button>
           </div>
         </CardHeader>

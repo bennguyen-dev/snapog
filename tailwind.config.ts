@@ -86,9 +86,6 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
-      aspectRatio: {
-        "open-graph": "1200 / 630",
-      },
     },
   },
   plugins: [require("tailwindcss-animate")],

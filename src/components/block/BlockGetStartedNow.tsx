@@ -20,7 +20,7 @@ export const BlockGetStartedNow = async () => {
       <Typography variant="p" className="mb-4 text-center">
         Automate your open-graph social images today!
       </Typography>
-      <Button id="getStartedNow">
+      <Button id="getStartedNow" className="h-11">
         Get Started Now <ArrowRight className="ml-2" />
       </Button>
     </form>

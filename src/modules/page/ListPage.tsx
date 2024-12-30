@@ -164,7 +164,7 @@ export const ListPage = ({ siteId }: IProps) => {
               src={row.original.imageSrc}
               width={120}
               height={62}
-              className="aspect-open-graph max-w-40 cursor-pointer rounded"
+              className="aspect-[1200/630] max-w-40 cursor-pointer rounded"
               alt={row.original.url}
             />
           );
@@ -298,8 +298,8 @@ export const ListPage = ({ siteId }: IProps) => {
       </Breadcrumb>
 
       <Card>
-        <CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
-          <div className="flex flex-col space-y-1.5 max-md:w-full">
+        <CardHeader className="flex flex-row items-start justify-between space-y-0">
+          <div className="flex flex-col space-y-1.5">
             <CardTitle>Pages</CardTitle>
             <CardDescription>
               List of pages for the site{" "}
@@ -317,14 +317,14 @@ export const ListPage = ({ siteId }: IProps) => {
               )}
             </CardDescription>
           </div>
-          <div className="flex items-center justify-end gap-4 max-md:w-full">
+          <div className="flex items-center justify-end gap-4">
             <Button
               variant="outline"
               onClick={() => getPages()}
               icon={<RefreshCw className="icon" />}
               loading={fetching}
             >
-              Refresh
+              <span className="max-sm:hidden">Refresh</span>
             </Button>
           </div>
         </CardHeader>

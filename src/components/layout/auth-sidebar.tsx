@@ -70,9 +70,9 @@ export const AuthSidebar = ({ className }: IProps) => {
                           <Link
                             href={item.disabled ? "/" : item.href}
                             className={cn(
-                              "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-accent hover:text-accent-foreground",
+                              "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
                               path.includes(item.href)
-                                ? "bg-accent"
+                                ? "bg-primary/5 text-primary"
                                 : "transparent",
                               item.disabled && "cursor-not-allowed opacity-80",
                             )}
