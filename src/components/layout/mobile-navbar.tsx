@@ -62,8 +62,10 @@ export const MobileNavbar = () => {
               href={route.disabled ? "/" : route.href}
               onClick={() => setOpen(false)}
               className={cn(
-                "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-accent hover:text-accent-foreground",
-                pathname.includes(route.href) ? "bg-accent" : "transparent",
+                "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
+                pathname.includes(route.href)
+                  ? "bg-primary/5 text-primary"
+                  : "transparent",
                 route.disabled && "cursor-not-allowed opacity-80",
               )}
             >

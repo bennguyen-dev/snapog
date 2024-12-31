@@ -29,12 +29,13 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
       >
         <Typography
           variant="h1"
-          className="mb-2 break-keep text-2xl sm:text-xl lg:text-3xl xl:text-5xl xl:leading-tight"
+          className="mb-2 break-keep bg-gradient-to-br from-secondary via-primary to-secondary bg-clip-text text-2xl sm:text-xl lg:text-3xl xl:text-5xl xl:leading-tight"
         >
-          Automate your open-graph: <br />
-          Dynamic screenshots by URL,
+          <span className="bg-clip-text text-transparent">Automate </span>
+          your open-graph: <br />
+          <span className="text-transparent">Dynamic screenshots </span>by URL,
           <br className={cn(hidePreview ? "hidden" : "")} />
-          zero code
+          <span className="text-transparent">zero code</span>
         </Typography>
         <Typography className="max-w-screen-md lg:text-xl">
           Turn any URL into engaging social previews instantly. Auto-generate OG

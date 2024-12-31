@@ -32,7 +32,7 @@ export const Header = async () => {
               redirect("/dashboard/sites");
             }}
           >
-            <Button className="h-11">Dashboard</Button>
+            <Button className="sm:h-11">Dashboard</Button>
           </form>
         ) : (
           <div className="flex items-center justify-between space-x-2 md:justify-end">
@@ -42,7 +42,7 @@ export const Header = async () => {
                 redirect("/signin");
               }}
             >
-              <Button type="submit" id="getStarted">
+              <Button className="sm:h-11" type="submit" id="getStarted">
                 Get Started
               </Button>
             </form>
