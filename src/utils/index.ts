@@ -89,3 +89,15 @@ export function getLinkSmartOGImage({
 }) {
   return `https://${host}/api/get?api_key=${apiKey}&url=${getUrlWithoutProtocol(url)}`;
 }
+
+export function formatPrice(priceInCents: string, currency: string = "USD") {
+  const price = parseFloat(priceInCents);
+  const dollars = price / 100;
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    // Use minimumFractionDigits to handle cases like $59.00 -> $59
+    minimumFractionDigits: dollars % 1 !== 0 ? 2 : 0,
+  }).format(dollars);
+}

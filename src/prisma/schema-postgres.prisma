@@ -195,3 +195,26 @@ model UserBalance {
 
   @@index([userId])
 }
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isRecurring Boolean  @default(false)
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  polarId         String    @unique
+  polarCreatedAt  DateTime
+  polarModifiedAt DateTime?
+  lastSyncedAt    DateTime  @default(now())
+
+  priceAmount   Int
+  priceCurrency String
+  priceType     String
+
+  creditsAmount Int
+
+  benefits Json[]
+}

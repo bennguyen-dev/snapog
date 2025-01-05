@@ -70,3 +70,20 @@ export const IMAGE_TYPES = Object.freeze({
 });
 
 export const DEFAULT_FREE_CREDIT = 30;
+
+export const DEFAULT_FEATURES_PRODUCT = {
+  FREE: [
+    "SEO-friendly Open Graph images",
+    "Premium templates access",
+    "Optimized for social media",
+    "Real-time image creation",
+    "30-day storage",
+  ],
+  PREMIUM: [
+    "Bulk SEO-friendly images",
+    "Advanced templates",
+    "Social media optimized sizes",
+    "Real-time generation",
+    "30-day storage",
+  ],
+};

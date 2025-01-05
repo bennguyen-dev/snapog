@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { DEFAULT_FEATURES_PRODUCT } from "@/constants";
 import { cn } from "@/utils";
 
 const PRICING_PLANS = [
@@ -20,13 +21,7 @@ const PRICING_PLANS = [
       "Free plan with 30 Open Graph images to kickstart your project.",
     price: 0,
     credits: 30,
-    features: [
-      "SEO-friendly Open Graph images",
-      "All templates included",
-      "Social media optimized sizes",
-      "Real-time image generation",
-      "30-day storage",
-    ],
+    features: DEFAULT_FEATURES_PRODUCT.FREE,
   },
   {
     name: "Growth Pack",
@@ -34,13 +29,7 @@ const PRICING_PLANS = [
     originalPrice: 29,
     price: 19,
     credits: 200,
-    features: [
-      "SEO-friendly Open Graph images",
-      "Premium templates access",
-      "Optimized for social media",
-      "Real-time image creation",
-      "30-day storage",
-    ],
+    features: DEFAULT_FEATURES_PRODUCT.FREE,
     isPopular: true,
   },
   {
@@ -49,13 +38,7 @@ const PRICING_PLANS = [
     originalPrice: 149,
     price: 99,
     credits: 1200,
-    features: [
-      "Bulk SEO-friendly images",
-      "Advanced templates",
-      "Social media optimized sizes",
-      "Real-time generation",
-      "30-day storage",
-    ],
+    features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
   },
 ];
 export const BlockPricing = async () => {
