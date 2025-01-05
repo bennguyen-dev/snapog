@@ -15,10 +15,14 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { PUBLIC_ROUTES } from "@/constants";
+import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/constants";
 import { cn } from "@/utils";
 
-export const MobileNavbar = () => {
+interface IProps {
+  isAuth?: boolean;
+}
+
+export const MobileNavbar = ({ isAuth }: IProps) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -40,36 +44,52 @@ export const MobileNavbar = () => {
         </SheetTrigger>
         <div className="md:hidden">
           <Link className="flex items-center space-x-2" href="/">
-            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+            <Image src="/logo.png" alt="Logo" width={64} height={64} />
           </Link>
         </div>
       </div>
 
       <SheetContent side="left">
         <SheetHeader>
-          <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
-            <span className="overflow-hidden whitespace-nowrap text-xl font-bold">
-              SnapOG
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="mb-4 flex items-center space-x-2 py-2 pl-3"
+          >
+            <Image src="/logo.png" alt="Logo" width={64} height={64} />
+            <span className="overflow-hidden whitespace-nowrap text-xl font-bold text-primary">
+              Snap<span className="text-secondary">OG</span>
             </span>
           </Link>
         </SheetHeader>
 
         <nav className="grid items-start gap-2">
-          {PUBLIC_ROUTES?.map((route) => (
+          {!isAuth && (
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className={cn(
+                "flex items-center gap-2 overflow-hidden rounded-md p-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
+                pathname === "/" ? "bg-primary/5 text-primary" : "transparent",
+              )}
+            >
+              <span className="truncate">Home</span>
+            </Link>
+          )}
+          {(isAuth ? AUTH_ROUTES : PUBLIC_ROUTES)?.map((route) => (
             <Link
               key={route.title}
               href={route.disabled ? "/" : route.href}
               onClick={() => setOpen(false)}
               className={cn(
-                "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
+                "flex items-center gap-2 overflow-hidden rounded-md p-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
                 pathname.includes(route.href)
                   ? "bg-primary/5 text-primary"
                   : "transparent",
                 route.disabled && "cursor-not-allowed opacity-80",
               )}
             >
-              <span className="ml-4">{route.icon}</span>
+              {route.icon && <span>{route.icon}</span>}
               <span className="truncate">{route.title}</span>
             </Link>
           ))}

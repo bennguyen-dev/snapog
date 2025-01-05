@@ -7,7 +7,7 @@ export const BlockBenefit = () => {
     <section className="container flex flex-col items-center justify-center py-8 sm:py-16">
       <Typography
         variant="h2"
-        className="mb-16 text-center font-serif text-4xl font-normal"
+        className="mb-8 text-center font-serif text-3xl font-normal md:mb-16 md:text-4xl"
       >
         Benefits
       </Typography>

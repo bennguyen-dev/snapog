@@ -37,16 +37,16 @@ export const AuthSidebar = ({ className }: IProps) => {
         className,
       )}
     >
-      <div className="hidden px-4 pt-4 md:block">
+      <div className="mt-4 hidden p-4 md:block">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+          <Image src="/logo.png" alt="Logo" width={64} height={64} />
           <span
             className={cn(
               isMinimized && "w-0 opacity-0",
-              "overflow-hidden whitespace-nowrap text-xl font-bold transition-all duration-500",
+              "overflow-hidden whitespace-nowrap text-2xl font-bold text-primary transition-all duration-500",
             )}
           >
-            SnapOG
+            Snap<span className="text-secondary">OG</span>
           </span>
         </Link>
       </div>
@@ -58,7 +58,7 @@ export const AuthSidebar = ({ className }: IProps) => {
         onClick={handleToggle}
       />
       <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
+        <div className="px-3">
           <div className="space-y-1">
             <nav className="grid items-start gap-2">
               <TooltipProvider>

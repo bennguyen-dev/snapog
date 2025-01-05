@@ -59,14 +59,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo.png" />
-        <link rel="mask-icon" href="/logo.svg" color="#0f172a" />
+        <link rel="mask-icon" href="/logo.svg" color="#FFFFFF" />
         <link rel="shortcut icon" href="/logo.png" />
         <link rel="text/plain" href="/humans.txt" />
-        <meta name="msvalidate.01" content="D1936DE08B1AC89E9415E9603037BD5C" />
       </Head>
       <body
         className={cn(
