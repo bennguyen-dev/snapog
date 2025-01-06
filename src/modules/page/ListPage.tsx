@@ -41,7 +41,7 @@ import {
   EditPageDialog,
   IEditPageDialogRef,
 } from "@/modules/page/EditPageDialog";
-import { getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
+import { formatDate, getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
 
 interface IProps {
   siteId: string;
@@ -191,7 +191,7 @@ export const ListPage = ({ siteId }: IProps) => {
           }
           return (
             <Typography affects="muted">
-              {new Date(row.original?.imageExpiresAt).toLocaleString()}
+              {formatDate(row.original?.imageExpiresAt)}
             </Typography>
           );
         },

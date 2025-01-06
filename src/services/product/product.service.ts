@@ -1,13 +1,15 @@
-import {
-  BenefitLicenseKeys,
-  ProductPriceOneTimeFixed,
-} from "@polar-sh/sdk/models/components";
-import { PrismaClient, Product } from "@prisma/client";
+import { ProductPriceOneTimeFixed } from "@polar-sh/sdk/models/components";
+import { Product } from "@prisma/client";
 
+import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
 import { polarApi } from "@/lib/polar";
+import {
+  IGetCheckoutUrl,
+  IGetCheckoutUrlResponse,
+  IGetProductBy,
+} from "@/services/product";
 import { IResponse } from "@/types/global";
-
-const prisma = new PrismaClient();
 
 class ProductService {
   async syncProducts(): Promise<IResponse<Product[] | null>> {
@@ -24,9 +26,6 @@ class ProductService {
             (price) =>
               price.type === "one_time" && price.amountType === "fixed",
           ) as ProductPriceOneTimeFixed;
-          const license = product.benefits.find(
-            (benefit) => benefit.type === "license_keys",
-          ) as BenefitLicenseKeys;
 
           return prisma.product.upsert({
             where: { polarId: product.id },
@@ -41,7 +40,7 @@ class ProductService {
               priceAmount: price.priceAmount,
               priceCurrency: price.priceCurrency,
               priceType: price.type,
-              creditsAmount: license?.properties.limitUsage || 0,
+              creditsAmount: 0,
               benefits: product.benefits,
               lastSyncedAt: new Date(),
             },
@@ -58,7 +57,7 @@ class ProductService {
               priceAmount: price.priceAmount,
               priceCurrency: price.priceCurrency,
               priceType: price.type || "one_time",
-              creditsAmount: license?.properties.limitUsage || 0,
+              creditsAmount: 0,
               benefits: product.benefits,
               lastSyncedAt: new Date(),
             },
@@ -99,6 +98,78 @@ class ProductService {
         data: null,
         status: 500,
         message: "Failed to get products",
+      };
+    }
+  }
+
+  async getCheckoutUrl({
+    productId,
+  }: IGetCheckoutUrl): Promise<IResponse<IGetCheckoutUrlResponse | null>> {
+    try {
+      const session = await auth();
+      const product = await prisma.product.findUnique({
+        where: { id: productId },
+      });
+
+      if (!product) {
+        return {
+          data: null,
+          status: 404,
+          message: "Product not found",
+        };
+      }
+
+      const checkoutUrl = await polarApi.checkouts.custom.create({
+        successUrl: `https://${process.env.NEXT_PUBLIC_VERCEL_DOMAIN}/payment/success?checkoutId={CHECKOUT_ID}`,
+        productId: product.polarId,
+        customerEmail: session?.user.email,
+      });
+
+      return {
+        data: {
+          checkoutUrl: checkoutUrl.url,
+        },
+        status: 200,
+        message: "Checkout URL fetched successfully",
+      };
+    } catch (error) {
+      console.error(`Failed to get checkout URL: ${error}`);
+      return {
+        data: null,
+        status: 500,
+        message: "Failed to get checkout URL",
+      };
+    }
+  }
+
+  async getProductBy({
+    id,
+    polarId,
+  }: IGetProductBy): Promise<IResponse<Product | null>> {
+    try {
+      const product = await prisma.product.findFirst({
+        where: { id, polarId },
+      });
+
+      if (!product) {
+        return {
+          data: null,
+          status: 404,
+          message: "Product not found",
+        };
+      }
+
+      return {
+        data: product,
+        status: 200,
+        message: "Product fetched successfully",
+      };
+    } catch (error) {
+      console.error(`Failed to get product: ${error}`);
+      return {
+        data: null,
+        status: 500,
+        message: "Failed to get product",
       };
     }
   }

@@ -36,7 +36,7 @@ import {
   IAddSiteDialogRef,
   IEditSiteDialogRef,
 } from "@/modules/site";
-import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
+import { formatDate, getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
 export const ListSite = () => {
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
@@ -123,7 +123,7 @@ export const ListSite = () => {
           }
           return (
             <Typography affects="muted">
-              {new Date(row.original?.createdAt).toLocaleString()}
+              {formatDate(row.original?.createdAt)}
             </Typography>
           );
         },

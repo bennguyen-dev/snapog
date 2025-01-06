@@ -3,7 +3,6 @@
 import { Product } from "@prisma/client";
 import { Check } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DEFAULT_FEATURES_PRODUCT } from "@/constants";
+import { ButtonBuyNow } from "@/modules/credits/CardProducts/ButtonBuyNow";
 import { formatPrice } from "@/utils";
 
 interface IProps {
@@ -30,10 +30,7 @@ export const CardProducts = ({ products }: IProps) => {
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
         {products.map((product) => {
-          const price = formatPrice(
-            product.priceAmount.toString(),
-            product.priceCurrency,
-          );
+          const price = formatPrice(product.priceAmount, product.priceCurrency);
 
           return (
             <Card key={product.name}>
@@ -77,7 +74,9 @@ export const CardProducts = ({ products }: IProps) => {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">Buy Now</Button>
+                <ButtonBuyNow className="w-full" productId={product.id}>
+                  Buy now
+                </ButtonBuyNow>
               </CardFooter>
             </Card>
           );
