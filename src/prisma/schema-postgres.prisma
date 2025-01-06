@@ -24,9 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sites     Site[]
-  balance   UserBalance?
-  purchases PurchaseHistory[]
+  sites   Site[]
+  balance UserBalance?
 
   @@index([email])
   @@index([apiKey])
@@ -149,36 +148,6 @@ model DemoPage {
   demo Demo @relation(fields: [demoId], references: [id])
 
   @@unique([demoId, url])
-}
-
-model Purchase {
-  id           String  @id @default(cuid())
-  name         String
-  description  String?
-  creditAmount Int
-  price        Float
-  active       Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  purchaseHistories PurchaseHistory[]
-}
-
-model PurchaseHistory {
-  id           String @id @default(cuid())
-  userId       String
-  purchaseId   String
-  paidAmount   Float
-  creditAmount Int
-
-  createdAt DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  purchase Purchase @relation(fields: [purchaseId], references: [id])
-
-  @@index([userId])
-  @@index([purchaseId])
 }
 
 model UserBalance {

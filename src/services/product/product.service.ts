@@ -147,7 +147,7 @@ class ProductService {
     polarId,
   }: IGetProductBy): Promise<IResponse<Product | null>> {
     try {
-      const product = await prisma.product.findFirst({
+      const product = await prisma.product.findUnique({
         where: { id, polarId },
       });
 
