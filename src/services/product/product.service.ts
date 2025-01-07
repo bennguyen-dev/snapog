@@ -123,6 +123,10 @@ class ProductService {
         successUrl: `https://${process.env.NEXT_PUBLIC_VERCEL_DOMAIN}/payment/success?checkoutId={CHECKOUT_ID}`,
         productId: product.polarId,
         customerEmail: session?.user.email,
+        metadata: {
+          userId: session?.user.id,
+          productId: product.id,
+        },
       });
 
       return {
