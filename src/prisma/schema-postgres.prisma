@@ -187,3 +187,16 @@ model Product {
 
   benefits Json[]
 }
+
+model WebhookEvent {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  eventName       String
+  processed       Boolean  @default(false)
+  body            Json
+  processingError String?
+  checkoutId      String?
+  checkoutStatus  String?
+
+  @@index([checkoutId])
+}
