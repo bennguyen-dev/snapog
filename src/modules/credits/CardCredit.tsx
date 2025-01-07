@@ -73,7 +73,6 @@ export const CardCredit = () => {
             <li>Each new page creation uses 1 credit</li>
             <li>Updating existing page images is free</li>
             <li>Free credits are used after paid credits are depleted</li>
-            {/*<li>Purchase more credits when running low</li>*/}
           </ul>
         </div>
 

@@ -6,6 +6,7 @@ import {
   ICreateUserBalance,
   IDeductCredits,
   IGetUserBalanceByUserId,
+  IIncrementPaidCredits,
   IUpdateUserBalance,
 } from "@/services/userBalance";
 import { IResponse } from "@/types/global";
@@ -145,6 +146,47 @@ class UserBalanceService {
       return {
         data: null,
         message: "Failed to deduct credits",
+        status: 500,
+      };
+    }
+  }
+
+  async incrementPaidCredits({
+    userId,
+    amount,
+  }: IIncrementPaidCredits): Promise<IResponse<UserBalance | null>> {
+    try {
+      // Get current balance
+      const currentBalance = await prisma.userBalance.findUnique({
+        where: { userId },
+      });
+
+      if (!currentBalance) {
+        return {
+          data: null,
+          message: "User balance not found",
+          status: 404,
+        };
+      }
+
+      // Update the balance
+      const updatedBalance = await prisma.userBalance.update({
+        where: { userId },
+        data: {
+          paidCredits: currentBalance.paidCredits + amount,
+        },
+      });
+
+      return {
+        data: updatedBalance,
+        message: "Paid credits incremented successfully",
+        status: 200,
+      };
+    } catch (error) {
+      console.error("Error incrementing paid credits:", error);
+      return {
+        data: null,
+        message: "Failed to increment paid credits",
         status: 500,
       };
     }
