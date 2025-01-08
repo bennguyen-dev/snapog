@@ -1,5 +1,8 @@
 "use client";
 
+import { RefreshCw } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +16,11 @@ import { useGetCredits } from "@/hooks";
 import { cn } from "@/utils";
 
 export const CardCredit = () => {
-  const { data: balance, isFetching: loading } = useGetCredits();
+  const {
+    data: balance,
+    isFetching: fetching,
+    refetch: getCredits,
+  } = useGetCredits();
 
   const totalCredits =
     (balance?.data.paidCredits ?? 0) + (balance?.data.freeCredits ?? 0);
@@ -22,17 +29,29 @@ export const CardCredit = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Credits</CardTitle>
-        <CardDescription>
-          Track your credit usage for generating OG images
-        </CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between space-y-0">
+        <div className="flex flex-col space-y-1.5">
+          <CardTitle>Credits</CardTitle>
+          <CardDescription>
+            Track your credit usage for generating OG images
+          </CardDescription>
+        </div>
+
+        <div className="flex items-center justify-end gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => getCredits()}
+            icon={<RefreshCw className="icon" />}
+            loading={fetching}
+          ></Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
             <Typography affects="muted">Total Credits</Typography>
-            {loading ? (
+            {fetching ? (
               <Skeleton className="h-8 w-16" />
             ) : (
               <p className="text-2xl font-bold">{totalCredits}</p>
@@ -40,7 +59,7 @@ export const CardCredit = () => {
           </div>
           <div className="space-y-2">
             <Typography affects="muted">Used Credits</Typography>
-            {loading ? (
+            {fetching ? (
               <Skeleton className="h-8 w-16" />
             ) : (
               <p className="text-2xl font-bold">{usedCredits}</p>
@@ -48,7 +67,7 @@ export const CardCredit = () => {
           </div>
           <div className="space-y-2">
             <Typography affects="muted">Remaining</Typography>
-            {loading ? (
+            {fetching ? (
               <Skeleton className="h-8 w-16" />
             ) : (
               <p
@@ -76,7 +95,7 @@ export const CardCredit = () => {
           </ul>
         </div>
 
-        {!loading && remainingCredits < 10 && (
+        {!fetching && remainingCredits < 10 && (
           <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-950">
             <Typography
               affects="small"

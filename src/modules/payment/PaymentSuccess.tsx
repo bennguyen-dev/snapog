@@ -1,5 +1,9 @@
-import { Checkout } from "@polar-sh/sdk/models/components";
+import {
+  Checkout,
+  DiscountFixedOnceForeverDuration,
+} from "@polar-sh/sdk/models/components";
 import { ProductPriceOneTimeFixed } from "@polar-sh/sdk/src/models/components";
+import { CheckoutDiscountPercentageOnceForeverDuration } from "@polar-sh/sdk/src/models/components/checkoutdiscountpercentageonceforeverduration";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -14,12 +18,20 @@ interface IProps {
 
 export const PaymentSuccess = ({ checkout }: IProps) => {
   const productPrice = checkout.productPrice as ProductPriceOneTimeFixed;
+  const discount = checkout.discount;
+
+  let discountAmount = 0;
+  if (discount?.type === "fixed") {
+    discountAmount = (discount as DiscountFixedOnceForeverDuration).amount;
+  } else if (discount?.type === "percentage") {
+    const percentage =
+      (discount as CheckoutDiscountPercentageOnceForeverDuration).basisPoints /
+      100;
+    discountAmount = (percentage * productPrice.priceAmount) / 100;
+  }
 
   return (
-    <section
-      id="faqs"
-      className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
-    >
+    <section className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16">
       <div className="space-y-4 sm:space-y-6 ">
         <div>
           <h1 className="text-2xl font-semibold">Your Order Details</h1>
@@ -88,7 +100,8 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
         <Card>
           <CardContent className="flex items-center space-x-4 p-4 sm:p-6">
             <Image
-              src="/logo.png"
+              unoptimized
+              src={checkout.product.medias?.[0].publicUrl || "/logo.png"}
               alt={checkout.product.name}
               width={80}
               height={80}
@@ -130,14 +143,18 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Discount</span>
-              <span>{formatPrice(0, productPrice.priceCurrency)}</span>
+              <span className="text-muted-foreground">
+                Discount {discount?.code ? `(${discount.code})` : ""}
+              </span>
+              <span>
+                - {formatPrice(discountAmount, productPrice.priceCurrency)}
+              </span>
             </div>
             <div className="flex justify-between border-t pt-4 font-medium">
               <span>Total</span>
               <span>
                 {formatPrice(
-                  checkout.totalAmount || productPrice.priceAmount,
+                  checkout.totalAmount ?? productPrice.priceAmount,
                   productPrice.priceCurrency,
                 )}
               </span>

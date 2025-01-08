@@ -1,6 +1,16 @@
 import { polarApi } from "@/lib/polar";
 import { PaymentSuccess } from "@/modules/payment";
 
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata() {
+  return {
+    title: "Payment Success - SnapOG",
+    description: "Payment Success for SnapOG",
+    path: "/payment/success",
+  };
+}
+
 export default async function PaymentSuccessPage({
   searchParams: { checkoutId },
 }: {
