@@ -24,9 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sites     Site[]
-  balance   UserBalance?
-  purchases PurchaseHistory[]
+  sites   Site[]
+  balance UserBalance?
 
   @@index([email])
   @@index([apiKey])
@@ -151,36 +150,6 @@ model DemoPage {
   @@unique([demoId, url])
 }
 
-model Purchase {
-  id           String  @id @default(cuid())
-  name         String
-  description  String?
-  creditAmount Int
-  price        Float
-  active       Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  purchaseHistories PurchaseHistory[]
-}
-
-model PurchaseHistory {
-  id           String @id @default(cuid())
-  userId       String
-  purchaseId   String
-  paidAmount   Float
-  creditAmount Int
-
-  createdAt DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  purchase Purchase @relation(fields: [purchaseId], references: [id])
-
-  @@index([userId])
-  @@index([purchaseId])
-}
-
 model UserBalance {
   id          String @id @default(cuid())
   userId      String @unique
@@ -194,4 +163,41 @@ model UserBalance {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isRecurring Boolean  @default(false)
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  polarId         String    @unique
+  polarCreatedAt  DateTime
+  polarModifiedAt DateTime?
+  lastSyncedAt    DateTime  @default(now())
+
+  priceAmount   Int
+  priceCurrency String
+  priceType     String
+
+  creditsAmount Int
+  isPopular     Boolean?
+
+  benefits Json[]
+}
+
+model WebhookEvent {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  eventName       String
+  processed       Boolean  @default(false)
+  body            Json
+  processingError String?
+  checkoutId      String?
+  checkoutStatus  String?
+
+  @@index([checkoutId])
 }

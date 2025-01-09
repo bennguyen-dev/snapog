@@ -11,51 +11,42 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { DEFAULT_FEATURES_PRODUCT } from "@/constants";
 import { cn } from "@/utils";
 
 const PRICING_PLANS = [
   {
-    name: "Starter Pack",
-    description:
-      "Free plan with 30 Open Graph images to kickstart your project.",
+    name: "Free",
+    description: "Free plan with 30 images to kickstart your project.",
     price: 0,
     credits: 30,
-    features: [
-      "SEO-friendly Open Graph images",
-      "All templates included",
-      "Social media optimized sizes",
-      "Real-time image generation",
-      "30-day storage",
-    ],
+    features: DEFAULT_FEATURES_PRODUCT.FREE,
   },
   {
-    name: "Growth Pack",
-    description: "Ideal for content creators with up to 200 images.",
+    name: "Basic",
+    description: "Suitable for small businesses with up to 200 images.",
     originalPrice: 29,
     price: 19,
     credits: 200,
-    features: [
-      "SEO-friendly Open Graph images",
-      "Premium templates access",
-      "Optimized for social media",
-      "Real-time image creation",
-      "30-day storage",
-    ],
+    features: DEFAULT_FEATURES_PRODUCT.FREE,
+  },
+  {
+    name: "Pro",
+    description:
+      "Suitable for medium to large agencies with up to 1,000 images.",
+    originalPrice: 109,
+    price: 79,
+    credits: 1000,
+    features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
     isPopular: true,
   },
   {
-    name: "Pro Pack",
-    description: "For high-volume marketers with up to 1,000 images.",
-    originalPrice: 149,
-    price: 99,
-    credits: 1200,
-    features: [
-      "Bulk SEO-friendly images",
-      "Advanced templates",
-      "Social media optimized sizes",
-      "Real-time generation",
-      "30-day storage",
-    ],
+    name: "Business",
+    description: "Suitable for large agencies with up to 2,500 images.",
+    originalPrice: 189,
+    price: 149,
+    credits: 2500,
+    features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
   },
 ];
 export const BlockPricing = async () => {
@@ -64,7 +55,7 @@ export const BlockPricing = async () => {
   };
 
   return (
-    <section className="container max-w-screen-xl py-8 lg:py-12 2xl:py-16">
+    <section className="container py-8 lg:py-12 2xl:py-16">
       <Typography variant="h2" className="mb-4 text-center text-base">
         Pricing
       </Typography>
@@ -75,64 +66,70 @@ export const BlockPricing = async () => {
         Simple, transparent pricing with all the features you need to boost
         social engagement. No required credit card to get started.
       </Typography>
-      <div className="mx-auto py-10 lg:max-w-screen-lg xl:max-w-screen-xl">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:items-center">
-          {PRICING_PLANS.map((plan) => {
+      <div className="mx-auto py-10">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:items-center xl:grid-cols-4 xl:max-2xl:gap-5">
+          {PRICING_PLANS.map((product) => {
             return (
               <Card
-                key={plan.name}
+                key={product.name}
                 className={cn(
-                  plan.isPopular ? "border-primary/30 shadow-primary/30" : "",
-                  "relative shadow-xl",
+                  product.isPopular
+                    ? "border-primary/30 shadow-xl shadow-primary/30"
+                    : "",
+                  "relative ",
                 )}
               >
-                {plan.originalPrice && (
+                {product.originalPrice && (
                   <div className="ribbon ribbon-primary">
                     <span>
-                      -{calculateDiscount(plan.originalPrice, plan.price)}%
+                      -{calculateDiscount(product.originalPrice, product.price)}
+                      %
                     </span>
                   </div>
                 )}
-                <CardHeader className="">
-                  {plan.isPopular && (
-                    <Badge className="mb-6 w-max self-start uppercase">
+                <CardHeader>
+                  {product.isPopular && (
+                    <Badge className="mb-4 w-max self-start uppercase">
                       Most popular
                     </Badge>
                   )}
-                  <CardTitle className="">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardTitle>{product.name}</CardTitle>
+                  <CardDescription className="w-11/12">
+                    {product.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-bold text-gray-900">
-                      {plan.price === 0 ? (
+                      {product.price === 0 ? (
                         <span className="text-3xl">Free</span>
                       ) : (
-                        `$${plan.price}`
+                        `$${product.price}`
                       )}
                     </span>
-                    {plan.originalPrice && (
+                    {product.originalPrice && (
                       <span className="text-lg text-gray-400 line-through">
-                        ${plan.originalPrice}
+                        ${product.originalPrice}
                       </span>
                     )}
                   </div>
                   <div className="mt-2">
                     <div className="text-lg font-semibold text-primary">
-                      {plan.credits} credits
+                      {product.credits} credits
                     </div>
                     <div className="mt-1 text-sm text-gray-500">
                       1 credit = 1 image{" "}
-                      {plan.price > 0 && (
+                      {product.price > 0 && (
                         <span className="text-sm text-gray-400">
-                          (≈ ${(plan.price / plan.credits).toFixed(3)}/image)
+                          (≈ ${(product.price / product.credits).toFixed(3)}
+                          /image)
                         </span>
                       )}
                     </div>
                   </div>
 
                   <ul className="mt-6 space-y-4">
-                    {plan.features.map((feature, index) => (
+                    {product.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <Check className="mr-2 size-6 flex-shrink-0 text-green-500" />
                         <p className="text-muted-foreground">{feature}</p>
@@ -143,9 +140,11 @@ export const BlockPricing = async () => {
                 <CardFooter>
                   <Button
                     className="w-full"
-                    variant={plan.isPopular ? "default" : "outline"}
+                    variant={product.isPopular ? "default" : "outline"}
                   >
-                    {plan.price === 0 ? "Get started for free" : "Get started"}
+                    {product.price === 0
+                      ? "Get started for free"
+                      : "Get started"}
                   </Button>
                 </CardFooter>
               </Card>

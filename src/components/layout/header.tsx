@@ -15,7 +15,7 @@ export const Header = async () => {
       <div className="container mx-auto flex h-16 items-center justify-between rounded-md bg-transparent">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
-            <Image src="/logo.png" alt="Logo" width={64} height={64} />
+            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
             <span className="hidden text-2xl font-bold text-primary sm:inline-block">
               Snap<span className="text-secondary">OG</span>
             </span>

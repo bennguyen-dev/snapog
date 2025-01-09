@@ -22,6 +22,7 @@ export const DiscordPreview = ({
             <Image
               src={image}
               fill
+              sizes={"(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
               alt={url || title}
               unoptimized={
                 image.startsWith("http") || image.startsWith("https")

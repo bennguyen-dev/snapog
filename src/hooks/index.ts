@@ -5,3 +5,4 @@ export * from "./queries/page";
 export * from "./queries/apiKey";
 export * from "./queries/credit";
 export * from "./queries/demo";
+export * from "./queries/product";

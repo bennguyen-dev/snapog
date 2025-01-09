@@ -10,10 +10,15 @@ export default function manifest() {
         sizes: "192x192",
         type: "image/png",
       },
+      {
+        src: "/logo.svg",
+        sizes: "192x192",
+        type: "image/svg+xml",
+      },
     ],
     start_url: "/",
     display: "standalone",
-    background_color: "#0f172a",
-    theme_color: "#0f172a",
+    background_color: "#FFFFFF",
+    theme_color: "#FFFFFF",
   };
 }

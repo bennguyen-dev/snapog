@@ -19,3 +19,8 @@ export interface IDeductCredits {
   userId: string;
   amount: number;
 }
+
+export interface IIncrementPaidCredits {
+  userId: string;
+  amount: number;
+}
