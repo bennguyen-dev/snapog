@@ -16,14 +16,14 @@ import { cn } from "@/utils";
 
 const PRICING_PLANS = [
   {
-    name: "Starter Pack",
+    name: "Free Pack",
     description: "Free plan with 30 images to kickstart your project.",
     price: 0,
     credits: 30,
     features: DEFAULT_FEATURES_PRODUCT.FREE,
   },
   {
-    name: "Growth Pack",
+    name: "Basic Pack",
     description: "Suitable for small businesses with up to 200 images.",
     originalPrice: 29,
     price: 19,
@@ -41,7 +41,7 @@ const PRICING_PLANS = [
     isPopular: true,
   },
   {
-    name: "Pro Pack",
+    name: "Business Pack",
     description: "Suitable for large agencies with up to 2,500 images.",
     originalPrice: 189,
     price: 149,

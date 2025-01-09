@@ -44,7 +44,7 @@ export const MobileNavbar = ({ isAuth }: IProps) => {
         </SheetTrigger>
         <div className="md:hidden">
           <Link className="flex items-center space-x-2" href="/">
-            <Image src="/logo.png" alt="Logo" width={64} height={64} />
+            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
           </Link>
         </div>
       </div>
@@ -56,7 +56,7 @@ export const MobileNavbar = ({ isAuth }: IProps) => {
             onClick={() => setOpen(false)}
             className="mb-4 flex items-center space-x-2 py-2 pl-3"
           >
-            <Image src="/logo.png" alt="Logo" width={64} height={64} />
+            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
             <span className="overflow-hidden whitespace-nowrap text-xl font-bold text-primary">
               Snap<span className="text-secondary">OG</span>
             </span>

@@ -61,9 +61,9 @@ export default function RootLayout({
       <Head>
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
         <link rel="mask-icon" href="/logo.svg" color="#FFFFFF" />
-        <link rel="shortcut icon" href="/logo.png" />
+        <link rel="shortcut icon" href="/logo.svg" />
         <link rel="text/plain" href="/humans.txt" />
       </Head>
       <body

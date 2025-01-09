@@ -101,7 +101,7 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
           <CardContent className="flex items-center space-x-4 p-4 sm:p-6">
             <Image
               unoptimized
-              src={checkout.product.medias?.[0].publicUrl || "/logo.png"}
+              src={checkout.product.medias?.[0].publicUrl || "/logo.svg"}
               alt={checkout.product.name}
               width={80}
               height={80}
