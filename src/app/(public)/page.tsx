@@ -4,6 +4,7 @@ import { BlockFAQs } from "@/components/block/BlockFAQs";
 import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
 import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
 import { BlockInputDemo } from "@/components/block/BlockInputDemo";
+import { BlockPricing } from "@/components/block/BlockPricing";
 import { IGetDemoResponse } from "@/services/demo";
 import { getMetadata } from "@/utils/metadata";
 
@@ -57,6 +58,7 @@ export default async function Home() {
       <BlockBenefit />
       <BlockCompareOGImage pagesInfo={initPageInfo} />
       <BlockHowItWorks />
+      <BlockPricing />
       <BlockGetStartedNow />
       <BlockFAQs />
       <BlockGetStartedNow />

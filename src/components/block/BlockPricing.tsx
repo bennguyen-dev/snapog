@@ -17,27 +17,35 @@ import { cn } from "@/utils";
 const PRICING_PLANS = [
   {
     name: "Starter Pack",
-    description:
-      "Free plan with 30 Open Graph images to kickstart your project.",
+    description: "Free plan with 30 images to kickstart your project.",
     price: 0,
     credits: 30,
     features: DEFAULT_FEATURES_PRODUCT.FREE,
   },
   {
     name: "Growth Pack",
-    description: "Ideal for content creators with up to 200 images.",
+    description: "Suitable for small businesses with up to 200 images.",
     originalPrice: 29,
     price: 19,
     credits: 200,
     features: DEFAULT_FEATURES_PRODUCT.FREE,
+  },
+  {
+    name: "Pro Pack",
+    description:
+      "Suitable for medium to large agencies with up to 1,000 images.",
+    originalPrice: 109,
+    price: 79,
+    credits: 1000,
+    features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
     isPopular: true,
   },
   {
     name: "Pro Pack",
-    description: "For high-volume marketers with up to 1,000 images.",
-    originalPrice: 149,
-    price: 99,
-    credits: 1200,
+    description: "Suitable for large agencies with up to 2,500 images.",
+    originalPrice: 189,
+    price: 149,
+    credits: 2500,
     features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
   },
 ];
@@ -47,7 +55,7 @@ export const BlockPricing = async () => {
   };
 
   return (
-    <section className="container max-w-screen-xl py-8 lg:py-12 2xl:py-16">
+    <section className="container py-8 lg:py-12 2xl:py-16">
       <Typography variant="h2" className="mb-4 text-center text-base">
         Pricing
       </Typography>
@@ -58,8 +66,8 @@ export const BlockPricing = async () => {
         Simple, transparent pricing with all the features you need to boost
         social engagement. No required credit card to get started.
       </Typography>
-      <div className="mx-auto py-10 lg:max-w-screen-lg xl:max-w-screen-xl">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:items-center">
+      <div className="mx-auto py-10">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:items-center xl:grid-cols-4 xl:max-2xl:gap-5">
           {PRICING_PLANS.map((plan) => {
             return (
               <Card
@@ -78,12 +86,14 @@ export const BlockPricing = async () => {
                 )}
                 <CardHeader className="">
                   {plan.isPopular && (
-                    <Badge className="mb-6 w-max self-start uppercase">
+                    <Badge className="mb-4 w-max self-start uppercase">
                       Most popular
                     </Badge>
                   )}
                   <CardTitle className="">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardDescription className="w-11/12">
+                    {plan.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
