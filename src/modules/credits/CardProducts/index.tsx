@@ -3,6 +3,7 @@
 import { Product } from "@prisma/client";
 import { Check } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { DEFAULT_FEATURES_PRODUCT } from "@/constants";
 import { ButtonBuyNow } from "@/modules/credits/CardProducts/ButtonBuyNow";
-import { formatPrice } from "@/utils";
+import { cn, formatPrice } from "@/utils";
 
 interface IProps {
   products: Product[];
@@ -28,14 +29,28 @@ export const CardProducts = ({ products }: IProps) => {
           Buy more credits to continue generating OG images and more features.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+      <CardContent className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:items-center xl:grid-cols-3">
         {products.map((product) => {
           const price = formatPrice(product.priceAmount, product.priceCurrency);
+          console.log({ product });
 
           return (
-            <Card key={product.name}>
-              <CardHeader className="">
-                <CardTitle className="">{product.name}</CardTitle>
+            <Card
+              key={product.name}
+              className={cn(
+                product.isPopular
+                  ? "border-primary/30 shadow-xl  shadow-primary/30"
+                  : "",
+                "relative",
+              )}
+            >
+              <CardHeader>
+                {product.isPopular && (
+                  <Badge className="mb-4 w-max self-start uppercase">
+                    Most popular
+                  </Badge>
+                )}
+                <CardTitle>{product.name}</CardTitle>
                 <CardDescription>{product.description}</CardDescription>
               </CardHeader>
               <CardContent>

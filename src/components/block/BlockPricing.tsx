@@ -68,64 +68,68 @@ export const BlockPricing = async () => {
       </Typography>
       <div className="mx-auto py-10">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:items-center xl:grid-cols-4 xl:max-2xl:gap-5">
-          {PRICING_PLANS.map((plan) => {
+          {PRICING_PLANS.map((product) => {
             return (
               <Card
-                key={plan.name}
+                key={product.name}
                 className={cn(
-                  plan.isPopular ? "border-primary/30 shadow-primary/30" : "",
-                  "relative shadow-xl",
+                  product.isPopular
+                    ? "border-primary/30 shadow-xl shadow-primary/30"
+                    : "",
+                  "relative ",
                 )}
               >
-                {plan.originalPrice && (
+                {product.originalPrice && (
                   <div className="ribbon ribbon-primary">
                     <span>
-                      -{calculateDiscount(plan.originalPrice, plan.price)}%
+                      -{calculateDiscount(product.originalPrice, product.price)}
+                      %
                     </span>
                   </div>
                 )}
-                <CardHeader className="">
-                  {plan.isPopular && (
+                <CardHeader>
+                  {product.isPopular && (
                     <Badge className="mb-4 w-max self-start uppercase">
                       Most popular
                     </Badge>
                   )}
-                  <CardTitle className="">{plan.name}</CardTitle>
+                  <CardTitle>{product.name}</CardTitle>
                   <CardDescription className="w-11/12">
-                    {plan.description}
+                    {product.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-bold text-gray-900">
-                      {plan.price === 0 ? (
+                      {product.price === 0 ? (
                         <span className="text-3xl">Free</span>
                       ) : (
-                        `$${plan.price}`
+                        `$${product.price}`
                       )}
                     </span>
-                    {plan.originalPrice && (
+                    {product.originalPrice && (
                       <span className="text-lg text-gray-400 line-through">
-                        ${plan.originalPrice}
+                        ${product.originalPrice}
                       </span>
                     )}
                   </div>
                   <div className="mt-2">
                     <div className="text-lg font-semibold text-primary">
-                      {plan.credits} credits
+                      {product.credits} credits
                     </div>
                     <div className="mt-1 text-sm text-gray-500">
                       1 credit = 1 image{" "}
-                      {plan.price > 0 && (
+                      {product.price > 0 && (
                         <span className="text-sm text-gray-400">
-                          (≈ ${(plan.price / plan.credits).toFixed(3)}/image)
+                          (≈ ${(product.price / product.credits).toFixed(3)}
+                          /image)
                         </span>
                       )}
                     </div>
                   </div>
 
                   <ul className="mt-6 space-y-4">
-                    {plan.features.map((feature, index) => (
+                    {product.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <Check className="mr-2 size-6 flex-shrink-0 text-green-500" />
                         <p className="text-muted-foreground">{feature}</p>
@@ -136,9 +140,11 @@ export const BlockPricing = async () => {
                 <CardFooter>
                   <Button
                     className="w-full"
-                    variant={plan.isPopular ? "default" : "outline"}
+                    variant={product.isPopular ? "default" : "outline"}
                   >
-                    {plan.price === 0 ? "Get started for free" : "Get started"}
+                    {product.price === 0
+                      ? "Get started for free"
+                      : "Get started"}
                   </Button>
                 </CardFooter>
               </Card>
