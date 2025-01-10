@@ -86,7 +86,7 @@ const ListSite = () => {
           });
 
           return (
-            <>
+            <div className="max-w-2xl">
               <Typography affects="small" className="mb-4">
                 Example URL:{" "}
                 <Link
@@ -106,7 +106,7 @@ const ListSite = () => {
                   apiKey: session?.user?.apiKey,
                 })}
               />
-            </>
+            </div>
           );
         },
       },

@@ -1,3 +1,5 @@
+import { Product } from "@prisma/client";
+
 import Link from "next/link";
 
 import {
@@ -9,15 +11,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { CardCredit, CardProducts } from "@/modules/credits";
-import { productService } from "@/services/product";
 
-export const ListCredit = async () => {
-  let resProducts = await productService.getProducts();
+interface IProps {
+  products: Product[];
+}
 
-  if (resProducts.data?.length === 0) {
-    resProducts = await productService.syncProducts();
-  }
-
+const ListCredit = ({ products }: IProps) => {
   return (
     <>
       <div className="p-4 sm:p-6">
@@ -39,9 +38,11 @@ export const ListCredit = async () => {
           <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-2">
             <CardCredit />
           </div>
-          {resProducts.data && <CardProducts products={resProducts.data} />}
+          {products && <CardProducts products={products} />}
         </div>
       </div>
     </>
   );
 };
+
+export default ListCredit;

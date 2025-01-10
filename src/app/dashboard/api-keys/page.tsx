@@ -1,5 +1,10 @@
-import { ListApiKey } from "@/modules/api-keys";
+import dynamic from "next/dynamic";
+
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicListApiKey = dynamic(
+  () => import("@/modules/api-keys/ListApiKey"),
+);
 
 export async function generateMetadata() {
   return getMetadata({
@@ -13,7 +18,7 @@ export async function generateMetadata() {
 export default function ApiKeysPage() {
   return (
     <>
-      <ListApiKey />
+      <DynamicListApiKey />
     </>
   );
 }

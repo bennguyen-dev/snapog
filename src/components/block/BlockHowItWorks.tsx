@@ -29,7 +29,7 @@ const BlockHowItWorks = () => {
       </Typography>
 
       {domain && (
-        <div className="w-full sm:w-fit">
+        <div className="w-full max-w-screen-md">
           <CodeBlock
             language="html"
             filename="index.html"

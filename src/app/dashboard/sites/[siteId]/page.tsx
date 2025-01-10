@@ -2,10 +2,7 @@ import dynamic from "next/dynamic";
 
 import { getMetadata } from "@/utils/metadata";
 
-const DynamicListPage = dynamic(() => import("@/modules/page/ListPage"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const DynamicListPage = dynamic(() => import("@/modules/page/ListPage"));
 
 export async function generateMetadata({
   params,
@@ -13,7 +10,7 @@ export async function generateMetadata({
   params: { siteId: string };
 }) {
   return getMetadata({
-    title: "Manage Your Pages - SnapOG Dashboard",
+    title: "Pages - SnapOG Dashboard",
     description:
       "Control and customize social previews for individual pages of your website.",
     path: `/dashboard/sites/${params.siteId}`,

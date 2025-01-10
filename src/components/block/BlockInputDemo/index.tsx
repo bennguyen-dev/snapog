@@ -17,7 +17,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
   return (
     <section
       className={cn(
-        "container relative grid grid-cols-1 gap-8 py-8 sm:py-16",
+        "container relative grid grid-cols-1 gap-8 py-8 sm:py-16 sm:max-lg:pb-36",
         hidePreview ? "max-w-screen-lg" : "sm:grid-cols-10",
       )}
     >
@@ -44,7 +44,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
 
         <GoogleCaptchaProvider>
           <ReactQueryProvider>
-            <InputDemo className="mt-8 w-full max-w-lg sm:mt-12 sm:max-lg:absolute sm:max-lg:-bottom-6 sm:max-lg:left-1/2  sm:max-lg:-translate-x-1/2" />
+            <InputDemo className="mt-8 w-full max-w-lg sm:mt-12 sm:max-lg:absolute sm:max-lg:bottom-6 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
           </ReactQueryProvider>
         </GoogleCaptchaProvider>
       </div>

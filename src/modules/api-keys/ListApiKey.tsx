@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { CardPublicApiKey } from "@/modules/api-keys/CardPublicApiKey";
 
-export const ListApiKey = () => {
+const ListApiKey = () => {
   return (
     <div className="p-4 sm:p-6">
       <Breadcrumb className="mb-4">
@@ -34,3 +34,5 @@ export const ListApiKey = () => {
     </div>
   );
 };
+
+export default ListApiKey;

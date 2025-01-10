@@ -125,7 +125,7 @@ export const InputDemo = ({ className }: IProps) => {
             icon={<EyeIcon className="icon" />}
             loading={loading}
           >
-            View Demo
+            <span className="max-sm:hidden">View</span> Demo
           </Button>
         </div>
       </div>
