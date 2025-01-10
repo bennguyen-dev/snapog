@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon } from "lucide-react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -14,6 +16,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -34,7 +37,8 @@ export const InputDemo = ({ className }: IProps) => {
   const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const { mutate: createDemo, isPending: creating } = useCreateDemo();
+  const { mutate: createDemo } = useCreateDemo();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,6 +57,8 @@ export const InputDemo = ({ className }: IProps) => {
       return;
     }
 
+    setLoading(true);
+
     try {
       const gReCaptchaToken = await executeRecaptcha("createDemo");
 
@@ -66,6 +72,7 @@ export const InputDemo = ({ className }: IProps) => {
             router.push(`/demo/${getDomainName(data?.data?.domain)}`);
           },
           onError: (data) => {
+            setLoading(false);
             form.setError("url", {
               message: data?.message,
             });
@@ -73,6 +80,7 @@ export const InputDemo = ({ className }: IProps) => {
         },
       );
     } catch (error) {
+      setLoading(false);
       form.setError("url", {
         message: "Failed to create demo. Please try again.",
       });
@@ -81,45 +89,45 @@ export const InputDemo = ({ className }: IProps) => {
 
   return (
     <Form {...form}>
-      <div
-        className={cn(
-          "mt-8 flex w-full max-w-lg space-x-2 sm:mt-12",
-          className,
-        )}
-      >
-        <FormField
-          control={form.control}
-          name="url"
-          render={({ field }) => (
-            <FormItem className="flex-1 text-left">
-              <FormControl>
-                <Input
-                  className="xl:h-11"
-                  title="Enter your website URL to see a live demo:"
-                  type="text"
-                  placeholder="yoursite.com"
-                  onKeyUp={(event) => {
-                    if (event.key === "Enter") {
-                      form.handleSubmit(onViewDemo)();
-                    }
-                  }}
-                  disabled={creating}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-          className="xl:h-11"
-          onClick={form.handleSubmit(onViewDemo)}
-          icon={<EyeIcon className="icon" />}
-          loading={creating}
-        >
-          View Demo
-        </Button>
+      <div className={cn("flex flex-col justify-start", className)}>
+        <FormLabel className="mb-1 ml-1 inline text-left text-sm text-muted-foreground">
+          Enter your website URL to see a live demo:
+        </FormLabel>
+        <div className="flex w-full max-w-lg space-x-2">
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem className="flex-1 text-left">
+                <FormControl>
+                  <Input
+                    className="xl:h-11"
+                    title="Enter your website URL to see a live demo:"
+                    type="text"
+                    placeholder="yoursite.com"
+                    onKeyUp={(event) => {
+                      if (event.key === "Enter") {
+                        form.handleSubmit(onViewDemo)();
+                      }
+                    }}
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="xl:h-11"
+            onClick={form.handleSubmit(onViewDemo)}
+            icon={<EyeIcon className="icon" />}
+            loading={loading}
+          >
+            View Demo
+          </Button>
+        </div>
       </div>
     </Form>
   );

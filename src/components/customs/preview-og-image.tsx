@@ -18,6 +18,7 @@ interface IProps {
   ribbon?: {
     content: ReactNode;
   };
+  unoptimized?: boolean;
 }
 
 export const PreviewOgImage = ({
@@ -26,6 +27,7 @@ export const PreviewOgImage = ({
   description,
   image,
   ribbon,
+  unoptimized,
 }: IProps) => {
   return (
     <div className={cn("relative rounded-2xl border border-border p-1 pt-0")}>
@@ -53,6 +55,7 @@ export const PreviewOgImage = ({
         title={title}
         description={description}
         image={image}
+        unoptimized={unoptimized}
       />
     </div>
   );

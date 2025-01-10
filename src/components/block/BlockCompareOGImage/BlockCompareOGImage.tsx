@@ -88,6 +88,7 @@ const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
                 image={page.OGImage}
                 title={page.OGTitle}
                 description={page.OGDescription}
+                unoptimized
               />
               <PreviewOgImage
                 url={getUrlWithProtocol(page.url)}
@@ -97,6 +98,7 @@ const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
                 ribbon={{
                   content: "SnapOG",
                 }}
+                unoptimized
               />
             </div>
           );

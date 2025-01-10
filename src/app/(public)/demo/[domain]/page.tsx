@@ -12,6 +12,9 @@ const DynamicBlockGetStartedNow = dynamic(
   () => import("@/components/block/BlockGetStartedNow"),
 );
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
+const DynamicBlockTryYourDemo = dynamic(
+  () => import("@/components/block/BlockTryYourDemo"),
+);
 
 export async function generateMetadata({
   params,
@@ -52,6 +55,7 @@ export default async function DemoDetailPage({
         <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
       )}
       <DynamicBlockHowItWorks />
+      <DynamicBlockTryYourDemo />
       <DynamicBlockGetStartedNow />
       <DynamicBlockFAQs />
       <DynamicBlockGetStartedNow />

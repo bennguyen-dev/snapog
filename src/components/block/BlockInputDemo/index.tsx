@@ -44,7 +44,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
 
         <GoogleCaptchaProvider>
           <ReactQueryProvider>
-            <InputDemo className="sm:max-lg:absolute sm:max-lg:-bottom-4 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
+            <InputDemo className="mt-8 w-full max-w-lg sm:mt-12 sm:max-lg:absolute sm:max-lg:-bottom-6 sm:max-lg:left-1/2  sm:max-lg:-translate-x-1/2" />
           </ReactQueryProvider>
         </GoogleCaptchaProvider>
       </div>
@@ -59,6 +59,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
                 description={
                   "Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes. Accept payments, send payouts, and automate financial processes with a suite of APIs and no-code tools."
                 }
+                priority
               />
             </div>
             <div className="col-span-2 self-end max-lg:hidden">
@@ -67,6 +68,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
                 image="/images/stripe-enterprise.webp"
                 title="Enterprise Payment Solutions for Large Businesses | Stripe"
                 description="Get enterprise payment and financial solutions that maximize conversion, add revenue streams, and automate financial operations. Learn why enterprises build on Stripe."
+                priority
               />
             </div>
             <div className="col-span-5">
@@ -79,6 +81,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
                 description={
                   "Millions of businesses are powered by Stripe. Get payment solutions designed to help startups launch quickly, scale further, and find new revenue streams."
                 }
+                priority
               />
             </div>
           </div>
