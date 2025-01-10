@@ -4,6 +4,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 
+export const runtime = "edge";
+
 import { prisma } from "@/lib/db";
 import { userService } from "@/services/user";
 import { userBalanceService } from "@/services/userBalance"; // Add this line

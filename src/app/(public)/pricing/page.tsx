@@ -1,7 +1,12 @@
-import { BlockFAQs } from "@/components/block/BlockFAQs";
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { BlockPricing } from "@/components/block/BlockPricing";
+import dynamic from "next/dynamic";
+
+import BlockPricing from "@/components/block/BlockPricing";
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
+const DynamicBlockGetStartedNow = dynamic(
+  () => import("@/components/block/BlockGetStartedNow"),
+);
 
 export async function generateMetadata() {
   return getMetadata({
@@ -16,8 +21,8 @@ export default function PricingPage() {
   return (
     <>
       <BlockPricing />
-      <BlockFAQs />
-      <BlockGetStartedNow />
+      <DynamicBlockFAQs />
+      <DynamicBlockGetStartedNow />
     </>
   );
 }

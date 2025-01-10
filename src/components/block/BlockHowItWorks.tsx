@@ -4,7 +4,7 @@ import { CodeBlock } from "@/components/ui/code-block";
 import { Typography } from "@/components/ui/typography";
 import { getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
-export const BlockHowItWorks = () => {
+const BlockHowItWorks = () => {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return (
@@ -19,11 +19,11 @@ export const BlockHowItWorks = () => {
       </Typography>
       <Typography variant="code" className="mb-4 break-all">
         https://{domain}/api/get?api_key=
-        <span className="text-base font-bold text-orange-600">
+        <span className="text-base font-bold text-secondary">
           {"<api_key>"}
         </span>
         &url=
-        <span className="text-base font-bold text-orange-600">
+        <span className="text-base font-bold text-secondary">
           yourwebsite.com/blogs/article-1
         </span>
       </Typography>
@@ -65,3 +65,5 @@ export const BlockHowItWorks = () => {
     </section>
   );
 };
+
+export default BlockHowItWorks;

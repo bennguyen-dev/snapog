@@ -1,6 +1,11 @@
-import { BlockAboutUs } from "@/components/block/BlockAboutUs";
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
+import dynamic from "next/dynamic";
+
+import BlockAboutUs from "@/components/block/BlockAboutUs";
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicBlockGetStartedNow = dynamic(
+  () => import("@/components/block/BlockGetStartedNow"),
+);
 
 export async function generateMetadata() {
   return getMetadata({
@@ -21,7 +26,7 @@ export default function AboutUsPage() {
   return (
     <>
       <BlockAboutUs />
-      <BlockGetStartedNow />
+      <DynamicBlockGetStartedNow />
     </>
   );
 }

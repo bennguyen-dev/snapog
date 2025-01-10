@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 
-export const BlockGetStartedNow = async () => {
+const BlockGetStartedNow = async () => {
   return (
     <form
       action={async () => {
@@ -26,3 +26,5 @@ export const BlockGetStartedNow = async () => {
     </form>
   );
 };
+
+export default BlockGetStartedNow;

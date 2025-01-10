@@ -1,11 +1,17 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
-import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
-import { BlockFAQs } from "@/components/block/BlockFAQs";
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
+import BlockCompareOGImage from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { demoService } from "@/services/demo";
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicBlockHowItWorks = dynamic(
+  () => import("@/components/block/BlockHowItWorks"),
+);
+const DynamicBlockGetStartedNow = dynamic(
+  () => import("@/components/block/BlockGetStartedNow"),
+);
+const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 
 export async function generateMetadata({
   params,
@@ -45,10 +51,10 @@ export default async function DemoDetailPage({
       {demoRes.data && (
         <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
       )}
-      <BlockHowItWorks />
-      <BlockGetStartedNow />
-      <BlockFAQs />
-      <BlockGetStartedNow />
+      <DynamicBlockHowItWorks />
+      <DynamicBlockGetStartedNow />
+      <DynamicBlockFAQs />
+      <DynamicBlockGetStartedNow />
     </>
   );
 }

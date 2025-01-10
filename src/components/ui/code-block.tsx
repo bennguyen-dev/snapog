@@ -81,6 +81,7 @@ export const CodeBlock = ({
               onClick={copyToClipboard}
               className="flex items-center gap-1 font-sans text-xs text-zinc-400 transition-colors hover:text-zinc-200"
             >
+              <span className="sr-only">Copy</span>
               {copied ? <Check size={14} /> : <Copy size={14} />}
             </button>
           </div>

@@ -5,14 +5,11 @@ import { Typography } from "@/components/ui/typography";
 export const BlockBenefit = () => {
   return (
     <section className="container flex flex-col items-center justify-center py-8 sm:py-16">
-      <Typography
-        variant="h2"
-        className="mb-8 text-center font-serif text-3xl font-normal md:mb-16 md:text-4xl"
-      >
+      <Typography variant="h2" className="mb-8">
         Benefits
       </Typography>
       <div className="grid gap-8 md:grid-cols-3 lg:max-w-screen-lg xl:max-w-screen-xl">
-        <div className="rounded-xl bg-slate-50 p-8 shadow-sm">
+        <div className="rounded-xl bg-slate-50 p-6 shadow-sm lg:p-8">
           <div className="mb-6 flex h-12 w-12 items-center justify-center">
             <MousePointer className="h-8 w-8 text-slate-600" />
           </div>
@@ -26,7 +23,7 @@ export const BlockBenefit = () => {
           </p>
         </div>
 
-        <div className="rounded-xl bg-pink-50 p-8 shadow-sm">
+        <div className="rounded-xl bg-pink-50 p-6 shadow-sm lg:p-8">
           <div className="mb-6 flex h-12 w-12 items-center justify-center">
             <ImageIcon className="h-8 w-8 text-pink-600" />
           </div>
@@ -40,7 +37,7 @@ export const BlockBenefit = () => {
           </p>
         </div>
 
-        <div className="rounded-xl bg-orange-50 p-8 shadow-sm">
+        <div className="rounded-xl bg-orange-50 p-6 shadow-sm lg:p-8">
           <div className="mb-6 flex h-12 w-12 items-center justify-center">
             <Zap className="h-8 w-8 text-orange-600" />
           </div>

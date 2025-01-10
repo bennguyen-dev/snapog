@@ -18,9 +18,9 @@ export const SlackPreview = ({
   return (
     <div className="overflow-hidden rounded border-l-4 border-[#1264a3] bg-gray-50 drop-shadow">
       <div className="p-3">
-        <h3 className="mb-1 line-clamp-2 text-base font-bold text-[#1264a3]">
+        <p className="mb-1 line-clamp-2 text-base font-bold text-[#1264a3]">
           {title}
-        </h3>
+        </p>
         <p className="line-clamp-2 text-sm text-gray-700">{description}</p>
         <p className="mt-1 text-xs text-gray-500">{siteName}</p>
       </div>

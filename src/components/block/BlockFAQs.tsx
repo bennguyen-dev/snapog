@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { Typography } from "@/components/ui/typography";
 
-export const BlockFAQs = () => {
+const BlockFAQs = () => {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   const FAQs = [
@@ -206,3 +206,5 @@ export const BlockFAQs = () => {
     </section>
   );
 };
+
+export default BlockFAQs;

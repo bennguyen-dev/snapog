@@ -47,7 +47,7 @@ interface IProps {
   siteId: string;
 }
 
-export const ListPage = ({ siteId }: IProps) => {
+const ListPage = ({ siteId }: IProps) => {
   const { data: session } = useSession();
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
   const {
@@ -343,3 +343,5 @@ export const ListPage = ({ siteId }: IProps) => {
     </div>
   );
 };
+
+export default ListPage;

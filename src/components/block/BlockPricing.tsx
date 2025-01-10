@@ -49,7 +49,8 @@ const PRICING_PLANS = [
     features: DEFAULT_FEATURES_PRODUCT.PREMIUM,
   },
 ];
-export const BlockPricing = async () => {
+
+const BlockPricing = async () => {
   const calculateDiscount = (original: number, final: number) => {
     return Math.round(((original - final) / original) * 100);
   };
@@ -98,9 +99,9 @@ export const BlockPricing = async () => {
                     {product.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pb-6">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-gray-900">
+                    <span className="text-4xl font-bold">
                       {product.price === 0 ? (
                         <span className="text-3xl">Free</span>
                       ) : (
@@ -108,7 +109,7 @@ export const BlockPricing = async () => {
                       )}
                     </span>
                     {product.originalPrice && (
-                      <span className="text-lg text-gray-400 line-through">
+                      <span className="text-lg text-muted-foreground line-through">
                         ${product.originalPrice}
                       </span>
                     )}
@@ -117,10 +118,10 @@ export const BlockPricing = async () => {
                     <div className="text-lg font-semibold text-primary">
                       {product.credits} credits
                     </div>
-                    <div className="mt-1 text-sm text-gray-500">
+                    <div className="mt-1 text-sm">
                       1 credit = 1 image{" "}
                       {product.price > 0 && (
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm">
                           (≈ ${(product.price / product.credits).toFixed(3)}
                           /image)
                         </span>
@@ -132,7 +133,7 @@ export const BlockPricing = async () => {
                     {product.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <Check className="mr-2 size-6 flex-shrink-0 text-green-500" />
-                        <p className="text-muted-foreground">{feature}</p>
+                        <p className="">{feature}</p>
                       </li>
                     ))}
                   </ul>
@@ -155,3 +156,5 @@ export const BlockPricing = async () => {
     </section>
   );
 };
+
+export default BlockPricing;

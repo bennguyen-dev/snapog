@@ -35,9 +35,9 @@ export const DiscordPreview = ({
         )}
       </div>
       <div className="p-3">
-        <h3 className="line-clamp-1 text-sm font-semibold text-[#00b0f4]">
+        <p className="line-clamp-1 text-sm font-semibold text-[#00b0f4]">
           {title}
-        </h3>
+        </p>
         <p className="mt-1 line-clamp-2 text-xs text-[#dcddde]">
           {description}
         </p>

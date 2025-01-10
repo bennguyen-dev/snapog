@@ -1,12 +1,23 @@
+import dynamic from "next/dynamic";
+
 import { BlockBenefit } from "@/components/block/BlockBenefit";
-import { BlockCompareOGImage } from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
-import { BlockFAQs } from "@/components/block/BlockFAQs";
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { BlockHowItWorks } from "@/components/block/BlockHowItWorks";
-import { BlockInputDemo } from "@/components/block/BlockInputDemo";
-import { BlockPricing } from "@/components/block/BlockPricing";
+import BlockInputDemo from "@/components/block/BlockInputDemo";
 import { IGetDemoResponse } from "@/services/demo";
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicBlockCompareOGImage = dynamic(
+  () => import("@/components/block/BlockCompareOGImage/BlockCompareOGImage"),
+);
+const DynamicBlockHowItWorks = dynamic(
+  () => import("@/components/block/BlockHowItWorks"),
+);
+const DynamicBlockPricing = dynamic(
+  () => import("@/components/block/BlockPricing"),
+);
+const DynamicBlockGetStartedNow = dynamic(
+  () => import("@/components/block/BlockGetStartedNow"),
+);
+const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 
 export async function generateMetadata() {
   return getMetadata({
@@ -56,12 +67,12 @@ export default async function Home() {
     <>
       <BlockInputDemo />
       <BlockBenefit />
-      <BlockCompareOGImage pagesInfo={initPageInfo} />
-      <BlockHowItWorks />
-      <BlockPricing />
-      <BlockGetStartedNow />
-      <BlockFAQs />
-      <BlockGetStartedNow />
+      <DynamicBlockCompareOGImage pagesInfo={initPageInfo} />
+      <DynamicBlockHowItWorks />
+      <DynamicBlockPricing />
+      <DynamicBlockGetStartedNow />
+      <DynamicBlockFAQs />
+      <DynamicBlockGetStartedNow />
     </>
   );
 }

@@ -1,5 +1,11 @@
-import { ListPage } from "@/modules/page";
+import dynamic from "next/dynamic";
+
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicListPage = dynamic(() => import("@/modules/page/ListPage"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
 
 export async function generateMetadata({
   params,
@@ -19,5 +25,5 @@ export default function PageListPage({
 }: {
   params: { siteId: string };
 }) {
-  return <ListPage siteId={siteId} />;
+  return <DynamicListPage siteId={siteId} />;
 }

@@ -28,11 +28,7 @@ export const PreviewOgImage = ({
   ribbon,
 }: IProps) => {
   return (
-    <div
-      className={cn(
-        "relative rounded-2xl border border-border bg-background/80 p-1 pt-0",
-      )}
-    >
+    <div className={cn("relative rounded-2xl border border-border p-1 pt-0")}>
       {ribbon && (
         <div className="ribbon ribbon-primary">
           <span>{ribbon.content}</span>
@@ -44,8 +40,8 @@ export const PreviewOgImage = ({
         <ArrowRight className="size-4 text-neutral-300" />
         <RotateCw className="size-4" />
 
-        <div className="flex flex-1 rounded-full border bg-[#edeff6] px-3 py-1.5 backdrop-blur-2xl">
-          <span className="line-clamp-1 break-all text-sm text-muted-foreground">
+        <div className="flex flex-1 rounded-full border bg-muted px-3 py-1.5">
+          <span className="line-clamp-1 break-all text-sm text-foreground/80">
             {getUrlWithoutProtocol(url || "")}
           </span>
         </div>

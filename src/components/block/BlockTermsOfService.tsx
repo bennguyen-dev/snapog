@@ -1,6 +1,6 @@
 import { Typography } from "@/components/ui/typography";
 
-export const BlockTermsOfService = () => {
+const BlockTermsOfService = () => {
   return (
     <section
       id="terms-of-service"
@@ -82,3 +82,5 @@ export const BlockTermsOfService = () => {
     </section>
   );
 };
+
+export default BlockTermsOfService;

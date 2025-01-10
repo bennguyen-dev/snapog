@@ -1,13 +1,17 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { MobileNavbar } from "@/components/layout/mobile-navbar";
 import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 
-export const Header = async () => {
+const DynamicMobileNavbar = dynamic(
+  () => import("@/components/layout/mobile-navbar"),
+);
+
+const Header = async () => {
   const session = await auth();
 
   return (
@@ -15,14 +19,14 @@ export const Header = async () => {
       <div className="container mx-auto flex h-16 items-center justify-between rounded-md bg-transparent">
         <div className="hidden md:flex">
           <Link className="flex items-center space-x-2" href="/">
-            <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+            <Image src="/logo.svg" alt="Logo" width={64} height={64} priority />
             <span className="hidden text-2xl font-bold text-primary sm:inline-block">
               Snap<span className="text-secondary">OG</span>
             </span>
           </Link>
         </div>
 
-        <MobileNavbar />
+        <DynamicMobileNavbar />
         <Navbar />
 
         {session?.user ? (
@@ -52,3 +56,5 @@ export const Header = async () => {
     </header>
   );
 };
+
+export default Header;

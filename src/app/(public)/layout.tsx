@@ -2,8 +2,11 @@ import { ReactNode } from "react";
 
 import { SessionProvider } from "next-auth/react";
 
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
+import dynamic from "next/dynamic";
+
+import Header from "@/components/layout/header";
+
+const DynamicFooter = dynamic(() => import("@/components/layout/footer"));
 
 interface IProps {
   children: ReactNode;
@@ -16,7 +19,7 @@ export default function PublicLayout({ children }: IProps) {
       <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-16">
         {children}
       </main>
-      <Footer />
+      <DynamicFooter />
     </SessionProvider>
   );
 }

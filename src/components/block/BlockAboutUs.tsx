@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Typography } from "@/components/ui/typography";
 
-export const BlockAboutUs = () => {
+const BlockAboutUs = () => {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return (
@@ -48,3 +48,5 @@ export const BlockAboutUs = () => {
     </section>
   );
 };
+
+export default BlockAboutUs;

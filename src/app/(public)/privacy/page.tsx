@@ -1,6 +1,11 @@
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { BlockPrivacyPolicy } from "@/components/block/BlockPrivacyPolicy";
+import dynamic from "next/dynamic";
+
+import BlockPrivacyPolicy from "@/components/block/BlockPrivacyPolicy";
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicBlockGetStartedNow = dynamic(
+  () => import("@/components/block/BlockGetStartedNow"),
+);
 
 export async function generateMetadata() {
   return getMetadata({
@@ -15,7 +20,7 @@ export default function PrivacyPage() {
   return (
     <>
       <BlockPrivacyPolicy />
-      <BlockGetStartedNow />
+      <DynamicBlockGetStartedNow />
     </>
   );
 }

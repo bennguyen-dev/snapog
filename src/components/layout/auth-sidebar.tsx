@@ -39,7 +39,7 @@ export const AuthSidebar = ({ className }: IProps) => {
     >
       <div className="mt-4 hidden p-4 md:block">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.svg" alt="Logo" width={64} height={64} />
+          <Image src="/logo.svg" alt="Logo" width={64} height={64} priority />
           <span
             className={cn(
               isMinimized && "w-0 opacity-0",

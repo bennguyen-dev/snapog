@@ -1,6 +1,6 @@
 import { Typography } from "@/components/ui/typography";
 
-export const BlockPrivacyPolicy = () => {
+const BlockPrivacyPolicy = () => {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
   return (
@@ -53,3 +53,5 @@ export const BlockPrivacyPolicy = () => {
     </section>
   );
 };
+
+export default BlockPrivacyPolicy;

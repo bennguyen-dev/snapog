@@ -13,7 +13,7 @@ interface IProps {
   hidePreview?: boolean;
 }
 
-export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
+const BlockInputDemo = ({ hidePreview = false }: IProps) => {
   return (
     <section
       className={cn(
@@ -90,3 +90,5 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
     </section>
   );
 };
+
+export default BlockInputDemo;

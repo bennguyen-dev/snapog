@@ -38,7 +38,7 @@ import {
 } from "@/modules/site";
 import { formatDate, getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
-export const ListSite = () => {
+const ListSite = () => {
   const { confirmDialog, onCloseConfirm, ConfirmDialog } = useConfirmDialog();
   const { data: session } = useSession();
 
@@ -245,3 +245,5 @@ export const ListSite = () => {
     </div>
   );
 };
+
+export default ListSite;

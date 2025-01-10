@@ -35,7 +35,7 @@ export const TelegramPreview = ({
         )}
       </div>
       <div className="p-3">
-        <h3 className="mb-1 text-base font-semibold text-black">{title}</h3>
+        <p className="mb-1 text-base font-semibold text-black">{title}</p>
         <p className="line-clamp-2 text-sm text-gray-600">{description}</p>
         <p className="mt-1 text-xs text-gray-400">{siteName}</p>
       </div>

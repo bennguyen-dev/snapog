@@ -28,7 +28,8 @@ const COMPARE_CONTENT = {
     ],
   },
 };
-export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
+
+const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
   return (
     <section className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
       {domain && (
@@ -41,7 +42,7 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
         </Typography>
       )}
       <div className="grid grid-cols-1 gap-x-12 gap-y-8 pb-12 md:grid-cols-2 md:gap-8">
-        <div className="flex flex-col items-center text-muted-foreground/80 sm:ml-2">
+        <div className="flex flex-col items-center text-muted-foreground sm:ml-2">
           <Typography
             variant="h3"
             className="mb-4 text-left text-xl font-normal text-foreground"
@@ -104,3 +105,5 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
     </section>
   );
 };
+
+export default BlockCompareOGImage;

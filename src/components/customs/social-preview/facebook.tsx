@@ -36,7 +36,7 @@ export const FacebookPreview = ({
       </div>
       <div className="bg-gray-100 p-2">
         <p className="text-xs uppercase text-muted-foreground">{siteName}</p>
-        <h3 className="line-clamp-1 text-sm font-semibold">{title}</h3>
+        <p className="line-clamp-1 text-sm font-semibold">{title}</p>
         <p className="line-clamp-2 text-xs text-muted-foreground">
           {description}
         </p>

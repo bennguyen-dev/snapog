@@ -1,5 +1,5 @@
-import { BlockGetStartedNow } from "@/components/block/BlockGetStartedNow";
-import { BlockInputDemo } from "@/components/block/BlockInputDemo";
+import BlockGetStartedNow from "@/components/block/BlockGetStartedNow";
+import BlockInputDemo from "@/components/block/BlockInputDemo";
 import { getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
