@@ -22,7 +22,7 @@ export const TelegramPreview = ({
           <Image
             src={image}
             fill
-            sizes={"(max-width: 768px) 100vw, (max-width: 1200px) 600px, 600px"}
+            sizes={"(max-width: 425px) 100vw, (max-width: 768px) 400px, 600px"}
             alt={title || url}
             unoptimized={unoptimized}
             priority={priority}
