@@ -56,6 +56,7 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
                 url="https://stripe.com"
                 image="/images/stripe-home.webp"
                 title="Stripe | Financial Infrastructure to Grow Your Revenue"
+                priority={true}
                 description={
                   "Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes. Accept payments, send payouts, and automate financial processes with a suite of APIs and no-code tools."
                 }
@@ -64,6 +65,7 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
             <div className="col-span-2 self-end max-lg:hidden">
               <SlackPreview
                 url="https://stripe.com/enterprise"
+                priority={true}
                 image="/images/stripe-enterprise.webp"
                 title="Enterprise Payment Solutions for Large Businesses | Stripe"
                 description="Get enterprise payment and financial solutions that maximize conversion, add revenue streams, and automate financial operations. Learn why enterprises build on Stripe."
@@ -72,6 +74,7 @@ export const BlockInputDemo = ({ hidePreview = false }: IProps) => {
             <div className="col-span-5">
               <TwitterPreview
                 url="https://stripe.com/startups"
+                priority={true}
                 image="/images/stripe-startups.webp"
                 title={
                   "Payment Processing Tools & Resources for Startups | Stripe"

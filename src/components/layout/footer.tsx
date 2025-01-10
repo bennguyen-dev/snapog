@@ -5,17 +5,17 @@ import { Typography } from "@/components/ui/typography";
 
 export const Footer = () => {
   return (
-    <footer className="bg-accent">
+    <footer className="bg-foreground dark:bg-background">
       <div className="container flex flex-col items-center justify-center pt-8 sm:pt-16">
         <div className="flex w-full flex-col gap-16 pb-8 sm:pb-16 md:flex-row md:justify-between">
           <div className="md:basis-1/3">
             <Link href="/" className="mb-4 flex items-center gap-2">
               <Image src="/logo.svg" alt="Logo" width={64} height={64} />
-              <span className="self-center whitespace-nowrap text-2xl font-bold text-primary">
+              <span className="text-2xl font-bold text-primary">
                 Snap<span className="text-secondary">OG</span>
               </span>
             </Link>
-            <Typography className="bg-gradient-to-br from-secondary via-primary to-secondary bg-clip-text">
+            <Typography className="bg-gradient-to-br from-secondary via-primary to-secondary bg-clip-text text-background dark:text-foreground">
               <span className="bg-clip-text text-transparent">Automate </span>
               your open-graph: <br />
               <span className="text-transparent">Dynamic screenshots </span>by
@@ -27,7 +27,7 @@ export const Footer = () => {
               <Typography className="mb-4 font-bold text-primary">
                 Solutions
               </Typography>
-              <ul className="text-sm text-muted-foreground">
+              <ul className="text-sm text-muted">
                 <li className="mb-4 hover:underline">
                   <Link href="/">Open-graph image</Link>
                 </li>
@@ -40,7 +40,7 @@ export const Footer = () => {
               <Typography className="mb-4 font-bold text-primary">
                 Support
               </Typography>
-              <ul className="text-sm text-muted-foreground">
+              <ul className="text-sm text-muted">
                 <li className="hover:underline">
                   <Link href="/#faqs">FAQs</Link>
                 </li>
@@ -50,7 +50,7 @@ export const Footer = () => {
               <Typography className="mb-4 font-bold text-primary">
                 Company
               </Typography>
-              <ul className="text-sm text-muted-foreground">
+              <ul className="text-sm text-muted">
                 <li className="mb-4 hover:underline">
                   <Link href="/about-us">About Us</Link>
                 </li>
@@ -60,7 +60,7 @@ export const Footer = () => {
               <Typography className="mb-4 font-bold text-primary">
                 Legal
               </Typography>
-              <ul className="text-sm text-muted-foreground">
+              <ul className="text-sm text-muted">
                 <li className="mb-4 hover:underline">
                   <Link href="/privacy">Privacy Policy</Link>
                 </li>

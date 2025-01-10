@@ -10,6 +10,24 @@ interface IProps {
   domain?: string;
 }
 
+const COMPARE_CONTENT = {
+  normal: {
+    title: "Normal og:image",
+    content: [
+      "Manually update when the content changes",
+      "Takes time to design an OG image for every page",
+      "Complicated code to generate dynamic OG images",
+    ],
+  },
+  snapog: {
+    title: "SnapOG's og:image",
+    content: [
+      "In-context OG image with page screenshot (better CTR)",
+      "Fully automated, generated for every page, save time.",
+      "Optimal size, high quality (retina scale), fast loading",
+    ],
+  },
+};
 export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
   return (
     <section className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
@@ -25,43 +43,35 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
       <div className="grid grid-cols-1 gap-x-12 gap-y-8 pb-12 md:grid-cols-2 md:gap-8">
         <div className="flex flex-col items-center text-muted-foreground/80 sm:ml-2">
           <Typography
-            variant="h4"
+            variant="h3"
             className="mb-4 text-left text-xl font-normal text-foreground"
           >
-            Normal OG images
+            {COMPARE_CONTENT.normal.title}
           </Typography>
           <ul className="space-y-2">
-            <li className="flex items-center gap-2">
-              <X className="inline-block size-5 stroke-2" />
-              Manually update when the content changes
-            </li>
-            <li className="flex items-center gap-2">
-              <X className="inline-block size-5 stroke-2" />
-              Takes time to design an OG image for every page
-            </li>
-            <li className="flex items-center gap-2">
-              <X className="inline-block size-5 stroke-2" />
-              Complicated code to generate dynamic OG images
-            </li>
+            {COMPARE_CONTENT.normal.content.map((content) => {
+              return (
+                <li className="flex items-start gap-2" key={content}>
+                  <X className="inline-block size-5 stroke-2" />
+                  {content}
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="flex flex-col items-center sm:ml-2">
-          <Typography variant="h4" className="mb-4 text-xl font-normal">
-            SnapOG's OG images
+          <Typography variant="h3" className="mb-4 text-xl font-normal">
+            {COMPARE_CONTENT.snapog.title}
           </Typography>
           <ul className="space-y-2 font-medium">
-            <li className="flex items-center gap-2">
-              <Check className="inline-block size-6 stroke-2 text-success" />
-              In-context OG image with page screenshot (better CTR)
-            </li>
-            <li className="flex items-center gap-2">
-              <Check className="inline-block size-6 stroke-2 text-success" />
-              Fully automated, generated for every page, save time.
-            </li>
-            <li className="flex items-center gap-2">
-              <Check className="inline-block size-6 stroke-2 text-success" />
-              Optimal size, high quality (retina scale), fast loading
-            </li>
+            {COMPARE_CONTENT.snapog.content.map((content) => {
+              return (
+                <li className="flex items-start gap-2" key={content}>
+                  <Check className="inline-block size-5 stroke-2 text-success" />
+                  {content}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -84,7 +94,6 @@ export const BlockCompareOGImage = ({ pagesInfo, domain }: IProps) => {
                 title={page.OGTitle}
                 description={page.OGDescription}
                 ribbon={{
-                  type: "success",
                   content: "SnapOG",
                 }}
               />
