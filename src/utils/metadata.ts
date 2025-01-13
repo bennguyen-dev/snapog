@@ -68,7 +68,7 @@ export function getMetadata({
       card: "summary_large_image",
       title: finalTitle,
       description: finalDescription,
-      creator: "@snapog",
+      creator: "@snapog_official",
     },
     alternates: {
       canonical: `https://${domain}${path}`,
