@@ -1,9 +1,12 @@
+"use client";
+
+import { useSession } from "next-auth/react";
+
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import { auth } from "@/auth";
 import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 
@@ -11,8 +14,9 @@ const DynamicMobileNavbar = dynamic(
   () => import("@/components/layout/mobile-navbar"),
 );
 
-const Header = async () => {
-  const session = await auth();
+const Header = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full bg-card/90 text-card-foreground backdrop-blur">
@@ -30,27 +34,25 @@ const Header = async () => {
         <Navbar />
 
         {session?.user ? (
-          <form
-            action={async () => {
-              "use server";
-              redirect("/dashboard/sites");
+          <Button
+            className="sm:h-11"
+            id="dashboard"
+            onClick={() => {
+              router.push("/dashboard/sites");
             }}
           >
-            <Button className="sm:h-11">Dashboard</Button>
-          </form>
+            Dashboard
+          </Button>
         ) : (
-          <div className="flex items-center justify-between space-x-2 md:justify-end">
-            <form
-              action={async () => {
-                "use server";
-                redirect("/signin");
-              }}
-            >
-              <Button className="sm:h-11" type="submit" id="getStarted">
-                Get Started
-              </Button>
-            </form>
-          </div>
+          <Button
+            className="sm:h-11"
+            id="getStarted"
+            onClick={() => {
+              router.push("/signin");
+            }}
+          >
+            Get Started
+          </Button>
         )}
       </div>
     </header>

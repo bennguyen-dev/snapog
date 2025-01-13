@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import BlockTermsOfService from "@/components/block/BlockTermsOfService";
 import { getMetadata } from "@/utils/metadata";
 
+export const runtime = "edge";
+
 const DynamicBlockGetStartedNow = dynamic(
   () => import("@/components/block/BlockGetStartedNow"),
 );

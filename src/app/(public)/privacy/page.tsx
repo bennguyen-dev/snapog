@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import BlockPrivacyPolicy from "@/components/block/BlockPrivacyPolicy";
 import { getMetadata } from "@/utils/metadata";
 
+export const runtime = "edge";
+
 const DynamicBlockGetStartedNow = dynamic(
   () => import("@/components/block/BlockGetStartedNow"),
 );

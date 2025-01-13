@@ -5,6 +5,8 @@ import BlockInputDemo from "@/components/block/BlockInputDemo";
 import { IGetDemoResponse } from "@/services/demo";
 import { getMetadata } from "@/utils/metadata";
 
+export const runtime = "edge";
+
 const DynamicBlockCompareOGImage = dynamic(
   () => import("@/components/block/BlockCompareOGImage/BlockCompareOGImage"),
 );

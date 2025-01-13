@@ -8,7 +8,6 @@ import { auth } from "@/auth";
 import { AuthHeader } from "@/components/layout/auth-header";
 import { AuthSidebar } from "@/components/layout/auth-sidebar";
 import { ReactQueryProvider } from "@/components/provider/reactQueryProvider";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface IProps {
   children: ReactNode;
@@ -27,11 +26,7 @@ export default async function AuthLayout({ children }: IProps) {
         <main className="flex h-screen w-full flex-col overflow-hidden">
           <AuthHeader />
           <ReactQueryProvider>
-            <ScrollArea className="h-full flex-1">
-              {children}
-              <ScrollBar orientation="vertical" />
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+            <div className="h-full flex-1 overflow-y-auto">{children}</div>
           </ReactQueryProvider>
         </main>
       </div>
