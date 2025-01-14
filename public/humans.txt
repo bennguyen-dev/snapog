@@ -1,6 +1,6 @@
 /* TEAM */
 Developer: Ben Nguyen
-Contact: bennguyen.dev.vn@gmail.com
+Contact: ben.nguyen@snapog.com
 Website: https://www.snapog.com
 From: Vietnam
 
