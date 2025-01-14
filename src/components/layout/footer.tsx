@@ -1,3 +1,5 @@
+import { Facebook, Instagram, Twitter } from "lucide-react";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,6 +46,22 @@ const Footer = () => {
             </div>
             <div>
               <Typography className="mb-4 font-bold text-primary">
+                Company
+              </Typography>
+              <ul className="text-sm text-muted-foreground">
+                <li className="mb-4 hover:underline">
+                  <Link href="/about-us">About Us</Link>
+                </li>
+                <li className="mb-4 hover:underline">
+                  <Link href="/privacy">Privacy Policy</Link>
+                </li>
+                <li className="hover:underline">
+                  <Link href="/terms">Terms & Conditions</Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <Typography className="mb-4 font-bold text-primary">
                 Support
               </Typography>
               <ul className="text-sm text-muted-foreground">
@@ -54,24 +72,41 @@ const Footer = () => {
             </div>
             <div>
               <Typography className="mb-4 font-bold text-primary">
-                Company
+                Follow Us
               </Typography>
               <ul className="text-sm text-muted-foreground">
-                <li className="mb-4 hover:underline">
-                  <Link href="/about-us">About Us</Link>
+                <li className="mb-4">
+                  <a
+                    href="https://x.com/snapog_official"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-primary"
+                  >
+                    <Twitter className="h-4 w-4" />
+                    <span>X (Twitter)</span>
+                  </a>
                 </li>
-              </ul>
-            </div>
-            <div>
-              <Typography className="mb-4 font-bold text-primary">
-                Legal
-              </Typography>
-              <ul className="text-sm text-muted-foreground">
-                <li className="mb-4 hover:underline">
-                  <Link href="/privacy">Privacy Policy</Link>
+                <li className="mb-4">
+                  <a
+                    href="https://facebook.com/snapog.official"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-primary"
+                  >
+                    <Facebook className="h-4 w-4" />
+                    <span>Facebook</span>
+                  </a>
                 </li>
-                <li className="hover:underline">
-                  <Link href="/terms">Terms & Conditions</Link>
+                <li>
+                  <a
+                    href="https://instagram.com/snapog.official"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-primary"
+                  >
+                    <Instagram className="h-4 w-4" />
+                    <span>Instagram</span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -79,9 +114,9 @@ const Footer = () => {
         </div>
         <div className="flex w-full flex-wrap justify-between gap-2 border-t border-solid border-t-accent-foreground py-4 sm:py-6">
           <span className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()}{" "}
+            {new Date().getFullYear()}{" "}
             <Link href="/" className="hover:underline">
-              SnapOG™
+              SnapOG
             </Link>
             . All Rights Reserved.{" "}
           </span>
