@@ -9,10 +9,18 @@ interface GenerateMetadataProps {
 }
 
 interface GenerateSchemaProps extends GenerateMetadataProps {
-  type?: "WebSite" | "WebPage" | "Article" | "Organization";
+  type?: "WebSite" | "WebPage" | "Article" | "Organization" | "FAQPage";
   datePublished?: string;
   dateModified?: string;
   author?: string;
+  mainEntity?: Array<{
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: {
+      "@type": "Answer";
+      text: string;
+    };
+  }>;
 }
 
 const defaultMetadata = {
@@ -99,6 +107,7 @@ export function generateSchema({
   datePublished,
   dateModified,
   author,
+  mainEntity,
 }: GenerateSchemaProps) {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
   const finalTitle = title
@@ -141,8 +150,27 @@ export function generateSchema({
       logo: `https://${domain}/logo.png`,
       sameAs: [
         "https://twitter.com/snapog_official",
+        "https://facebook.com/snapog.official",
+        "https://instagram.com/snapog.official",
         // Add other social media URLs here
       ],
+    };
+  }
+
+  if (type === "FAQPage") {
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      name: finalTitle,
+      description: finalDescription,
+      url,
+      mainEntity: mainEntity || [],
+      publisher: {
+        "@type": "Organization",
+        name: defaultMetadata.siteName,
+        url: `https://${domain}`,
+      },
+      ...(dateModified && { dateModified }),
     };
   }
 

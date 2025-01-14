@@ -48,7 +48,7 @@ const Footer = () => {
               </Typography>
               <ul className="text-sm text-muted-foreground">
                 <li className="hover:underline">
-                  <Link href="/#faqs">FAQs</Link>
+                  <Link href="/faqs">FAQs</Link>
                 </li>
               </ul>
             </div>

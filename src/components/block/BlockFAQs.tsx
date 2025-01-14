@@ -11,40 +11,62 @@ const BlockFAQs = () => {
 
   const FAQs = [
     {
-      key: "question-2",
+      key: "getting-started",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          How do I use this as the open graph image (social image) for my web
-          pages?
+          How do I get started with SnapOG?
         </Typography>
       ),
       content: (
-        <div className="text-muted-foreground">
-          <Typography variant="p">
-            Very simple, you just need to use this URL as the open graph image:
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>Getting started with SnapOG is simple:</Typography>
+          <ol className="list-decimal space-y-2 pl-4">
+            <li>
+              <Typography>Sign up for an account</Typography>
+            </li>
+            <li>
+              <Typography>
+                Add your website domain in the admin panel
+              </Typography>
+            </li>
+            <li>
+              <Typography>Get your API key</Typography>
+            </li>
+            <li>
+              <Typography>Start generating OG images using our API</Typography>
+            </li>
+          </ol>
+        </div>
+      ),
+    },
+    {
+      key: "implementation",
+      title: (
+        <Typography variant="h4" className="text-left text-base font-medium">
+          How do I implement SnapOG in my website?
+        </Typography>
+      ),
+      content: (
+        <div className="space-y-4 text-muted-foreground">
+          <Typography>
+            Implementation is straightforward. Use this URL format for your OG
+            image:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
             https://{domain}/api/get?api_key=
-            <span className="font-bold text-orange-600">{"<api_key>"}</span>
+            <span className="font-bold text-orange-600">
+              {"<your_api_key>"}
+            </span>
             &url=
             <span className="font-bold text-orange-600">
-              yourwebsite.com/articles/my-post-123
+              yourwebsite.com/your-page
             </span>
           </Typography>
-          <Typography variant="p">
-            Replace{" "}
-            <Typography variant="code" className="font-bold text-orange-600">
-              yourwebsite.com/articles/my-post-123
-            </Typography>{" "}
-            with your website URL.
-          </Typography>
-          <Typography variant="p">
-            Ideally, you would want to generate the URL dynamically on your
-            website so that each page has its own unique social image. For
-            example:
+          <Typography>
+            For dynamic implementation, use your router's path:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{domain}/api/get?url=
+            https://{domain}/api/get?api_key={"<your_api_key>"}&url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/{"${router.pathname}"}
             </span>
@@ -53,156 +75,187 @@ const BlockFAQs = () => {
       ),
     },
     {
-      key: "question-3",
+      key: "url-rules",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          What kind of URL can I use in the &quot;{domain}
-          /api/get?url=&quot; parameter?
+          What are the URL requirements and limitations?
         </Typography>
       ),
       content: (
-        <Typography variant="p" className="text-muted-foreground">
-          You can use any URL that is under the domain of the site you added in
-          your admin panel. Note that the query string is ignored, so links like
-          &quot;yourcompany.com/blog/post1?utm_source=google&quot; will be
-          treated as &quot;yourcompany.com/blog/post1&quot;. Furthermore, the
-          URL must exist (not a 404 page or an error page), otherwise it will
-          result in an error. Requests to non-existing URLs or duplicated URLs
-          are not counted toward your usage limit.
-        </Typography>
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>When using URLs with our service:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>
+                Only URLs from your registered domain are allowed
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                URLs must be accessible (return 2xx status code)
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Query parameters are ignored (e.g., UTM parameters)
+              </Typography>
+            </li>
+            <li>
+              <Typography>Subdomains must be registered separately</Typography>
+            </li>
+          </ul>
+        </div>
       ),
     },
     {
-      key: "question-5",
+      key: "usage-limits",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          How do I prevent someone else from using my URL to generate thousands
-          of images and consuming all of my usage limit?
+          How are usage limits calculated?
         </Typography>
       ),
       content: (
-        <Typography variant="p" className="text-muted-foreground">
-          Images can only be generated from the domain you added in the admin
-          panel. Trying to generate images from another domain will result in an
-          error. For a specific domain, we only generate images for URLs that
-          exist (return a 2xx status code), which means no one can spam your
-          images usage limit.
-        </Typography>
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>Understanding usage limits:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>
+                Only new image generations count toward your limit
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Cached images are served without counting against your quota
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Failed requests (404s, errors) don't count
+              </Typography>
+            </li>
+            <li>
+              <Typography>Duplicate URLs use cached versions</Typography>
+            </li>
+          </ul>
+        </div>
       ),
     },
     {
-      key: "question-6",
+      key: "cache-management",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          What if my website has hundreds of thousands of unique URLs? Will each
-          URL get a separate image?
+          How do I manage image caching?
         </Typography>
       ),
       content: (
-        <Typography variant="p" className="text-muted-foreground">
-          Just a reminder that the query string is ignored, so
-          &quot;yourwebsite.com/blog/post1?utm_source=google&quot; and
-          &quot;yourwebsite.com/blog/post1?utm_source=facebook&quot; will be
-          treated as the same URL, and the same image will be created for both.
-          If you really have hundreds of thousands of unique URLs without query
-          strings and you don&apos;t want to generate images for all the URLs,
-          you can use the site settings to control which URLs you want to
-          generate images for. We will support restrictions using a whitelist,
-          blacklist, or a sitemap.xml file (this feature will be available
-          soon).
-        </Typography>
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>Cache management options in the admin panel:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>Clear cache for specific URLs</Typography>
+            </li>
+            <li>
+              <Typography>Adjust cache duration settings</Typography>
+            </li>
+            <li>
+              <Typography>
+                Automatic cache clearing on content updates (coming soon)
+              </Typography>
+            </li>
+          </ul>
+        </div>
       ),
     },
     {
-      key: "question-7",
+      key: "security",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          How is the image limit counted? Are cached images counted toward my
-          limit?
+          How secure is the service?
         </Typography>
       ),
       content: (
-        <Typography variant="p" className="text-muted-foreground">
-          Cached images are not counted toward your usage, so 1,000 images/month
-          means you can create new 1,000 screenshots of your website per month.
-        </Typography>
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>SnapOG implements several security measures:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>API key authentication for all requests</Typography>
+            </li>
+            <li>
+              <Typography>Domain-specific image generation</Typography>
+            </li>
+            <li>
+              <Typography>Rate limiting to prevent abuse</Typography>
+            </li>
+            <li>
+              <Typography>SSL encryption for all API calls</Typography>
+            </li>
+          </ul>
+        </div>
       ),
     },
     {
-      key: "question-8",
+      key: "large-scale",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          I just updated a web page, how do I get a new image for that specific
-          URL?
+          What if my website has many unique URLs?
         </Typography>
       ),
       content: (
-        <Typography variant="p" className="text-muted-foreground">
-          You can clear the cache for a specific URL in the admin panel. A new
-          request to create an image for that URL will cost you 1 image. You can
-          also change the cache duration in the admin panel.
-        </Typography>
-      ),
-    },
-    {
-      key: "question-9",
-      title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
-          Why don&apos;t I need to verify the sites I add? Can I add any site
-          even if I don&apos;t own it?
-        </Typography>
-      ),
-      content: (
-        <Typography variant="p" className="text-muted-foreground">
-          Site verification is not needed by design. You can add sites that you
-          don&apos;t own, but generally, you wouldn&apos;t want to do that. If
-          you have a site added to your account, any requests to generate images
-          from that site will be counted toward your usage limit. This also
-          means a site can be added by multiple different users (as verification
-          is not required). When this happens, any requests to generate images
-          from that site will be counted toward a random user&apos;s usage
-          limit. If you think there is a flaw in this design, please contact us;
-          we would love to hear your feedback.
-        </Typography>
-      ),
-    },
-    {
-      key: "question-10",
-      title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
-          When I add a root domain (e.g., yourwebsite.com), does that means I
-          can generate images for all the subdomains like blog.yourwebsite.com,
-          shop.yourwebsite.com, etc.?
-        </Typography>
-      ),
-      content: (
-        <Typography variant="p" className="text-muted-foreground">
-          No, you can only generate images for the root domain you added. If you
-          want to generate images for subdomains, you need to add them
-          separately in the admin panel.
-        </Typography>
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>
+            SnapOG is designed to handle websites with many URLs efficiently:
+          </Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>
+                Query parameters are ignored to reduce duplicate generations
+                (e.g., UTM parameters)
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Upcoming features will include URL filtering via
+                whitelist/blacklist
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Future support for sitemap.xml integration to manage large sets
+                of URLs
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Efficient caching system to minimize unnecessary regenerations
+              </Typography>
+            </li>
+          </ul>
+          <Typography className="mt-2">
+            If you have specific requirements for handling large numbers of
+            URLs, please contact us to discuss your needs.
+          </Typography>
+        </div>
       ),
     },
   ];
 
   return (
-    <section
-      id="faqs"
-      className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16"
-    >
+    <section className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16">
       <Typography variant="h2" className="mb-8 text-center">
         Frequently Asked Questions
       </Typography>
-      <Accordion type="multiple" className="mx-auto w-full max-w-screen-lg">
-        {FAQs.map((faq) => (
-          <AccordionItem key={faq.key} value={faq.key}>
-            <AccordionTrigger>{faq.title}</AccordionTrigger>
-            <AccordionContent className="md:pr-16">
-              {faq.content}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <div className="mx-auto w-full max-w-screen-lg">
+        <Accordion type="multiple" className="w-full">
+          {FAQs.map((faq) => (
+            <AccordionItem key={faq.key} value={faq.key}>
+              <AccordionTrigger>{faq.title}</AccordionTrigger>
+              <AccordionContent className="md:pr-16">
+                {faq.content}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </section>
   );
 };

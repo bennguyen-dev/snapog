@@ -21,7 +21,7 @@ export const PUBLIC_ROUTES: NavItem[] = [
   {
     title: "FAQs",
     label: "FAQs",
-    href: "/#faqs",
+    href: "/faqs",
   },
 ];
 
