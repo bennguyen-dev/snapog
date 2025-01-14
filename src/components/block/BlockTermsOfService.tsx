@@ -43,7 +43,12 @@ const BlockTermsOfService = () => {
               individual or entity that uses our Service
             </Typography>
           </li>
-          l
+          <li>
+            <Typography>
+              <span className="font-semibold">"Credits"</span> refer to the
+              virtual currency used within SnapOG to pay for services
+            </Typography>
+          </li>
           <li>
             <Typography>
               <span className="font-semibold">"OG Images"</span> refers to the
@@ -95,29 +100,38 @@ const BlockTermsOfService = () => {
 
       {/* Payment Terms */}
       <div className="space-y-4">
-        <Typography variant="h3">5. Payment and Subscription</Typography>
+        <Typography variant="h3">5. Payment and Credits</Typography>
         <Typography>
-          Some aspects of the Service are provided for a fee. You agree to pay
-          all fees associated with your selected plan. Fees are non-refundable
-          except as required by law or as explicitly stated in these Terms.
+          Our Service operates on a credit-based system. Users must purchase
+          credits to use our services. All credit purchases are final and
+          non-refundable.
         </Typography>
         <ul className="list-disc space-y-2 pl-6">
           <li>
             <Typography>
-              Subscription fees are billed in advance on a monthly or annual
-              basis
+              Credits must be purchased in advance to use our services
             </Typography>
           </li>
           <li>
             <Typography>
-              Refunds may be issued within 14 days of purchase if credits remain
-              unused
+              All credit purchases are final and non-refundable under any
+              circumstances
             </Typography>
           </li>
           <li>
             <Typography>
-              You may cancel your subscription at any time, but no refunds will
-              be issued for partial subscription periods
+              Credits have no cash value and cannot be transferred or exchanged
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Unused credits remain valid as long as your account is active
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              We reserve the right to modify credit pricing and packages at any
+              time
             </Typography>
           </li>
         </ul>
@@ -125,13 +139,34 @@ const BlockTermsOfService = () => {
 
       {/* API Usage */}
       <div className="space-y-4">
-        <Typography variant="h3">6. API Usage and Rate Limits</Typography>
-        <Typography>
-          Our Service includes API access subject to rate limits based on your
-          subscription plan. You agree not to exceed these limits or attempt to
-          circumvent them. We reserve the right to modify these limits at any
-          time.
+        <Typography variant="h3">
+          6. API Usage and Credit Consumption
         </Typography>
+        <Typography>
+          Our Service includes API access that consumes credits based on usage.
+          Each API call requires a specific number of credits. You are
+          responsible for maintaining sufficient credits in your account for
+          your usage needs.
+        </Typography>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            <Typography>
+              API calls will fail if you have insufficient credits
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Credit consumption rates may vary based on the type of service
+              used
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              We reserve the right to modify credit consumption rates with
+              notice
+            </Typography>
+          </li>
+        </ul>
       </div>
 
       {/* Intellectual Property */}

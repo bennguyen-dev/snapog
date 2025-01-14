@@ -111,30 +111,96 @@ const BlockFAQs = () => {
       key: "usage-limits",
       title: (
         <Typography variant="h4" className="text-left text-base font-medium">
-          How are usage limits calculated?
+          How do credits work?
         </Typography>
       ),
       content: (
         <div className="space-y-2 text-muted-foreground">
-          <Typography>Understanding usage limits:</Typography>
+          <Typography>Understanding credits and usage:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
               <Typography>
-                Only new image generations count toward your limit
+                Each image generation consumes one credit from your account
               </Typography>
             </li>
             <li>
               <Typography>
-                Cached images are served without counting against your quota
+                Cached images are served for free and don't consume credits
               </Typography>
             </li>
             <li>
               <Typography>
-                Failed requests (404s, errors) don't count
+                Failed requests (404s, errors) don't consume credits
               </Typography>
             </li>
             <li>
-              <Typography>Duplicate URLs use cached versions</Typography>
+              <Typography>
+                Credits never expire as long as your account remains active
+              </Typography>
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      key: "credits-purchase",
+      title: (
+        <Typography variant="h4" className="text-left text-base font-medium">
+          How do I purchase credits?
+        </Typography>
+      ),
+      content: (
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>Purchasing credits is straightforward:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>
+                Choose a credit package from our pricing page
+              </Typography>
+            </li>
+            <li>
+              <Typography>Complete the secure payment process</Typography>
+            </li>
+            <li>
+              <Typography>
+                Credits are instantly added to your account
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Note: Credit purchases are final and non-refundable
+              </Typography>
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      key: "credit-balance",
+      title: (
+        <Typography variant="h4" className="text-left text-base font-medium">
+          How do I monitor my credit balance?
+        </Typography>
+      ),
+      content: (
+        <div className="space-y-2 text-muted-foreground">
+          <Typography>Track your credit usage in the admin panel:</Typography>
+          <ul className="list-disc space-y-2 pl-4">
+            <li>
+              <Typography>View your current credit balance</Typography>
+            </li>
+            <li>
+              <Typography>Monitor credit consumption history</Typography>
+            </li>
+            <li>
+              <Typography>
+                Set up low balance notifications (coming soon)
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Enable auto-purchase for uninterrupted service (coming soon)
+              </Typography>
             </li>
           </ul>
         </div>
