@@ -8,6 +8,13 @@ interface GenerateMetadataProps {
   keywords?: string[];
 }
 
+interface GenerateSchemaProps extends GenerateMetadataProps {
+  type?: "WebSite" | "WebPage" | "Article" | "Organization";
+  datePublished?: string;
+  dateModified?: string;
+  author?: string;
+}
+
 const defaultMetadata = {
   siteName: "SnapOG",
   baseTitle: "Generate social media previews automatically",
@@ -82,4 +89,62 @@ export function getMetadata({
       },
     },
   };
+}
+
+export function generateSchema({
+  title,
+  description,
+  path = "",
+  type = "WebPage",
+  datePublished,
+  dateModified,
+  author,
+}: GenerateSchemaProps) {
+  const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
+  const finalTitle = title
+    ? `${title} | ${defaultMetadata.siteName}`
+    : defaultMetadata.baseTitle;
+  const finalDescription = description || defaultMetadata.baseDescription;
+  const url = `https://${domain}${path}`;
+
+  const baseSchema = {
+    "@context": "https://schema.org",
+    "@type": type,
+    name: finalTitle,
+    description: finalDescription,
+    url,
+  };
+
+  if (type === "WebPage" || type === "Article") {
+    return {
+      ...baseSchema,
+      ...(datePublished && { datePublished }),
+      ...(dateModified && { dateModified }),
+      ...(author && {
+        author: {
+          "@type": "Person",
+          name: author,
+        },
+      }),
+      publisher: {
+        "@type": "Organization",
+        name: defaultMetadata.siteName,
+        url: `https://${domain}`,
+      },
+      image: `https://${domain}/api/get?api_key=${process.env.SNAP_OG_API_KEY}&url=${domain}${path}&time=${Date.now()}`,
+    };
+  }
+
+  if (type === "Organization") {
+    return {
+      ...baseSchema,
+      logo: `https://${domain}/logo.png`,
+      sameAs: [
+        "https://twitter.com/snapog_official",
+        // Add other social media URLs here
+      ],
+    };
+  }
+
+  return baseSchema;
 }

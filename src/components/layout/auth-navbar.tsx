@@ -1,4 +1,5 @@
 "use client";
+
 import { LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
@@ -16,6 +17,7 @@ import {
 
 export const AuthNavbar = () => {
   const { data: session } = useSession();
+
   if (session) {
     return (
       <DropdownMenu>

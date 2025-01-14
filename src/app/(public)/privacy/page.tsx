@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import BlockPrivacyPolicy from "@/components/block/BlockPrivacyPolicy";
-import { getMetadata } from "@/utils/metadata";
+import { generateSchema, getMetadata } from "@/utils/metadata";
 
 export const runtime = "edge";
 
@@ -21,6 +21,21 @@ export async function generateMetadata() {
 export default function PrivacyPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateSchema({
+              type: "WebPage",
+              title: "Privacy Policy - SnapOG",
+              description:
+                "Our commitment to protecting your privacy. Read about how SnapOG handles and safeguards your data.",
+              path: "/privacy",
+              dateModified: new Date().toISOString(),
+            }),
+          ),
+        }}
+      />
       <BlockPrivacyPolicy />
       <DynamicBlockGetStartedNow />
     </>

@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 
-import { SessionProvider } from "next-auth/react";
-
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -20,7 +18,7 @@ export default async function AuthLayout({ children }: IProps) {
   }
 
   return (
-    <SessionProvider>
+    <>
       <div className="flex ">
         <AuthSidebar />
         <main className="flex h-screen w-full flex-col overflow-hidden">
@@ -30,6 +28,6 @@ export default async function AuthLayout({ children }: IProps) {
           </ReactQueryProvider>
         </main>
       </div>
-    </SessionProvider>
+    </>
   );
 }

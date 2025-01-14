@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { BlockBenefit } from "@/components/block/BlockBenefit";
 import BlockInputDemo from "@/components/block/BlockInputDemo";
 import { IGetDemoResponse } from "@/services/demo";
-import { getMetadata } from "@/utils/metadata";
+import { generateSchema, getMetadata } from "@/utils/metadata";
 
 export const runtime = "edge";
 
@@ -21,17 +21,8 @@ const DynamicBlockGetStartedNow = dynamic(
 );
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 
-export async function generateMetadata() {
-  return getMetadata({
-    path: "/",
-    keywords: [
-      "social preview automation",
-      "OG image generation",
-      "social media optimization",
-      "automated meta images",
-      "link preview tool",
-    ],
-  });
+export function generateMetadata() {
+  return getMetadata({});
 }
 
 export default async function Home() {
@@ -67,6 +58,17 @@ export default async function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateSchema({
+              type: "WebSite",
+              dateModified: new Date().toISOString(),
+            }),
+          ),
+        }}
+      />
       <BlockInputDemo />
       <BlockBenefit />
       <DynamicBlockCompareOGImage pagesInfo={initPageInfo} />

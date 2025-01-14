@@ -1,9 +1,7 @@
 import dynamic from "next/dynamic";
 
 import BlockPricing from "@/components/block/BlockPricing";
-import { getMetadata } from "@/utils/metadata";
-
-export const runtime = "edge";
+import { generateSchema, getMetadata } from "@/utils/metadata";
 
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 const DynamicBlockGetStartedNow = dynamic(
@@ -12,6 +10,8 @@ const DynamicBlockGetStartedNow = dynamic(
 const DynamicBlockTryYourDemo = dynamic(
   () => import("@/components/block/BlockTryYourDemo"),
 );
+
+export const runtime = "edge";
 
 export async function generateMetadata() {
   return getMetadata({
@@ -25,6 +25,21 @@ export async function generateMetadata() {
 export default function PricingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateSchema({
+              type: "WebPage",
+              title: "SnapOG Pricing - Simple Plans for Every Business",
+              description:
+                "Choose the perfect plan for your business. Simple, transparent pricing with all the features you need to boost social engagement.",
+              path: "/pricing",
+              dateModified: new Date().toISOString(),
+            }),
+          ),
+        }}
+      />
       <BlockPricing />
       <DynamicBlockTryYourDemo />
       <DynamicBlockFAQs />

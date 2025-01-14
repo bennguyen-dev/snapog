@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import BlockAboutUs from "@/components/block/BlockAboutUs";
-import { getMetadata } from "@/utils/metadata";
+import { generateSchema, getMetadata } from "@/utils/metadata";
 
 export const runtime = "edge";
 
@@ -19,7 +19,8 @@ export async function generateMetadata() {
       "SnapOG team",
       "social media tools",
       "OG image automation",
-      "about us",
+      "about SnapOG",
+      "social preview company",
     ],
   });
 }
@@ -27,6 +28,21 @@ export async function generateMetadata() {
 export default function AboutUsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateSchema({
+              type: "WebPage",
+              title: "About SnapOG - The Leading Social Preview Generator",
+              description:
+                "Meet the team behind SnapOG. Learn how we're revolutionizing social media sharing with automated OG image generation technology.",
+              path: "/about-us",
+              dateModified: new Date().toISOString(),
+            }),
+          ),
+        }}
+      />
       <BlockAboutUs />
       <DynamicBlockGetStartedNow />
     </>

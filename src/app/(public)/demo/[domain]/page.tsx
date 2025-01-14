@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import BlockCompareOGImage from "@/components/block/BlockCompareOGImage/BlockCompareOGImage";
 import { demoService } from "@/services/demo";
-import { getMetadata } from "@/utils/metadata";
+import { generateSchema, getMetadata } from "@/utils/metadata";
 
 const DynamicBlockHowItWorks = dynamic(
   () => import("@/components/block/BlockHowItWorks"),
@@ -29,9 +29,9 @@ export async function generateMetadata({
     path: `/demo/${domain}`,
     keywords: [
       `${domain} social preview`,
-      "website preview generator",
+      `${domain} og image`,
+      "website preview",
       "social media optimization",
-      "link preview demo",
     ],
   });
 }
@@ -42,7 +42,6 @@ export default async function DemoDetailPage({
   params: { domain: string };
 }) {
   const domain = params.domain;
-
   const demoRes = await demoService.getDemo({ url: domain });
 
   if (demoRes.status === 404) {
@@ -51,6 +50,20 @@ export default async function DemoDetailPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateSchema({
+              type: "WebPage",
+              title: `See How ${domain} Could Look With Automated OG Images`,
+              description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference SnapOG makes in social sharing previews.`,
+              path: `/demo/${domain}`,
+              dateModified: new Date().toISOString(),
+            }),
+          ),
+        }}
+      />
       {demoRes.data && (
         <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
       )}
