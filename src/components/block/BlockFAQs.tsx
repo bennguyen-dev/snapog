@@ -53,20 +53,20 @@ const BlockFAQs = () => {
             image:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{domain}/api/get?api_key=
-            <span className="font-bold text-orange-600">
-              {"<your_api_key>"}
-            </span>
-            &url=
+            https://{domain}/api
+            <span className="font-bold text-orange-600">{"{apiKey}"}</span>
+            ?url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/your-page
             </span>
           </Typography>
-          <Typography>
+          <Typography className="mt-4">
             For dynamic implementation, use your router's path:
           </Typography>
           <Typography variant="code" className="mt-2 inline-block">
-            https://{domain}/api/get?api_key={"<your_api_key>"}&url=
+            https://{domain}/api
+            <span className="font-bold text-orange-600">{"{apiKey}"}</span>
+            ?url=
             <span className="font-bold text-orange-600">
               yourwebsite.com/{"${router.pathname}"}
             </span>

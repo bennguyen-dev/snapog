@@ -87,7 +87,7 @@ export function getLinkSmartOGImage({
   url: string;
   apiKey: string;
 }) {
-  return `https://${host}/api/get?api_key=${apiKey}&url=${getUrlWithoutProtocol(url)}`;
+  return `https://${host}/api/${apiKey}?url=${getUrlWithoutProtocol(url)}`;
 }
 
 export function formatPrice(priceInCents: number, currency: string = "USD") {

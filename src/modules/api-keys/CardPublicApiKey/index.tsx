@@ -15,8 +15,7 @@ export const CardPublicApiKey = async () => {
       <CardHeader>
         <CardTitle>Public API Key</CardTitle>
         <CardDescription>
-          {`Use your API key to render og:image (https://${domain}
-          /get?api_key=<api_key>&url=...)`}
+          {`Use this API key to access our service. Simply add it to your URL path: https://${domain}/api/{apiKey}?url=...`}
         </CardDescription>
       </CardHeader>
       <CardContent>

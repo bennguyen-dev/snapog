@@ -12,6 +12,7 @@ type CodeBlockProps = {
   language: string;
   filename: string;
   highlightLines?: number[];
+  style?: { [key: string]: React.CSSProperties };
 } & (
   | {
       code: string;
@@ -32,6 +33,7 @@ export const CodeBlock = ({
   language,
   filename,
   code,
+  style = atomDark,
   highlightLines = [],
   tabs = [],
 }: CodeBlockProps) => {
@@ -58,7 +60,7 @@ export const CodeBlock = ({
     : highlightLines;
 
   return (
-    <div className="relative w-full rounded-lg bg-slate-900 p-4 pb-2 font-mono text-sm">
+    <div className="relative w-full rounded-lg bg-slate-900 px-4 py-2 font-mono text-sm">
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex  overflow-x-auto">
@@ -69,7 +71,7 @@ export const CodeBlock = ({
                 className={`!py-2 px-3 font-sans text-xs transition-colors ${
                   activeTab === index
                     ? "text-white"
-                    : "text-zinc-400 hover:text-zinc-200"
+                    : "text-zinc-200 hover:text-zinc-200"
                 }`}
               >
                 {tab.name}
@@ -79,7 +81,7 @@ export const CodeBlock = ({
         )}
         {!tabsExist && filename && (
           <div className="flex items-center justify-between py-2">
-            <div className="text-xs text-zinc-400">{filename}</div>
+            <div className="text-xs text-zinc-200">{filename}</div>
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-1 font-sans text-xs text-zinc-400 transition-colors hover:text-zinc-200"
@@ -93,7 +95,7 @@ export const CodeBlock = ({
       <ScrollArea className={cn("pb-4")}>
         <SyntaxHighlighter
           language={activeLanguage}
-          style={atomDark}
+          style={style}
           customStyle={{
             margin: 0,
             padding: 0,

@@ -18,11 +18,9 @@ const BlockHowItWorks = () => {
         your website:
       </Typography>
       <Typography variant="code" className="mb-4 break-all">
-        https://{domain}/api/get?api_key=
-        <span className="text-base font-bold text-secondary">
-          {"<api_key>"}
-        </span>
-        &url=
+        https://{domain}/api
+        <span className="text-base font-bold text-secondary">{"{apiKey}"}</span>
+        ?url=
         <span className="text-base font-bold text-secondary">
           yourwebsite.com/blogs/article-1
         </span>
@@ -36,7 +34,7 @@ const BlockHowItWorks = () => {
             code={getSnippetHowToUse({
               host: domain,
               domain: "yourwebsite.com",
-              apiKey: "<api_key>",
+              apiKey: "{apiKey}",
             })}
           />
         </div>
@@ -49,7 +47,7 @@ const BlockHowItWorks = () => {
             href={getLinkSmartOGImage({
               host: domain,
               url: domain,
-              apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
+              apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
             })}
             target="_blank"
             className="text-link break-all"
@@ -57,7 +55,7 @@ const BlockHowItWorks = () => {
             {getLinkSmartOGImage({
               host: domain,
               url: domain,
-              apiKey: process.env.SNAP_OG_API_KEY || "<api_key>",
+              apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
             })}
           </Link>
         </Typography>
