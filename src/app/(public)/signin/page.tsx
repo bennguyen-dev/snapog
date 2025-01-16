@@ -6,7 +6,7 @@ import { generateSchema, getMetadata } from "@/utils/metadata";
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Sign In - SnapOG",
+    title: "Sign In",
     description: "Sign in to your account to access all features of SnapOG.",
     path: "/signin",
   });
@@ -14,7 +14,7 @@ export async function generateMetadata() {
 
 const schema = generateSchema({
   type: "WebPage",
-  title: "Sign In - SnapOG",
+  title: "Sign In",
   description: "Sign in to your account to access all features of SnapOG.",
   path: "/signin",
 });

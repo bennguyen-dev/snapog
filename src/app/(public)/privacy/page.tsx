@@ -11,7 +11,7 @@ const DynamicBlockGetStartedNow = dynamic(
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Privacy Policy - SnapOG",
+    title: "Privacy Policy",
     description:
       "Our commitment to protecting your privacy. Read about how SnapOG handles and safeguards your data.",
     path: "/privacy",
@@ -20,7 +20,7 @@ export async function generateMetadata() {
 
 const schema = generateSchema({
   type: "WebPage",
-  title: "Privacy Policy - SnapOG",
+  title: "Privacy Policy",
   description:
     "Our commitment to protecting your privacy. Read about how SnapOG handles and safeguards your data.",
   path: "/privacy",

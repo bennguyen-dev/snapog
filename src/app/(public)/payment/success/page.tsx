@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return {
-    title: "Payment Success - SnapOG",
+    title: "Payment Success",
     description: "Payment Success for SnapOG",
     path: "/payment/success",
   };

@@ -11,7 +11,7 @@ const DynamicBlockGetStartedNow = dynamic(
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "Terms of Service - SnapOG",
+    title: "Terms of Service",
     description:
       "Terms of Service for SnapOG. Learn about our policies, including usage, privacy, and more.",
     path: "/terms",
@@ -20,7 +20,7 @@ export async function generateMetadata() {
 
 const schema = generateSchema({
   type: "WebPage",
-  title: "Terms of Service - SnapOG",
+  title: "Terms of Service",
   description:
     "Terms of Service for SnapOG. Learn about our policies, including usage, privacy, and more.",
   path: "/terms",

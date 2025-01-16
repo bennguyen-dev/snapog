@@ -14,7 +14,7 @@ const DynamicBlockGetStartedNow = dynamic(
 
 export async function generateMetadata() {
   return getMetadata({
-    title: "API Documentation - SnapOG",
+    title: "API Documentation",
     description:
       "Learn how to use SnapOG's API to generate dynamic Open Graph images for your website. Simple integration with just a URL parameter.",
     path: "/docs",
@@ -30,7 +30,7 @@ export async function generateMetadata() {
 
 const schema = generateSchema({
   type: "WebPage",
-  title: "API Documentation - SnapOG",
+  title: "API Documentation",
   description:
     "Learn how to use SnapOG's API to generate dynamic Open Graph images for your website. Simple integration with just a URL parameter.",
   path: "/docs",
