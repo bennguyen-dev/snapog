@@ -44,29 +44,26 @@ export default async function DemoDetailPage({
   const domain = params.domain;
   const demoRes = await demoService.getDemo({ url: domain });
 
-  if (demoRes.status === 404) {
+  if (!demoRes.data || demoRes.status === 404) {
     return notFound();
   }
+
+  const schema = generateSchema({
+    type: "WebPage",
+    title: `See How ${domain} Could Look With Automated OG Images`,
+    description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference SnapOG makes in social sharing previews.`,
+    path: `/demo/${domain}`,
+  });
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: `See How ${domain} Could Look With Automated OG Images`,
-              description: `Preview how ${domain} could boost social media engagement with automated OG images. See the difference SnapOG makes in social sharing previews.`,
-              path: `/demo/${domain}`,
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
-      {demoRes.data && (
-        <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
-      )}
+      <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
       <DynamicBlockHowItWorks />
       <DynamicBlockTryYourDemo />
       <DynamicBlockGetStartedNow />

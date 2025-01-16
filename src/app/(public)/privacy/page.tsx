@@ -18,22 +18,21 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "Privacy Policy - SnapOG",
+  description:
+    "Our commitment to protecting your privacy. Read about how SnapOG handles and safeguards your data.",
+  path: "/privacy",
+});
+
 export default function PrivacyPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "Privacy Policy - SnapOG",
-              description:
-                "Our commitment to protecting your privacy. Read about how SnapOG handles and safeguards your data.",
-              path: "/privacy",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
       <BlockPrivacyPolicy />

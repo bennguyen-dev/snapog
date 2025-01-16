@@ -22,22 +22,21 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "SnapOG Pricing - Simple Plans for Every Business",
+  description:
+    "Choose the perfect plan for your business. Simple, transparent pricing with all the features you need to boost social engagement.",
+  path: "/pricing",
+});
+
 export default function PricingPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "SnapOG Pricing - Simple Plans for Every Business",
-              description:
-                "Choose the perfect plan for your business. Simple, transparent pricing with all the features you need to boost social engagement.",
-              path: "/pricing",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
       <BlockPricing />

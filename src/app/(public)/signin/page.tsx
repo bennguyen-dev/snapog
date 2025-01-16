@@ -12,6 +12,13 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "Sign In - SnapOG",
+  description: "Sign in to your account to access all features of SnapOG.",
+  path: "/signin",
+});
+
 export default async function SignInPage() {
   const session = await auth();
 
@@ -24,16 +31,7 @@ export default async function SignInPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "Sign In - SnapOG",
-              description:
-                "Sign in to your account to access all features of SnapOG.",
-              path: "/signin",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
       <SignIn />

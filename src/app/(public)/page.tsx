@@ -25,6 +25,19 @@ export function generateMetadata() {
   return getMetadata({});
 }
 
+const schema = [
+  generateSchema({
+    type: "WebPage",
+    path: "/",
+  }),
+  generateSchema({
+    type: "Organization",
+    description:
+      "Leading provider of automated social media preview generation solutions.",
+    path: "/",
+  }),
+];
+
 export default async function Home() {
   const initPageInfo: IGetDemoResponse[] = [
     {
@@ -61,23 +74,7 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            generateSchema({
-              type: "WebSite",
-              title: "SnapOG - Automated Social Media Preview Generator",
-              description:
-                "Transform your social media presence with automated OG images. Boost engagement by up to 40% with AI-powered social previews.",
-              path: "/",
-              dateModified: new Date().toISOString(),
-            }),
-            generateSchema({
-              type: "Organization",
-              title: "SnapOG",
-              description:
-                "Leading provider of automated social media preview generation solutions.",
-              path: "/",
-            }),
-          ]),
+          __html: JSON.stringify(schema),
         }}
       />
       <BlockInputDemo />

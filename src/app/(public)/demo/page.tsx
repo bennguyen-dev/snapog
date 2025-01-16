@@ -13,22 +13,21 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "Try SnapOG Demo - See Your Website's Social Preview",
+  description:
+    "Experience the power of automated social previews. See how SnapOG can transform your website's social media appearance instantly.",
+  path: "/demo",
+});
+
 export default function DemoPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "Try SnapOG Demo - See Your Website's Social Preview",
-              description:
-                "Experience the power of automated social previews. See how SnapOG can transform your website's social media appearance instantly.",
-              path: "/demo",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
       <BlockInputDemo hidePreview />

@@ -28,6 +28,14 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "API Documentation - SnapOG",
+  description:
+    "Learn how to use SnapOG's API to generate dynamic Open Graph images for your website. Simple integration with just a URL parameter.",
+  path: "/docs",
+});
+
 export default function DocsPage() {
   const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN || "snapog.com";
 
@@ -36,16 +44,7 @@ export default function DocsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "API Documentation - SnapOG",
-              description:
-                "Learn how to use SnapOG's API to generate dynamic Open Graph images for your website. Simple integration with just a URL parameter.",
-              path: "/docs",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
 

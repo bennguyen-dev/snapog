@@ -18,22 +18,21 @@ export async function generateMetadata() {
   });
 }
 
+const schema = generateSchema({
+  type: "WebPage",
+  title: "Terms of Service - SnapOG",
+  description:
+    "Terms of Service for SnapOG. Learn about our policies, including usage, privacy, and more.",
+  path: "/terms",
+});
+
 export default function TermsPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateSchema({
-              type: "WebPage",
-              title: "Terms of Service - SnapOG",
-              description:
-                "Terms of Service for SnapOG. Learn about our policies, including usage, privacy, and more.",
-              path: "/terms",
-              dateModified: new Date().toISOString(),
-            }),
-          ),
+          __html: JSON.stringify(schema),
         }}
       />
       <BlockTermsOfService />

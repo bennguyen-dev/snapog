@@ -9,7 +9,7 @@ interface GenerateMetadataProps {
 }
 
 interface GenerateSchemaProps extends GenerateMetadataProps {
-  type?: "WebSite" | "WebPage" | "Article" | "Organization" | "FAQPage";
+  type?: "WebPage" | "Article" | "Organization" | "FAQPage";
   datePublished?: string;
   dateModified?: string;
   author?: string;
@@ -25,7 +25,7 @@ interface GenerateSchemaProps extends GenerateMetadataProps {
 
 const defaultMetadata = {
   siteName: "SnapOG",
-  baseTitle: "Generate social media previews automatically",
+  baseTitle: "Automate your open-graph: Dynamic screenshots by URL, zero code",
   baseDescription:
     "Transform your social media presence with automated OG images. Boost engagement by up to 40% with AI-powered social previews.",
   baseKeywords: [
@@ -105,7 +105,7 @@ export function generateSchema({
   path = "",
   type = "WebPage",
   datePublished,
-  dateModified,
+  dateModified = new Date().toISOString(),
   author,
   mainEntity,
 }: GenerateSchemaProps) {
@@ -122,6 +122,7 @@ export function generateSchema({
     name: finalTitle,
     description: finalDescription,
     url,
+    image: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}&time=${Date.now()}`,
   };
 
   if (type === "WebPage" || type === "Article") {
@@ -140,7 +141,6 @@ export function generateSchema({
         name: defaultMetadata.siteName,
         url: `https://${domain}`,
       },
-      image: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}&time=${Date.now()}`,
     };
   }
 
@@ -159,18 +159,14 @@ export function generateSchema({
 
   if (type === "FAQPage") {
     return {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      name: finalTitle,
-      description: finalDescription,
-      url,
+      ...baseSchema,
       mainEntity: mainEntity || [],
+      ...(dateModified && { dateModified }),
       publisher: {
         "@type": "Organization",
         name: defaultMetadata.siteName,
         url: `https://${domain}`,
       },
-      ...(dateModified && { dateModified }),
     };
   }
 
