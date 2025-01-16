@@ -42,8 +42,8 @@ class UserService {
 
       if (!user) {
         return {
-          status: 404,
-          message: "User not found",
+          status: apiKey ? 401 : 404,
+          message: apiKey ? "Invalid API key" : "User not found",
           data: null,
         };
       }

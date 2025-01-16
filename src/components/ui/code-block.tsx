@@ -10,7 +10,7 @@ import { cn } from "@/utils";
 
 type CodeBlockProps = {
   language: string;
-  filename: string;
+  filename?: string;
   highlightLines?: number[];
   style?: { [key: string]: React.CSSProperties };
 } & (
@@ -60,10 +60,14 @@ export const CodeBlock = ({
     : highlightLines;
 
   return (
-    <div className="relative w-full rounded-lg bg-slate-900 px-4 py-2 font-mono text-sm">
+    <div
+      className={cn(
+        "relative w-full rounded-lg bg-slate-900 px-6 pb-1 pt-3 font-mono text-sm",
+      )}
+    >
       <div className="flex flex-col gap-2">
         {tabsExist && (
-          <div className="flex  overflow-x-auto">
+          <div className="flex overflow-x-auto">
             {tabs.map((tab, index) => (
               <button
                 key={index}
@@ -79,9 +83,14 @@ export const CodeBlock = ({
             ))}
           </div>
         )}
-        {!tabsExist && filename && (
-          <div className="flex items-center justify-between py-2">
-            <div className="text-xs text-zinc-200">{filename}</div>
+        {!tabsExist && (
+          <div
+            className={cn(
+              "flex items-center justify-between pb-3 pt-1",
+              !filename && "pb-0",
+            )}
+          >
+            <div className="text-xs text-zinc-200">{filename ?? ""}</div>
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-1 font-sans text-xs text-zinc-400 transition-colors hover:text-zinc-200"
@@ -92,7 +101,7 @@ export const CodeBlock = ({
           </div>
         )}
       </div>
-      <ScrollArea className={cn("pb-4")}>
+      <ScrollArea className={cn("pb-5", filename && "pb-3")}>
         <SyntaxHighlighter
           language={activeLanguage}
           style={style}
