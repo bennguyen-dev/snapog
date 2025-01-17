@@ -1,4 +1,5 @@
 import { InputDemo } from "@/components/block/BlockInputDemo/InputDemo";
+import { TrustBanner } from "@/components/block/BlockInputDemo/TrustBanner";
 import {
   FacebookPreview,
   SlackPreview,
@@ -17,7 +18,7 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
   return (
     <section
       className={cn(
-        "container relative grid grid-cols-1 gap-8 py-8 sm:py-16 sm:max-lg:pb-36",
+        "container relative grid grid-cols-1 gap-6 py-8 sm:py-16 sm:max-lg:pb-36 lg:gap-8",
         hidePreview ? "max-w-screen-lg" : "sm:grid-cols-10",
       )}
     >
@@ -47,6 +48,8 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
             <InputDemo className="mt-8 w-full max-w-lg sm:mt-12 sm:max-lg:absolute sm:max-lg:bottom-6 sm:max-lg:left-1/2 sm:max-lg:-translate-x-1/2" />
           </ReactQueryProvider>
         </GoogleCaptchaProvider>
+
+        <TrustBanner className="mb-4 mt-8 sm:mt-6" />
       </div>
       {!hidePreview && (
         <div className="col-span-5 self-center xl:col-span-4">
