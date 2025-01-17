@@ -4,9 +4,7 @@ import BlockPricing from "@/components/block/BlockPricing";
 import { generateSchema, getMetadata } from "@/utils/metadata";
 
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
-const DynamicBlockGetStartedNow = dynamic(
-  () => import("@/components/block/BlockGetStartedNow"),
-);
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 const DynamicBlockTryYourDemo = dynamic(
   () => import("@/components/block/BlockTryYourDemo"),
 );
@@ -42,7 +40,7 @@ export default function PricingPage() {
       <BlockPricing />
       <DynamicBlockTryYourDemo />
       <DynamicBlockFAQs />
-      <DynamicBlockGetStartedNow />
+      <DynamicBlockCTA />
     </>
   );
 }

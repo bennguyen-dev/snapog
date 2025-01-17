@@ -16,9 +16,7 @@ const DynamicBlockHowItWorks = dynamic(
 const DynamicBlockPricing = dynamic(
   () => import("@/components/block/BlockPricing"),
 );
-const DynamicBlockGetStartedNow = dynamic(
-  () => import("@/components/block/BlockGetStartedNow"),
-);
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 
 export function generateMetadata() {
@@ -82,9 +80,8 @@ export default async function Home() {
       <DynamicBlockCompareOGImage pagesInfo={initPageInfo} />
       <DynamicBlockHowItWorks />
       <DynamicBlockPricing />
-      <DynamicBlockGetStartedNow />
       <DynamicBlockFAQs />
-      <DynamicBlockGetStartedNow />
+      <DynamicBlockCTA />
     </>
   );
 }

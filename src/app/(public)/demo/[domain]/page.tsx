@@ -8,9 +8,7 @@ import { generateSchema, getMetadata } from "@/utils/metadata";
 const DynamicBlockHowItWorks = dynamic(
   () => import("@/components/block/BlockHowItWorks"),
 );
-const DynamicBlockGetStartedNow = dynamic(
-  () => import("@/components/block/BlockGetStartedNow"),
-);
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
 const DynamicBlockTryYourDemo = dynamic(
   () => import("@/components/block/BlockTryYourDemo"),
@@ -66,9 +64,8 @@ export default async function DemoDetailPage({
       <BlockCompareOGImage pagesInfo={demoRes.data} domain={domain} />
       <DynamicBlockHowItWorks />
       <DynamicBlockTryYourDemo />
-      <DynamicBlockGetStartedNow />
       <DynamicBlockFAQs />
-      <DynamicBlockGetStartedNow />
+      <DynamicBlockCTA />
     </>
   );
 }

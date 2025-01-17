@@ -26,40 +26,41 @@ const BlockHowItWorks = () => {
         </span>
       </Typography>
 
-      {domain && (
-        <div className="w-full max-w-screen-md">
-          <CodeBlock
-            language="html"
-            filename="index.html"
-            code={getSnippetHowToUse({
-              host: domain,
-              domain: "yourwebsite.com",
-              apiKey: "{apiKey}",
-            })}
-          />
-        </div>
-      )}
+      <div className="w-full max-w-screen-md">
+        <CodeBlock
+          language="html"
+          filename="index.html"
+          code={getSnippetHowToUse({
+            host: domain,
+            domain: "yourwebsite.com",
+            apiKey: "{apiKey}",
+          })}
+        />
+      </div>
 
-      {domain && (
-        <Typography variant="p" className="break-all">
-          Example:{" "}
-          <Link
-            href={getLinkSmartOGImage({
-              host: domain,
-              url: domain,
-              apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
-            })}
-            target="_blank"
-            className="text-link break-all"
-          >
-            {getLinkSmartOGImage({
-              host: domain,
-              url: domain,
-              apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
-            })}
-          </Link>
-        </Typography>
-      )}
+      <Typography affects="muted">
+        That's it! SnapOG will handle the rest, ensuring your website always
+        looks professional on social platforms.
+      </Typography>
+
+      <Typography className="break-all">
+        Example:{" "}
+        <Link
+          href={getLinkSmartOGImage({
+            host: domain,
+            url: domain,
+            apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
+          })}
+          target="_blank"
+          className="text-link break-all"
+        >
+          {getLinkSmartOGImage({
+            host: domain,
+            url: domain,
+            apiKey: process.env.SNAP_OG_API_KEY || "{apiKey}",
+          })}
+        </Link>
+      </Typography>
     </section>
   );
 };

@@ -5,9 +5,7 @@ import { generateSchema, getMetadata } from "@/utils/metadata";
 
 export const runtime = "edge";
 
-const DynamicBlockGetStartedNow = dynamic(
-  () => import("@/components/block/BlockGetStartedNow"),
-);
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 
 export async function generateMetadata() {
   return getMetadata({
@@ -77,7 +75,7 @@ export default function FAQsPage() {
         }}
       />
       <BlockFAQs />
-      <DynamicBlockGetStartedNow />
+      <DynamicBlockCTA />
     </>
   );
 }

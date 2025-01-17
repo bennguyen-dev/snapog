@@ -1,4 +1,4 @@
-import BlockGetStartedNow from "@/components/block/BlockGetStartedNow";
+import BlockCTA from "@/components/block/BlockCTA";
 import BlockInputDemo from "@/components/block/BlockInputDemo";
 import { generateSchema, getMetadata } from "@/utils/metadata";
 
@@ -31,7 +31,7 @@ export default function DemoPage() {
         }}
       />
       <BlockInputDemo hidePreview />
-      <BlockGetStartedNow />
+      <BlockCTA />
     </>
   );
 }

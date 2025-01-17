@@ -35,8 +35,10 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
           <span className="bg-clip-text text-transparent">Automate </span>
           your open-graph: <br />
           <span className="text-transparent">Dynamic screenshots </span>by URL,
-          <br className={cn(hidePreview ? "hidden" : "")} />
-          <span className="text-transparent">zero code</span>
+          <br className={cn(hidePreview && "hidden")} />
+          <span className={cn("text-transparent", hidePreview && "ml-1")}>
+            zero code
+          </span>
         </Typography>
         <Typography className="max-w-screen-md lg:text-xl">
           Turn any URL into engaging social previews instantly. Auto-generate OG
