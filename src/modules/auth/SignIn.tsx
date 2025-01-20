@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import GitHubIcon from "@/assets/icons/github.svg";
 import GoogleIcon from "@/assets/icons/google.svg";
 import { providerMap, signIn } from "@/auth";
@@ -17,11 +19,20 @@ const IconPlatforms: any = {
 
 export const SignIn = () => {
   return (
-    <div className="mt-64 flex h-full max-w-screen-2xl">
-      <Card className="w-[350px]">
+    <div className="mt-36 flex h-full max-w-screen-2xl flex-col items-center sm:mt-48">
+      <Image src="/logo.svg" alt="Logo" width={64} height={64} priority />
+      <Card className="max-w-96">
         <CardHeader>
-          <CardTitle>Sign in</CardTitle>
-          <CardDescription>Get started in just 2 minutes.</CardDescription>
+          <CardTitle>
+            Join{" "}
+            <strong className="text-primary">
+              Snap<span className="text-secondary">OG</span>
+            </strong>
+          </CardTitle>
+          <CardDescription>
+            Join these communities and start generating OG images with 700+
+            other users
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col space-y-2">
           {Object.values(providerMap).map((provider) => (

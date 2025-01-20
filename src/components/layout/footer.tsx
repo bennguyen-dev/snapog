@@ -1,8 +1,9 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
 
+import XIcon from "@/assets/icons/X.svg";
 import { Typography } from "@/components/ui/typography";
 
 const Footer = () => {
@@ -85,7 +86,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 hover:text-primary"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <XIcon className="h-4 w-4" />
                     <span>X (Twitter)</span>
                   </a>
                 </li>
