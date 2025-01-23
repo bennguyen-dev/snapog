@@ -72,7 +72,7 @@ const ListLogs = () => {
               className={cn("text-center font-bold", {
                 "text-success": amount > 0,
                 "text-destructive": amount < 0,
-                "text-muted": amount === 0,
+                "text-foreground": amount === 0,
               })}
             >
               {amount > 0 ? "+" : ""}
