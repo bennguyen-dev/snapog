@@ -1,4 +1,4 @@
-import { UserBalance } from "@prisma/client";
+import { LOG_STATUS, LOG_TYPE, UserBalance } from "@prisma/client";
 
 import { DEFAULT_FREE_CREDIT } from "@/constants";
 import { prisma } from "@/lib/db";
@@ -9,13 +9,14 @@ import {
   IIncrementPaidCredits,
   IUpdateUserBalance,
 } from "@/services/userBalance";
+import { userLogService } from "@/services/userLog";
 import { IResponse } from "@/types/global";
 
 class UserBalanceService {
   async create({
     userId,
     paidCredits = 0,
-    freeCredits = DEFAULT_FREE_CREDIT, // Default free credits for new users
+    freeCredits = DEFAULT_FREE_CREDIT,
   }: ICreateUserBalance): Promise<IResponse<UserBalance | null>> {
     try {
       const userBalance = await prisma.userBalance.create({
@@ -26,6 +27,19 @@ class UserBalanceService {
           usedCredits: 0,
         },
       });
+
+      // Log initial free credits
+      if (freeCredits > 0) {
+        userLogService.create({
+          userId,
+          amount: freeCredits,
+          type: LOG_TYPE.FREE_CREDITS,
+          status: LOG_STATUS.SUCCESS,
+          metadata: {
+            freeCredits,
+          },
+        });
+      }
 
       return {
         data: userBalance,

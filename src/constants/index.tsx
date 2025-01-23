@@ -1,4 +1,4 @@
-import { ReceiptText, SquareMousePointer, KeyRound } from "lucide-react";
+import { ReceiptText, SquareMousePointer, KeyRound, Logs } from "lucide-react";
 
 import { NavItem } from "@/types/global";
 
@@ -48,6 +48,12 @@ export const AUTH_ROUTES: NavItem[] = [
     href: "/dashboard/credits",
     icon: <ReceiptText className="size-5" />,
     label: "Credits",
+  },
+  {
+    title: "Logs",
+    href: "/dashboard/logs",
+    icon: <Logs className="size-5" />,
+    label: "Logs",
   },
   {
     title: "API Keys",

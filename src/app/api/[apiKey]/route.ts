@@ -39,6 +39,11 @@ export async function GET(
     const res = await imageService.generateOGImage({
       url: urlClean,
       apiKey,
+      headers: {
+        "user-agent": req.headers.get("user-agent") || undefined,
+        "x-forwarded-for": req.headers.get("x-forwarded-for") || undefined,
+        "x-real-ip": req.headers.get("x-real-ip") || undefined,
+      },
     });
 
     if (!res.data) {

@@ -18,6 +18,7 @@ class ImageService {
   async generateOGImage({
     url,
     apiKey,
+    headers,
   }: IGenerateOGImage): Promise<IResponse<IGenerateOGImageResponse | null>> {
     const domain = getDomainName(url);
 
@@ -60,6 +61,7 @@ class ImageService {
         const newPage = await pageService.create({
           siteId: site.data.id,
           url,
+          headers,
         });
 
         if (!newPage.data || !newPage.data.imageSrc) {

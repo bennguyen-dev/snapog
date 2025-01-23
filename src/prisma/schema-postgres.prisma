@@ -26,6 +26,7 @@ model User {
 
   sites   Site[]
   balance UserBalance?
+  logs    UserLog[]
 
   @@index([email])
   @@index([apiKey])
@@ -95,7 +96,7 @@ model Site {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user  User   @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   pages Page[]
 
   @@unique([userId, domain])
@@ -115,7 +116,7 @@ model Page {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site Site @relation(fields: [siteId], references: [id])
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
   @@unique([siteId, url])
 }
@@ -145,7 +146,7 @@ model DemoPage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  demo Demo @relation(fields: [demoId], references: [id])
+  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
 
   @@unique([demoId, url])
 }
@@ -163,6 +164,38 @@ model UserBalance {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum LOG_STATUS {
+  SUCCESS
+  ERROR
+}
+
+enum LOG_TYPE {
+  // Credit additions
+  FREE_CREDITS
+  PURCHASE_CREDITS
+
+  // Credit deductions
+  PAGE_CREATION
+  PAGE_MANUAL_REFRESH
+}
+
+model UserLog {
+  id        String     @id @default(cuid())
+  userId    String
+  amount    Int
+  type      LOG_TYPE
+  status    LOG_STATUS @default(SUCCESS)
+  metadata  Json?
+  createdAt DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Product {

@@ -1,4 +1,4 @@
-import { Page } from "@prisma/client";
+import { LOG_STATUS, LOG_TYPE, Page } from "@prisma/client";
 
 import { IMAGE_TYPES } from "@/constants";
 import { prisma } from "@/lib/db";
@@ -12,6 +12,7 @@ import {
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 import { userBalanceService } from "@/services/userBalance";
+import { userLogService } from "@/services/userLog";
 import { IResponse } from "@/types/global";
 import {
   getDomainName,
@@ -21,7 +22,11 @@ import {
 } from "@/utils";
 
 class PageService {
-  async create({ url, siteId }: ICreatePage): Promise<IResponse<Page | null>> {
+  async create({
+    url,
+    siteId,
+    headers,
+  }: ICreatePage): Promise<IResponse<Page | null>> {
     const urlWithProtocol = getUrlWithProtocol(url);
     const urlWithoutProtocol = getUrlWithoutProtocol(url);
     const today = new Date();
@@ -113,6 +118,26 @@ class PageService {
             balanceRes.data.usedCredits;
 
           if (availableCredits < 1) {
+            userLogService.create({
+              userId: balanceRes.data.userId,
+              amount: 0,
+              type: LOG_TYPE.PAGE_CREATION,
+              status: LOG_STATUS.ERROR,
+              metadata: {
+                pageUrl: urlWithProtocol,
+                siteId,
+                userAgent: headers?.["user-agent"],
+                ipAddress:
+                  headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+                error: {
+                  message: "Insufficient credits",
+                  details: {
+                    availableCredits,
+                  },
+                },
+              },
+            });
+
             return {
               message: "Insufficient credits",
               status: 400,
@@ -126,9 +151,27 @@ class PageService {
           });
 
           if (!pageCrawlInfo.data?.screenshot) {
+            userLogService.create({
+              userId: balanceRes.data.userId,
+              amount: 0,
+              type: LOG_TYPE.PAGE_CREATION,
+              status: LOG_STATUS.ERROR,
+              metadata: {
+                pageUrl: urlWithProtocol,
+                siteId,
+                userAgent: headers?.["user-agent"],
+                ipAddress:
+                  headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+                error: {
+                  message: pageCrawlInfo.message,
+                  details: pageCrawlInfo,
+                },
+              },
+            });
+
             return {
               message: pageCrawlInfo.message || "Failed to generate image",
-              status: pageCrawlInfo.status || 400,
+              status: pageCrawlInfo.status || 500,
               data: null,
             };
           }
@@ -145,6 +188,24 @@ class PageService {
           });
 
           if (!uploadRes.data?.src) {
+            userLogService.create({
+              userId: balanceRes.data.userId,
+              amount: 0,
+              type: LOG_TYPE.PAGE_CREATION,
+              status: LOG_STATUS.ERROR,
+              metadata: {
+                pageUrl: urlWithProtocol,
+                siteId,
+                userAgent: headers?.["user-agent"],
+                ipAddress:
+                  headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+                error: {
+                  message: uploadRes.message,
+                  details: uploadRes,
+                },
+              },
+            });
+
             return {
               message: uploadRes.message || "Failed to upload image",
               status: uploadRes.status || 500,
@@ -173,6 +234,19 @@ class PageService {
           await userBalanceService.deductCredits({
             userId: site.userId,
             amount: 1,
+          });
+
+          userLogService.create({
+            userId: site.userId,
+            amount: -1,
+            type: LOG_TYPE.PAGE_CREATION,
+            status: LOG_STATUS.SUCCESS,
+            metadata: {
+              pageUrl: urlWithProtocol,
+              siteId,
+              userAgent: headers?.["user-agent"],
+              ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+            },
           });
 
           return {
@@ -388,13 +462,30 @@ class PageService {
   async regenerate({
     id,
     userId,
+    headers,
   }: IInvalidateCachePageBy): Promise<IResponse<Page | null>> {
     try {
       const page = await prisma.page.findUnique({
         where: { id },
+        include: { site: true },
       });
 
       if (!page) {
+        userLogService.create({
+          userId,
+          amount: 0,
+          type: LOG_TYPE.PAGE_MANUAL_REFRESH,
+          status: LOG_STATUS.ERROR,
+          metadata: {
+            pageId: id,
+            userAgent: headers?.["user-agent"],
+            ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+            error: {
+              message: "Page not found",
+            },
+          },
+        });
+
         return {
           message: "Page not found",
           status: 404,
@@ -420,6 +511,25 @@ class PageService {
         balanceRes.data.usedCredits;
 
       if (availableCredits < 1) {
+        userLogService.create({
+          userId,
+          amount: 0,
+          type: LOG_TYPE.PAGE_MANUAL_REFRESH,
+          status: LOG_STATUS.ERROR,
+          metadata: {
+            pageUrl: page.url,
+            siteId: page.siteId,
+            userAgent: headers?.["user-agent"],
+            ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+            error: {
+              message: "Insufficient credits",
+              details: {
+                availableCredits,
+              },
+            },
+          },
+        });
+
         return {
           message: "Insufficient credits",
           status: 400,
@@ -433,9 +543,26 @@ class PageService {
       });
 
       if (!pageCrawlInfo.data?.screenshot) {
+        userLogService.create({
+          userId: balanceRes.data.userId,
+          amount: 0,
+          type: LOG_TYPE.PAGE_MANUAL_REFRESH,
+          status: LOG_STATUS.ERROR,
+          metadata: {
+            pageUrl: page.url,
+            siteId: page.siteId,
+            userAgent: headers?.["user-agent"],
+            ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+            error: {
+              message: pageCrawlInfo.message,
+              details: pageCrawlInfo,
+            },
+          },
+        });
+
         return {
           message: pageCrawlInfo.message || "Failed to generate image",
-          status: pageCrawlInfo.status || 400,
+          status: pageCrawlInfo.status || 500,
           data: null,
         };
       }
@@ -454,6 +581,23 @@ class PageService {
       });
 
       if (!uploadRes.data) {
+        userLogService.create({
+          userId: balanceRes.data.userId,
+          amount: 0,
+          type: LOG_TYPE.PAGE_MANUAL_REFRESH,
+          status: LOG_STATUS.ERROR,
+          metadata: {
+            pageUrl: page.url,
+            siteId: page.siteId,
+            userAgent: headers?.["user-agent"],
+            ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+            error: {
+              message: uploadRes.message,
+              details: uploadRes,
+            },
+          },
+        });
+
         return {
           message: uploadRes.message || "Failed to upload image",
           status: uploadRes.status || 500,
@@ -480,6 +624,19 @@ class PageService {
       await userBalanceService.deductCredits({
         userId,
         amount: 1,
+      });
+
+      userLogService.create({
+        userId,
+        amount: -1,
+        type: LOG_TYPE.PAGE_MANUAL_REFRESH,
+        status: LOG_STATUS.SUCCESS,
+        metadata: {
+          pageUrl: page.url,
+          siteId: page.siteId,
+          userAgent: headers?.["user-agent"],
+          ipAddress: headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+        },
       });
 
       return {
