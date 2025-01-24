@@ -72,7 +72,7 @@ const ListLogs = () => {
               className={cn("text-center font-bold", {
                 "text-success": amount > 0,
                 "text-destructive": amount < 0,
-                "text-foreground": amount === 0,
+                "text-muted-foreground": amount === 0,
               })}
             >
               {amount > 0 ? "+" : ""}
@@ -141,10 +141,10 @@ const ListLogs = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <Breadcrumb>
+      <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/sites">Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -153,12 +153,14 @@ const ListLogs = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Logs</CardTitle>
-          <CardDescription>
-            View your credit usage history and transactions
-          </CardDescription>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 sm:items-start">
+          <div className="flex flex-col space-y-1.5">
+            <CardTitle>Logs</CardTitle>
+            <CardDescription>
+              View your credit usage history and transactions
+            </CardDescription>
+          </div>
           <div className="flex items-center justify-end gap-4">
             <Button
               variant="outline"
