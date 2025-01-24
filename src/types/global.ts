@@ -16,4 +16,5 @@ export interface NavItem {
   icon?: ReactNode;
   label?: string;
   description?: string;
+  children?: NavItem[];
 }

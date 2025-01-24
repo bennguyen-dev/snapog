@@ -44,6 +44,11 @@ export const POST = auth(async function POST(req) {
   const page = await pageService.create({
     siteId: site.data.id,
     url: urlHomepage,
+    headers: {
+      "user-agent": req.headers.get("user-agent") || undefined,
+      "x-forwarded-for": req.headers.get("x-forwarded-for") || undefined,
+      "x-real-ip": req.headers.get("x-real-ip") || undefined,
+    },
   });
 
   if (!page.data) {

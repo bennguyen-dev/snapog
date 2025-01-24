@@ -32,7 +32,6 @@ export const CardProducts = ({ products }: IProps) => {
       <CardContent className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:items-center xl:grid-cols-3">
         {products.map((product) => {
           const price = formatPrice(product.priceAmount, product.priceCurrency);
-          console.log({ product });
 
           return (
             <Card

@@ -1,7 +1,7 @@
 import { Page } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { creditKeys } from "@/hooks";
+import { creditKeys, logsKeys } from "@/hooks";
 import {
   IDeletePagesBy,
   IInvalidateCachePageBy,
@@ -70,6 +70,9 @@ export const useInvalidateCachePageById = ({ siteId }: { siteId: string }) => {
       });
       queryClient.invalidateQueries({
         queryKey: creditKeys.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: logsKeys.all,
       });
     },
   });

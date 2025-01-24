@@ -1,9 +1,11 @@
 import { WebhookCheckoutUpdatedPayload } from "@polar-sh/sdk/models/components";
 import { validateEvent } from "@polar-sh/sdk/webhooks";
+import { LOG_STATUS, LOG_TYPE } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { productService } from "@/services/product";
 import { userBalanceService } from "@/services/userBalance";
+import { userLogService } from "@/services/userLog";
 
 class WebhookService {
   async processWebhookEvent(payload: ReturnType<typeof validateEvent>) {
@@ -54,11 +56,47 @@ class WebhookService {
             );
           }
 
+          userLogService.create({
+            userId,
+            amount: creditsAmount,
+            type: LOG_TYPE.PURCHASE_CREDITS,
+            status: LOG_STATUS.SUCCESS,
+            metadata: {
+              orderId: data.id,
+              productId: productId,
+              polarProductId: data.productId,
+              productName: productRes.data.name,
+              productPrice: data.amount,
+              currency: data.currency,
+              customerEmail: data.customerEmail,
+              customerName: data.customerName,
+              paymentStatus: data.status,
+            },
+          });
+
           console.log("Processed checkout updated event:", {
             userId,
             productId,
             polarId: data.productId,
             creditsAmount,
+          });
+        } else if (data.status === "failed" || data.status === "expired") {
+          userLogService.create({
+            userId: data.customerMetadata?.userId as string,
+            amount: 0,
+            type: LOG_TYPE.PURCHASE_CREDITS,
+            status: LOG_STATUS.ERROR,
+            metadata: {
+              orderId: data.id,
+              productId: data.customerMetadata?.productId as string,
+              polarProductId: data.productId,
+              productName: data.product.name,
+              productPrice: data.amount,
+              currency: data.currency,
+              customerEmail: data.customerEmail,
+              customerName: data.customerName,
+              paymentStatus: data.status,
+            },
           });
         } else {
           // For other statuses, just mark as processed since we don't need to do anything
