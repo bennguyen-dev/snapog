@@ -1,4 +1,10 @@
-import { ReceiptText, SquareMousePointer, KeyRound, Logs } from "lucide-react";
+import {
+  CreditCard,
+  Globe,
+  KeyRound,
+  LayoutDashboard,
+  Logs,
+} from "lucide-react";
 
 import { NavItem } from "@/types/global";
 
@@ -31,22 +37,22 @@ export const PUBLIC_ROUTES: NavItem[] = [
 ];
 
 export const AUTH_ROUTES: NavItem[] = [
-  // {
-  //   title: "Dashboard",
-  //   href: "/dashboard",
-  //   icon: <LayoutDashboard className="size-5" />,
-  //   label: "Dashboard",
-  // },
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: <LayoutDashboard className="size-5" />,
+    label: "Dashboard",
+  },
   {
     title: "Sites",
     href: "/dashboard/sites",
-    icon: <SquareMousePointer className="size-5" />,
+    icon: <Globe className="size-5" />,
     label: "Sites",
   },
   {
     title: "Credits",
     href: "/dashboard/credits",
-    icon: <ReceiptText className="size-5" />,
+    icon: <CreditCard className="size-5" />,
     label: "Credits",
   },
   {

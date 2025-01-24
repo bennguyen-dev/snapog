@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { AUTH_ROUTES } from "@/constants";
+import { NavItem } from "@/types/global";
 import { cn } from "@/utils";
 
 interface IProps {
@@ -28,6 +29,17 @@ export const AuthSidebar = ({ className }: IProps) => {
   const handleToggle = () => {
     setIsMinimized(!isMinimized);
   };
+
+  const activeRoute = AUTH_ROUTES.reduce(
+    (activeItem: NavItem, item: NavItem) => {
+      if (path.startsWith(item.href)) {
+        if (!activeItem || item.href.length > activeItem.href.length) {
+          return item;
+        }
+      }
+      return activeItem;
+    },
+  );
 
   return (
     <aside
@@ -71,7 +83,7 @@ export const AuthSidebar = ({ className }: IProps) => {
                             href={item.disabled ? "/" : item.href}
                             className={cn(
                               "flex items-center gap-2 overflow-hidden rounded-md py-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
-                              path.includes(item.href)
+                              activeRoute?.href === item.href
                                 ? "bg-primary/5 text-primary"
                                 : "transparent",
                               item.disabled && "cursor-not-allowed opacity-80",

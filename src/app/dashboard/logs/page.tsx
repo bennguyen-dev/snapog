@@ -1,5 +1,8 @@
-import ListLogs from "@/modules/logs/ListLogs";
+import dynamic from "next/dynamic";
+
 import { getMetadata } from "@/utils/metadata";
+
+const DynamicListLogs = dynamic(() => import("@/modules/logs/ListLogs"));
 
 export async function generateMetadata() {
   return getMetadata({
@@ -10,5 +13,5 @@ export async function generateMetadata() {
 }
 
 export default function PageListLogs() {
-  return <ListLogs />;
+  return <DynamicListLogs />;
 }
