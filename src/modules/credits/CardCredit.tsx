@@ -62,7 +62,7 @@ export const CardCredit = () => {
             {fetching ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <p className="text-2xl font-bold">{usedCredits}</p>
+              <p className="text-2xl font-bold text-primary">{usedCredits}</p>
             )}
           </div>
           <div className="space-y-2">

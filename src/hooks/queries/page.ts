@@ -1,7 +1,7 @@
 import { Page } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { creditKeys, logsKeys } from "@/hooks";
+import { creditKeys, logsKeys, userStatsKeys } from "@/hooks";
 import {
   IDeletePagesBy,
   IInvalidateCachePageBy,
@@ -74,6 +74,9 @@ export const useInvalidateCachePageById = ({ siteId }: { siteId: string }) => {
       queryClient.invalidateQueries({
         queryKey: logsKeys.all,
       });
+      queryClient.invalidateQueries({
+        queryKey: userStatsKeys.all,
+      });
     },
   });
 };
@@ -95,6 +98,9 @@ export const useDeletePageById = ({ siteId }: { siteId: string }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: pageKeys.list({ siteId }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: userStatsKeys.all,
       });
     },
   });

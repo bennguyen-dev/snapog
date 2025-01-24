@@ -1,7 +1,7 @@
 import { Site } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { logsKeys, pageKeys } from "@/hooks";
+import { logsKeys, pageKeys, userStatsKeys } from "@/hooks";
 import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
 import { IResponse } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
@@ -66,6 +66,9 @@ export const useCreateSite = () => {
       queryClient.invalidateQueries({
         queryKey: logsKeys.all,
       });
+      queryClient.invalidateQueries({
+        queryKey: userStatsKeys.all,
+      });
     },
   });
 };
@@ -117,6 +120,9 @@ export const useDeleteSiteById = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: siteKeys.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: userStatsKeys.all,
       });
     },
   });

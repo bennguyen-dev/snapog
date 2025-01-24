@@ -274,12 +274,12 @@ const ListPage = ({ siteId }: IProps) => {
   );
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 md:p-6">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/dashboard/sites">Home</Link>
+              <Link href="/dashboard">Dashboard</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

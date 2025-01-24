@@ -98,7 +98,7 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
         </div>
 
         <Card>
-          <CardContent className="flex items-center space-x-4 p-4 sm:p-6">
+          <CardContent className="flex items-center space-x-4 p-4 md:p-6">
             <Image
               unoptimized
               src={checkout.product.medias?.[0].publicUrl || "/logo.svg"}
@@ -123,7 +123,7 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
         </Card>
 
         <Card>
-          <CardContent className="space-y-4 p-4 sm:p-6">
+          <CardContent className="space-y-4 p-4 md:p-6">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
               <span>

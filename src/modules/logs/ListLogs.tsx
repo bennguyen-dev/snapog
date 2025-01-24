@@ -140,7 +140,7 @@ const ListLogs = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 md:p-6">
       <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
