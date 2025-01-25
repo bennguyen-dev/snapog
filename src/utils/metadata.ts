@@ -70,7 +70,7 @@ export function getMetadata({
       siteName: defaultMetadata.siteName,
       images: [
         {
-          url: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}&time=${Date.now()}`,
+          url: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}`,
           width: 1200,
           height: 630,
           alt: finalTitle,
@@ -122,7 +122,7 @@ export function generateSchema({
     name: finalTitle,
     description: finalDescription,
     url,
-    image: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}&time=${Date.now()}`,
+    image: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}`,
   };
 
   if (type === "WebPage" || type === "Article") {
