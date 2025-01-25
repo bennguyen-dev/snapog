@@ -102,9 +102,17 @@ export function formatPrice(priceInCents: number, currency: string = "USD") {
   }).format(dollars);
 }
 
-export function formatDate(date: string | Date) {
+export function formatDate(date: string | Date, format?: "short" | "long") {
   if (!date) {
     return "";
+  }
+
+  if (format === "short") {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   }
 
   return new Date(date).toLocaleDateString("en-US", {

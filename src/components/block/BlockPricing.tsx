@@ -77,7 +77,7 @@ const BlockPricing = async () => {
                   product.isPopular
                     ? "border-primary/30 shadow-xl shadow-primary/30"
                     : "",
-                  "relative ",
+                  "relative",
                 )}
               >
                 {product.originalPrice && (

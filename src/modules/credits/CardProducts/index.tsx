@@ -38,7 +38,7 @@ export const CardProducts = ({ products }: IProps) => {
               key={product.name}
               className={cn(
                 product.isPopular
-                  ? "border-primary/30 shadow-xl  shadow-primary/30"
+                  ? "border-primary/30 shadow-xl shadow-primary/30"
                   : "",
                 "relative",
               )}

@@ -28,7 +28,7 @@ export const FacebookPreview = ({
             priority={priority}
           />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center bg-muted">
+          <div className="flex h-full flex-col items-center justify-center bg-muted/50">
             <InfoIcon className="mb-4 h-10 w-10 text-muted-foreground" />
             <p className="text-sm">You're missing an image 🙁</p>
           </div>

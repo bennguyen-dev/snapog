@@ -73,7 +73,7 @@ export default function RootLayout({
       </Head>
       <body
         className={cn(
-          "min-h-dvh bg-background font-sans antialiased",
+          "min-h-dvh bg-background font-sans antialiased selection:bg-primary/20",
           fontSans.variable,
         )}
       >

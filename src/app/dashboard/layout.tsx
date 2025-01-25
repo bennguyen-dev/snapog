@@ -19,7 +19,7 @@ export default async function AuthLayout({ children }: IProps) {
 
   return (
     <>
-      <div className="flex ">
+      <div className="flex">
         <AuthSidebar />
         <main className="relative flex h-dvh w-full flex-col overflow-hidden">
           <AuthHeader />

@@ -14,7 +14,7 @@ const BlockTryYourDemo = () => {
       </Typography>
       <GoogleCaptchaProvider>
         <ReactQueryProvider>
-          <InputDemo className=" w-full max-w-lg" />
+          <InputDemo className="w-full max-w-lg" />
         </ReactQueryProvider>
       </GoogleCaptchaProvider>
     </section>

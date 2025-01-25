@@ -32,7 +32,7 @@ export const PaymentSuccess = ({ checkout }: IProps) => {
 
   return (
     <section className="container flex scroll-mt-20 flex-col items-center justify-center py-8 sm:py-16">
-      <div className="space-y-4 sm:space-y-6 ">
+      <div className="space-y-4 sm:space-y-6">
         <div>
           <h1 className="text-2xl font-semibold">Your Order Details</h1>
           <div className="mt-2">

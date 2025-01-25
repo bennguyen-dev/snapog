@@ -8,7 +8,7 @@ import { Typography } from "@/components/ui/typography";
 
 const BlockCTA = async () => {
   return (
-    <section className=" relative flex w-full flex-col items-center justify-center py-12 sm:py-24">
+    <section className="relative flex w-full flex-col items-center justify-center py-12 sm:py-24">
       <div className="container z-10 flex flex-col items-center justify-center">
         <Typography variant="h2" className="text-center">
           Say Goodbye to og:image Headaches
