@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/constants";
+import { NavItem } from "@/types/global";
 import { cn } from "@/utils";
 
 interface IProps {
@@ -25,6 +26,17 @@ interface IProps {
 const MobileNavbar = ({ isAuth }: IProps) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const activeRoute = (isAuth ? AUTH_ROUTES : PUBLIC_ROUTES).reduce(
+    (activeItem: NavItem, item: NavItem) => {
+      if (pathname.startsWith(item.href)) {
+        if (!activeItem || item.href.length > activeItem.href.length) {
+          return item;
+        }
+      }
+      return activeItem;
+    },
+  );
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -83,7 +95,7 @@ const MobileNavbar = ({ isAuth }: IProps) => {
               onClick={() => setOpen(false)}
               className={cn(
                 "flex items-center gap-2 overflow-hidden rounded-md p-4 text-sm font-medium duration-200 hover:bg-primary/5 hover:text-primary",
-                pathname.includes(route.href)
+                activeRoute?.href === route.href
                   ? "bg-primary/5 text-primary"
                   : "transparent",
                 route.disabled && "cursor-not-allowed opacity-80",

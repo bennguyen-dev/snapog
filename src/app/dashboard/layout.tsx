@@ -21,10 +21,12 @@ export default async function AuthLayout({ children }: IProps) {
     <>
       <div className="flex ">
         <AuthSidebar />
-        <main className="flex h-screen w-full flex-col overflow-hidden">
+        <main className="relative flex h-dvh w-full flex-col overflow-hidden">
           <AuthHeader />
           <ReactQueryProvider>
-            <div className="h-full flex-1 overflow-y-auto">{children}</div>
+            <div className="h-full flex-1 overflow-y-auto bg-muted/30">
+              {children}
+            </div>
           </ReactQueryProvider>
         </main>
       </div>

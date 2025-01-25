@@ -9,8 +9,8 @@ import { Typography } from "@/components/ui/typography";
 const Footer = () => {
   return (
     <footer className="bg-accent">
-      <div className="container flex flex-col items-center justify-center pt-8 sm:pt-16">
-        <div className="flex w-full flex-col gap-16 pb-8 sm:pb-16 md:flex-row md:justify-between">
+      <div className="container flex flex-col items-center justify-center pt-8 sm:pt-12">
+        <div className="flex w-full flex-col gap-8 pb-8 sm:pb-16 md:flex-row md:justify-between">
           <div className="md:basis-1/3">
             <Link href="/" className="mb-4 flex items-center gap-2">
               <Image
@@ -31,7 +31,7 @@ const Footer = () => {
               URL, <span className="text-transparent">zero code</span>
             </Typography>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-6 md:basis-2/3">
+          <div className="mt-4 grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-6 md:basis-2/3">
             <div>
               <Typography className="mb-4 font-bold text-primary">
                 Solutions
@@ -118,9 +118,9 @@ const Footer = () => {
         </div>
         <div className="flex w-full flex-wrap justify-between gap-2 border-t border-solid border-t-accent-foreground py-4 sm:py-6">
           <span className="text-sm text-muted-foreground">
-            {new Date().getFullYear()}{" "}
+            © {new Date().getFullYear()}{" "}
             <Link href="/" className="hover:underline">
-              SnapOG
+              SnapOG™
             </Link>
             . All Rights Reserved.{" "}
           </span>

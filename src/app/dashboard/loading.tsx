@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Loading() {
   return (
-    <div className="flex h-screen w-full items-center justify-center">
+    <div className="flex h-dvh w-full items-center justify-center">
       <Image
         className="animate-bounce opacity-50"
         src="/logo.svg"

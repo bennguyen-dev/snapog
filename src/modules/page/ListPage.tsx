@@ -62,7 +62,7 @@ const ListPage = ({ siteId }: IProps) => {
     isFetching: fetching,
     refetch: getPages,
   } = useGetPages({ siteId });
-  const { data: site, isFetching: fetchingSite } = useGetSiteById({ siteId });
+  const { data: site, isLoading: loadingSite } = useGetSiteById({ siteId });
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
     siteId,
   });
@@ -123,7 +123,11 @@ const ListPage = ({ siteId }: IProps) => {
         accessorKey: "id",
         header: "No.",
         cell: ({ row }) => {
-          return <Typography affects="small">{row.index + 1}</Typography>;
+          return (
+            <Typography className="text-center" affects="small">
+              {row.index + 1}
+            </Typography>
+          );
         },
       },
       {
@@ -134,7 +138,7 @@ const ListPage = ({ siteId }: IProps) => {
             <Link
               href={getUrlWithProtocol(row.original.url)}
               target="_blank"
-              className="text-link"
+              className="text-link inline-block min-w-64 max-w-64 break-all"
             >
               {row.original.url}
             </Link>
@@ -173,14 +177,35 @@ const ListPage = ({ siteId }: IProps) => {
       {
         accessorKey: "OGTitle",
         header: "Title",
+        cell: ({ row }) => {
+          return (
+            <Typography className="min-w-44 max-w-44 text-sm">
+              {row.original.OGTitle}
+            </Typography>
+          );
+        },
       },
       {
         accessorKey: "OGDescription",
         header: "Description",
+        cell: ({ row }) => {
+          return (
+            <Typography className="min-w-64 max-w-64 text-sm">
+              {row.original.OGDescription}
+            </Typography>
+          );
+        },
       },
       {
         accessorKey: "cacheDurationDays",
         header: "Cache duration (days)",
+        cell: ({ row }) => {
+          return (
+            <Typography className="text-center" affects="small">
+              {row.original.cacheDurationDays}
+            </Typography>
+          );
+        },
       },
       {
         accessorKey: "expiredAt",
@@ -274,28 +299,31 @@ const ListPage = ({ siteId }: IProps) => {
   );
 
   return (
-    <div className="p-4 md:p-6">
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            {fetchingSite ? (
-              <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
-            ) : (
+    <div className="p-4 sm:p-6">
+      <div className="left-0 top-0 flex items-center max-md:mb-4 md:absolute md:h-16 md:px-16">
+        <div className="h-4 border-l border-l-border px-2 max-md:hidden" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/dashboard/sites">{site?.data.domain}</Link>
+                <Link href="/dashboard">Dashboard</Link>
               </BreadcrumbLink>
-            )}
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbPage>All pages</BreadcrumbPage>
-        </BreadcrumbList>
-      </Breadcrumb>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {loadingSite ? (
+                <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link href="/dashboard/sites">{site?.data.domain}</Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbPage>All pages</BreadcrumbPage>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between space-y-0">
@@ -312,7 +340,7 @@ const ListPage = ({ siteId }: IProps) => {
                   {site.data.domain}
                 </Link>
               )}
-              {fetchingSite && (
+              {loadingSite && (
                 <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
               )}
             </CardDescription>

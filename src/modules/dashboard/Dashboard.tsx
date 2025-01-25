@@ -4,6 +4,12 @@ import { Check, CreditCard, FileText, Globe, X } from "lucide-react";
 
 import Link from "next/link";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,7 +43,17 @@ const Dashboard = () => {
     : 0;
 
   return (
-    <div className="space-y-6 p-4 sm:space-y-12 sm:p-6">
+    <div className="flex flex-col gap-6 p-4 sm:gap-12 sm:p-6">
+      <div className="left-0 top-0 flex items-center max-md:mb-4 max-md:hidden md:absolute md:h-16 md:px-16">
+        <div className="h-4 border-l border-l-border px-2 max-md:hidden" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Dashboard</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       <div>
         <Typography variant="h2" className="mb-4 text-2xl">
           Credits Usage
@@ -126,16 +142,27 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div>
+      <div className="!mb-4">
         <Typography variant="h2" className="mb-4 text-2xl">
           Sites Details
         </Typography>
         <div className="grid gap-4">
           {isFetching && (
             <>
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    <Skeleton className="h-5 w-16" />
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    <Skeleton className="h-5 w-16" />
+                  </CardTitle>
+                </CardHeader>
+              </Card>
             </>
           )}
           {stats?.data.sites.details.map((site) => (

@@ -6,6 +6,8 @@ import { LOG_STATUS, UserLog } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
 import { CircleCheckBig, CircleX, RefreshCw } from "lucide-react";
 
+import Link from "next/link";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -69,7 +71,7 @@ const ListLogs = () => {
           return (
             <Typography
               affects="muted"
-              className={cn("text-center font-bold", {
+              className={cn("text-end font-bold", {
                 "text-success": amount > 0,
                 "text-destructive": amount < 0,
                 "text-muted-foreground": amount === 0,
@@ -118,7 +120,7 @@ const ListLogs = () => {
           return (
             <Typography
               affects="muted"
-              className="max-w-2xl whitespace-pre-wrap"
+              className="w-2xl min-w-96 whitespace-pre-wrap"
             >
               {details.join("\n")}
             </Typography>
@@ -130,7 +132,7 @@ const ListLogs = () => {
         header: "Date",
         cell: ({ row }) => {
           return (
-            <Typography affects="muted">
+            <Typography className="min-w-40" affects="muted">
               {formatDate(row.original.createdAt)}
             </Typography>
           );
@@ -141,17 +143,22 @@ const ListLogs = () => {
 
   return (
     <div className="p-4 md:p-6">
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/sites">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Logs</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className="left-0 top-0 flex items-center max-md:mb-4 md:absolute md:h-16 md:px-16">
+        <div className="h-4 border-l border-l-border px-2 max-md:hidden" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Logs</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 sm:items-start">

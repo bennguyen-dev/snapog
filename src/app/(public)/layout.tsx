@@ -14,7 +14,7 @@ export default function PublicLayout({ children }: IProps) {
   return (
     <>
       <Header />
-      <main className="flex min-h-screen flex-col items-center overflow-x-clip pt-16 sm:pt-16">
+      <main className="flex min-h-dvh flex-col items-center overflow-x-clip pt-16 sm:pt-16">
         {children}
       </main>
       <DynamicFooter />
