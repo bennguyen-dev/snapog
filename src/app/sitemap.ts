@@ -12,6 +12,7 @@ const PAGES = {
     { path: "/about-us", priority: 0.8, changeFreq: "monthly" as const },
     { path: "/signin", priority: 0.8, changeFreq: "monthly" as const },
     { path: "/docs", priority: 0.8, changeFreq: "monthly" as const },
+    { path: "/blog", priority: 0.8, changeFreq: "monthly" as const },
     { path: "/faqs", priority: 0.8, changeFreq: "monthly" as const },
   ],
   legal: [

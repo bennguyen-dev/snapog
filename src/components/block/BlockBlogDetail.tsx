@@ -33,6 +33,7 @@ const BlockBlogDetail = ({ blog }: IProps) => {
             src={blog.image}
             alt={blog.title}
             fill
+            sizes="(max-width: 768px) 100vw, 1200px"
             className="object-cover transition-transform duration-300 hover:scale-105"
             priority
           />

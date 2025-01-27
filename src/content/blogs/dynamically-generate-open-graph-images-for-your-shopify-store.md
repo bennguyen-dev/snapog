@@ -2,7 +2,7 @@
 title: "Dynamically Generate Open Graph Images for Your Shopify Store"
 date: "2025-01-25"
 description: "Learn how to automate Open Graph image generation for your Shopify store using SnapOG's API. Boost your click-through rates effortlessly with dynamic OG images."
-image: "/blog/images/shopify-og-image.webp"
+image: "/blog/images/dynamically-generate-open-graph-images-for-your-shopify-store.webp"
 author: "SnapOG Team"
 authorImage: "/logo.svg"
 tags: ["snapog", "shopify", "og:image", "dynamic-og", "tutorial"]

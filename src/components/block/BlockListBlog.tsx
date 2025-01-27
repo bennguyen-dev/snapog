@@ -34,26 +34,30 @@ const BlockListBlog = ({ blogs }: IProps) => {
             key={post.slug}
             className="group relative flex flex-col overflow-hidden rounded-lg border bg-card transition-shadow hover:shadow-lg"
           >
-            <div className="relative h-48 overflow-hidden">
+            <Link
+              href={`/blog/${post.slug}`}
+              className="relative aspect-video overflow-hidden"
+            >
               <Image
                 src={post.image}
                 alt={post.title}
                 fill
+                sizes="(max-width: 425px) 100vw, (max-width: 768px) 400px, 800px"
                 className="object-cover transition-transform duration-200 group-hover:scale-105"
               />
-            </div>
+            </Link>
 
-            <div className="flex-1 p-6">
+            <div className="flex flex-1 flex-col p-6">
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="capitalize">
+                  <Badge key={tag} variant="secondary">
                     <Tag className="mr-1 h-3 w-3" />
                     {tag}
                   </Badge>
                 ))}
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 flex-1">
                 <Link href={`/blog/${post.slug}`}>
                   <Typography
                     variant="h2"
