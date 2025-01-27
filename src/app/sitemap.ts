@@ -1,3 +1,4 @@
+import { blogService } from "@/services/blog";
 import { demoService } from "@/services/demo";
 
 const LAST_MODIFIED = new Date();
@@ -24,6 +25,8 @@ export default async function sitemap() {
 
   const demos = await demoService.getAllDemos();
 
+  const blogs = await blogService.getAllBy();
+
   // Generate core pages
   const corePages = PAGES.core.map((page) => ({
     url: `https://${domain}${page.path}`,
@@ -49,5 +52,12 @@ export default async function sitemap() {
       priority: 0.7,
     })) || [];
 
-  return [...corePages, ...legalPages, ...demoPages];
+  const blogPages = blogs.data.map((blog) => ({
+    url: `https://${domain}/blog/${blog.slug}`,
+    lastModified: blog.date,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...corePages, ...legalPages, ...demoPages, ...blogPages];
 }
