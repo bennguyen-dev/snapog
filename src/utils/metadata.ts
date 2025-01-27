@@ -6,10 +6,17 @@ interface GenerateMetadataProps {
   path?: string;
   host?: string | null;
   keywords?: string[];
+  openGraph?: Metadata["openGraph"];
 }
 
 interface GenerateSchemaProps extends GenerateMetadataProps {
-  type?: "WebPage" | "Article" | "Organization" | "FAQPage";
+  type?:
+    | "WebPage"
+    | "Article"
+    | "Organization"
+    | "FAQPage"
+    | "Blog"
+    | "BlogPosting";
   datePublished?: string;
   dateModified?: string;
   author?: string;
@@ -51,6 +58,7 @@ export function getMetadata({
   description,
   path = "",
   keywords = [],
+  openGraph,
 }: GenerateMetadataProps): Metadata {
   const finalTitle = title
     ? `${title} | ${defaultMetadata.siteName}`
@@ -78,6 +86,7 @@ export function getMetadata({
       ],
       url: `https://${domain}${path}`,
       locale: "en_US",
+      ...openGraph,
     },
     twitter: {
       card: "summary_large_image",
@@ -115,6 +124,7 @@ export function generateSchema({
     : defaultMetadata.baseTitle;
   const finalDescription = description || defaultMetadata.baseDescription;
   const url = `https://${domain}${path}`;
+  const image = `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}`;
 
   const baseSchema = {
     "@context": "https://schema.org",
@@ -122,7 +132,7 @@ export function generateSchema({
     name: finalTitle,
     description: finalDescription,
     url,
-    image: `https://${domain}/api/${process.env.SNAP_OG_API_KEY}?url=${domain}${path}`,
+    image,
   };
 
   if (type === "WebPage" || type === "Article") {
@@ -167,6 +177,38 @@ export function generateSchema({
         name: defaultMetadata.siteName,
         url: `https://${domain}`,
       },
+    };
+  }
+
+  if (type === "Blog") {
+    return {
+      ...baseSchema,
+      "@type": "Blog",
+      headline: title,
+      image,
+      author: {
+        "@type": "Person",
+        name: author || "Unknown",
+      },
+      datePublished,
+      dateModified,
+    };
+  }
+
+  if (type === "BlogPosting") {
+    return {
+      ...baseSchema,
+      "@type": "BlogPosting",
+      headline: title,
+      image,
+      author: {
+        "@type": "Person",
+        name: author || "Unknown",
+      },
+      datePublished,
+      dateModified,
+      articleBody: description || "",
+      mainEntityOfPage: path,
     };
   }
 
