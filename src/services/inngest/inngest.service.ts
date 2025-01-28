@@ -113,7 +113,9 @@ class InngestService {
       // Step 2: Process and update OG Images
       return await step.run("Process and update OG Images", async () => {
         const updatePromises = pages.map(async (page) => {
-          if (!page || !page.imageSrc) return;
+          if (!page || !page.imageSrc) {
+            throw Error("No imageSrc found for page");
+          }
 
           const cacheDurationDays = page.cacheDurationDays ?? 0;
 
@@ -124,7 +126,7 @@ class InngestService {
 
           if (!pageCrawlInfo.data?.screenshot) {
             console.error(`No screenshot available for ${page.url}`);
-            return;
+            throw Error(pageCrawlInfo.message);
           }
 
           const uploadRes = await storageService.uploadImage({
@@ -134,7 +136,7 @@ class InngestService {
 
           if (!uploadRes.data) {
             console.error(`Failed to upload image for ${page.url}`);
-            return;
+            throw Error(uploadRes.message);
           }
 
           const newExpiresAt = new Date(
