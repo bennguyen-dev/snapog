@@ -76,7 +76,7 @@ const BlockBlogDetail = ({ blog }: IProps) => {
             </div>
           </div>
 
-          <article className="prose-primary prose mt-8 max-w-none dark:prose-invert prose-headings:text-primary prose-h3:text-foreground prose-a:text-primary">
+          <article className="prose-primary prose mt-8 max-w-none dark:prose-invert prose-h1:text-primary prose-h2:text-primary prose-h3:text-foreground prose-h4:text-primary prose-h5:text-primary prose-h6:text-primary prose-a:text-primary">
             <div dangerouslySetInnerHTML={{ __html: blog.content }} />
           </article>
         </div>

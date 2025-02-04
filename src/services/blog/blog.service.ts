@@ -3,6 +3,7 @@ import path from "path";
 
 import matter from "gray-matter";
 import { remark } from "remark";
+import remarkGfm from "remark-gfm";
 import html from "remark-html";
 
 import { IBlog } from "@/services/blog/blog.interface";
@@ -50,22 +51,46 @@ class BlogService {
     const { data, content } = matter(fileContents);
 
     const processedContent = await remark()
+      .use(remarkGfm)
       .use(html, { sanitize: false })
       .process(content);
 
-    const contentHtml = processedContent.toString().replace(
-      /<img\s+src="([^"]+)"\s+alt="([^"]+)">/g,
-      (match, src, alt) => `
-      <div class="relative w-full my-8">
-        <img
-          src="${src}"
-          alt="${alt}"
-          class="rounded-lg"
-          style="width: 100%; height: auto;"
-        />
-      </div>
-    `,
-    );
+    const contentHtml = processedContent
+      .toString()
+      // Handle images
+      .replace(
+        /<img\s+src="([^"]+)"\s+alt="([^"]+)">/g,
+        (match, src, alt) => `
+          <div class="relative w-full my-8">
+            <img
+              src="${src}"
+              alt="${alt}"
+              class="rounded-lg"
+              style="width: 100%; height: auto;"
+            />
+          </div>
+        `,
+      )
+      // Add Shadcn table styling
+      .replace(
+        /<table>/g,
+        '<div class="my-6 w-full overflow-y-auto"><table class="w-full">',
+      )
+      .replace(/<\/table>/g, "</table></div>")
+      .replace(/<thead>/g, '<thead class="[&_tr]:border-b">')
+      .replace(
+        /<th>/g,
+        '<th class="h-12 px-4 text-left align-middle font-medium text-foreground [&:has([role=checkbox])]:pr-0">',
+      )
+      .replace(/<tbody>/g, '<tbody class="[&_tr:last-child]:border-0">')
+      .replace(
+        /<tr>/g,
+        '<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">',
+      )
+      .replace(
+        /<td>/g,
+        '<td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">',
+      );
 
     return {
       data: {
