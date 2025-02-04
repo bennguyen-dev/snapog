@@ -1,4 +1,5 @@
-import BlockCTA from "@/components/block/BlockCTA";
+import dynamic from "next/dynamic";
+
 import BlockListBlog from "@/components/block/BlockListBlog";
 import { blogService } from "@/services/blog";
 import { generateSchema, getMetadata } from "@/utils/metadata";
@@ -11,6 +12,11 @@ export async function generateMetadata() {
     path: "/blog",
   });
 }
+
+const DynamicBlockIndieBoosting = dynamic(
+  () => import("@/components/block/BlockIndieBoosting"),
+);
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 
 export default async function BlogPage() {
   const { data: blogs } = await blogService.getAllBy();
@@ -32,7 +38,8 @@ export default async function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <BlockListBlog blogs={blogs} />
-      <BlockCTA />
+      <DynamicBlockCTA />
+      <DynamicBlockIndieBoosting />
     </>
   );
 }

@@ -88,12 +88,6 @@ const BlockListBlog = ({ blogs }: IProps) => {
                     <CalendarDays className="h-4 w-4" />
                     <time>{formatDate(post.date, "short")}</time>
                   </div>
-                  {/*<div className="flex items-center gap-1 text-sm text-muted-foreground">*/}
-                  {/*  <Clock className="h-4 w-4" />*/}
-                  {/*  <span>*/}
-                  {/*    {blogService.getReadingTime(post.content)} min read*/}
-                  {/*  </span>*/}
-                  {/*</div>*/}
                 </div>
               </div>
             </div>

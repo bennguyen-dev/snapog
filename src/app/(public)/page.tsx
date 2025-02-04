@@ -18,6 +18,9 @@ const DynamicBlockPricing = dynamic(
 );
 const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 const DynamicBlockFAQs = dynamic(() => import("@/components/block/BlockFAQs"));
+const DynamicBlockIndieBoosting = dynamic(
+  () => import("@/components/block/BlockIndieBoosting"),
+);
 
 export function generateMetadata() {
   return getMetadata({});
@@ -82,6 +85,7 @@ export default async function Home() {
       <DynamicBlockPricing />
       <DynamicBlockFAQs />
       <DynamicBlockCTA />
+      <DynamicBlockIndieBoosting />
     </>
   );
 }

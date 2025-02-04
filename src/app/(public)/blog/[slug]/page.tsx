@@ -3,8 +3,9 @@ import path from "path";
 
 import { Metadata } from "next";
 
+import dynamic from "next/dynamic";
+
 import BlockBlogDetail from "@/components/block/BlockBlogDetail";
-import BlockCTA from "@/components/block/BlockCTA";
 import { blogService } from "@/services/blog";
 import { generateSchema, getMetadata } from "@/utils/metadata";
 
@@ -33,6 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }),
   };
 }
+
+const DynamicBlockCTA = dynamic(() => import("@/components/block/BlockCTA"));
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "src/content/blogs");
@@ -64,7 +67,7 @@ export default async function BlogPost({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <BlockBlogDetail blog={blog} />
-      <BlockCTA />
+      <DynamicBlockCTA />
     </>
   );
 }

@@ -57,7 +57,7 @@ export default async function sitemap() {
     url: `https://${domain}/blog/${blog.slug}`,
     lastModified: blog.date,
     changeFrequency: "monthly" as const,
-    priority: 0.7,
+    priority: 0.8,
   }));
 
   return [...corePages, ...legalPages, ...demoPages, ...blogPages];
