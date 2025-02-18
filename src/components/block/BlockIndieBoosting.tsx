@@ -18,11 +18,10 @@ const BlockIndieBoosting = ({ ...props }: IProps) => {
       )}
     >
       <IndieBoosting
-        id="HWKZ4YKOOZ"
+        id="XRKO06RP3O"
         maxColumns={3}
         maxProducts={9}
         noShadow
-        owned
         title="Top Indie Products"
         {...props}
       />
