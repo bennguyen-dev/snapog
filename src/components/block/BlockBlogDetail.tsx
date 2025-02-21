@@ -1,20 +1,23 @@
 import { CalendarDays, Clock, Tag } from "lucide-react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import BlockIndieBoosting from "@/components/block/BlockIndieBoosting";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { blogService, type IBlog } from "@/services/blog";
 import { formatDate } from "@/utils";
 
 interface IProps {
   blog: IBlog;
+  recentBlogs: IBlog[];
 }
 
-const BlockBlogDetail = ({ blog }: IProps) => {
+const BlockBlogDetail = ({ blog, recentBlogs }: IProps) => {
   return (
-    <div className="container max-w-screen-lg py-8 sm:py-16">
+    <div className="container py-8 sm:py-16 lg:max-w-screen-lg xl:max-w-screen-xl">
       <div className="mx-auto mb-8 max-w-screen-md text-center">
         <Typography variant="h1" className="text-primary">
           {blog.title}
@@ -46,7 +49,7 @@ const BlockBlogDetail = ({ blog }: IProps) => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr,300px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr,300px] xl:grid-cols-[1fr,400px]">
         <div>
           <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-md">
             <Image
@@ -80,6 +83,40 @@ const BlockBlogDetail = ({ blog }: IProps) => {
         </div>
 
         <div className="space-y-8 lg:sticky lg:top-20 lg:self-start">
+          {recentBlogs.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent posts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {recentBlogs.map((post) => (
+                    <li key={post.slug}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="group flex items-center gap-2 transition-transform duration-200 hover:text-primary hover:underline"
+                      >
+                        <Image
+                          src={post.image}
+                          alt={post.title}
+                          width={320}
+                          height={320}
+                          className="aspect-video w-20 rounded group-hover:scale-105"
+                        />
+                        <Typography
+                          variant="h4"
+                          className="line-clamp-2 text-sm font-normal"
+                        >
+                          {post.title}
+                        </Typography>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
           <BlockIndieBoosting
             classNameContainer="!px-0 !py-0"
             maxProducts={6}

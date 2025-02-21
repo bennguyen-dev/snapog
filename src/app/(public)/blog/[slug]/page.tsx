@@ -50,6 +50,7 @@ export async function generateStaticParams() {
 
 export default async function BlogPost({ params }: Props) {
   const { data: blog } = await blogService.getBy({ slug: params.slug });
+  const { data: recentBlogs } = await blogService.getAllBy();
   const schema = generateSchema({
     type: "BlogPosting",
     title: blog.title,
@@ -66,7 +67,7 @@ export default async function BlogPost({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <BlockBlogDetail blog={blog} />
+      <BlockBlogDetail blog={blog} recentBlogs={recentBlogs} />
       <DynamicBlockCTA />
     </>
   );
