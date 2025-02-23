@@ -1,6 +1,7 @@
 "use client";
 
 import { IndieBoosting } from "@indieboosting/react";
+import "@indieboosting/react/indieboosting.css";
 import { IndieBoostingProps } from "@indieboosting/react/dist/components/IndieBoosting";
 
 import { cn } from "@/utils";
@@ -19,6 +20,7 @@ const BlockIndieBoosting = ({ ...props }: IProps) => {
     >
       <IndieBoosting
         id="XRKO06RP3O"
+        className="[&>h2]:!font-sans"
         maxColumns={3}
         maxProducts={9}
         noShadow

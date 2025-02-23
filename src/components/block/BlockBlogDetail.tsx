@@ -119,8 +119,8 @@ const BlockBlogDetail = ({ blog, recentBlogs }: IProps) => {
 
           <BlockIndieBoosting
             classNameContainer="!px-0 !py-0"
-            maxProducts={6}
-            direction="vertical"
+            maxProducts={9}
+            maxColumns={1}
           />
         </div>
       </div>

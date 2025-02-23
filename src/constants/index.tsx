@@ -29,11 +29,11 @@ export const PUBLIC_ROUTES: NavItem[] = [
     label: "Blog",
     href: "/blog",
   },
-  {
-    title: "How it works",
-    label: "How it works",
-    href: "/#how-it-works",
-  },
+  // {
+  //   title: "How it works",
+  //   label: "How it works",
+  //   href: "/#how-it-works",
+  // },
   {
     title: "FAQs",
     label: "FAQs",

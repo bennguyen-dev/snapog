@@ -27,15 +27,33 @@ const MobileNavbar = ({ isAuth }: IProps) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  const activeRoute = (isAuth ? AUTH_ROUTES : PUBLIC_ROUTES).reduce(
-    (activeItem: NavItem, item: NavItem) => {
-      if (pathname.startsWith(item.href)) {
-        if (!activeItem || item.href.length > activeItem.href.length) {
-          return item;
-        }
-      }
-      return activeItem;
-    },
+  const getActiveRoute = (
+    routes: NavItem[],
+    pathname: string,
+  ): NavItem | undefined => {
+    if (pathname === "/") {
+      return undefined;
+    }
+
+    // Find all matching routes first
+    const matchingRoutes = routes.filter((item) => {
+      // Check if the pathname starts with this route's path
+      return pathname === item.href || pathname.startsWith(item.href + "/");
+    });
+
+    // If we have matches, return the one with the longest href (most specific match)
+    if (matchingRoutes.length > 0) {
+      return matchingRoutes.reduce((longest, current) =>
+        current.href.length > longest.href.length ? current : longest,
+      );
+    }
+
+    return undefined;
+  };
+
+  const activeRoute = getActiveRoute(
+    isAuth ? AUTH_ROUTES : PUBLIC_ROUTES,
+    pathname,
   );
 
   return (
