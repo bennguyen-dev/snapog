@@ -13,6 +13,7 @@ type CodeBlockProps = {
   filename?: string;
   highlightLines?: number[];
   style?: { [key: string]: React.CSSProperties };
+  className?: string;
 } & (
   | {
       code: string;
@@ -36,6 +37,7 @@ export const CodeBlock = ({
   style = atomDark,
   highlightLines = [],
   tabs = [],
+  className,
 }: CodeBlockProps) => {
   const [copied, setCopied] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
@@ -63,6 +65,7 @@ export const CodeBlock = ({
     <div
       className={cn(
         "relative w-full rounded-lg bg-slate-900 px-6 pb-1 pt-3 font-mono text-sm",
+        className,
       )}
     >
       <div className="flex flex-col gap-2">
