@@ -49,6 +49,9 @@ const ListSite = () => {
     data: sites,
     isFetching: fetching,
     refetch: getSites,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useGetSites();
   const { mutate: deleteSite, isPending: deleting } = useDeleteSiteById();
 
@@ -243,8 +246,13 @@ const ListSite = () => {
         <CardContent>
           <DataTable
             columns={columns}
-            data={sites?.data || []}
+            data={
+              sites?.pages?.flatMap((page: { data: Site[] }) => page.data) || []
+            }
             loading={fetching}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
           />
         </CardContent>
       </Card>

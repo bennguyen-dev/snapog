@@ -100,18 +100,35 @@ class SiteService {
 
   async getAllBy({
     userId,
-  }: IGetSitesBy): Promise<IResponse<ISiteDetail[] | null>> {
+    cursor,
+    pageSize = 10,
+  }: IGetSitesBy & { cursor?: string; pageSize?: number }): Promise<
+    IResponse<{
+      data: ISiteDetail[];
+      nextCursor: string | null;
+    } | null>
+  > {
     try {
-      const sites = await prisma.site.findMany({
-        where: {
-          userId,
-        },
+      const results = await prisma.site.findMany({
+        where: { userId },
+        take: pageSize + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { createdAt: "desc" },
       });
+
+      let nextCursor = null;
+      if (results.length > pageSize) {
+        const nextItem = results.pop();
+        nextCursor = nextItem?.id || null;
+      }
 
       return {
         message: "Sites fetched successfully",
         status: 200,
-        data: sites,
+        data: {
+          data: results,
+          nextCursor,
+        },
       };
     } catch (error) {
       console.error(`Error getting sites: ${error}`);

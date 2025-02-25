@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useCallback, useRef } from "react";
 
 import {
   ColumnDef,
@@ -25,6 +26,9 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   className?: string;
   loading?: boolean;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -32,12 +36,35 @@ export function DataTable<TData, TValue>({
   data,
   className,
   loading,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const observer = useRef<IntersectionObserver>();
+  const lastRowRef = useCallback(
+    (node: HTMLTableRowElement) => {
+      if (loading || !hasNextPage || isFetchingNextPage || !fetchNextPage)
+        return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && fetchNextPage) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
+
+  const rows = table.getRowModel().rows;
 
   return (
     <div className={className}>
@@ -68,23 +95,37 @@ export function DataTable<TData, TValue>({
               </TableCell>
             </TableRow>
           )}
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+          {rows?.length ? (
+            rows.map((row, index) => {
+              const isLastRow = index === rows.length - 1;
+              return (
+                <TableRow
+                  key={row.id}
+                  ref={isLastRow ? lastRowRef : null}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
+              </TableCell>
+            </TableRow>
+          )}
+          {isFetchingNextPage && (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <Loader2 className="icon animate-spin text-primary" />
               </TableCell>
             </TableRow>
           )}

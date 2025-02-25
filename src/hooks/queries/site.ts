@@ -1,5 +1,10 @@
 import { Site } from "@prisma/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 
 import { logsKeys, pageKeys, userStatsKeys } from "@/hooks";
 import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
@@ -8,18 +13,30 @@ import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const siteKeys = generateQueryKey("site");
 
-export const useGetSites = () => {
-  return useQuery({
-    queryKey: siteKeys.all,
-    queryFn: async () => {
-      const result = await fetch("/api/sites");
-      const response: IResponse<Site[]> = await result.json();
+export const useGetSites = (pageSize = 2) => {
+  return useInfiniteQuery({
+    queryKey: [...siteKeys.all, pageSize],
+    initialPageParam: null as string | null,
+    queryFn: async ({ pageParam }) => {
+      const url = `/api/sites?pageSize=${pageSize}${
+        pageParam ? `&cursor=${pageParam}` : ""
+      }`;
+      const result = await fetch(url);
+      const response: IResponse<{
+        data: Site[];
+        nextCursor: string | null;
+      }> = await result.json();
 
-      if (response.status === 200) {
-        return response;
+      if (response.status === 200 && response.data) {
+        return {
+          ...response,
+          data: response.data.data,
+          nextCursor: response.data.nextCursor,
+        };
       }
       throw new Error(response.message);
     },
+    getNextPageParam: (lastPage) => lastPage?.nextCursor,
   });
 };
 

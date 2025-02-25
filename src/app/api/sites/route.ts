@@ -86,8 +86,14 @@ export const GET = auth(async function GET(req) {
     });
   }
 
-  const sites = await siteService.getAllBy({
+  const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
+  const pageSize = parseInt(req.nextUrl.searchParams.get("pageSize") || "10");
+
+  const result = await siteService.getAllBy({
     userId: req.auth.user.id,
+    cursor,
+    pageSize,
   });
-  return NextResponse.json(sites, { status: sites.status });
+
+  return NextResponse.json(result, { status: result.status });
 });
