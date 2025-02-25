@@ -27,10 +27,18 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { Typography } from "@/components/ui/typography";
 import { useGetLogs } from "@/hooks";
+import { IUserLog } from "@/services/userLog";
 import { cn, formatDate } from "@/utils";
 
 const ListLogs = () => {
-  const { data: logs, isFetching: fetching, refetch: getLogs } = useGetLogs();
+  const {
+    data: logs,
+    isLoading: fetching,
+    refetch: getLogs,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetLogs({});
 
   const columns: ColumnDef<UserLog>[] = useMemo(() => {
     return [
@@ -182,8 +190,14 @@ const ListLogs = () => {
         <CardContent>
           <DataTable
             columns={columns}
-            data={logs?.data || []}
+            data={
+              logs?.pages?.flatMap((page: { data: IUserLog[] }) => page.data) ||
+              []
+            }
             loading={fetching}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
           />
         </CardContent>
       </Card>

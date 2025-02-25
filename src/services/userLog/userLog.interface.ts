@@ -1,4 +1,6 @@
-import { LOG_STATUS, LOG_TYPE } from "@prisma/client";
+import { LOG_STATUS, LOG_TYPE, UserLog } from "@prisma/client";
+
+export interface IUserLog extends UserLog {}
 
 export interface ICreateUserLog {
   userId: string;

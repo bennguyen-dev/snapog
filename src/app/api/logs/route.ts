@@ -12,9 +12,14 @@ export const GET = auth(async function GET(req) {
     });
   }
 
+  const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
+  const pageSize = parseInt(req.nextUrl.searchParams.get("pageSize") || "10");
+
   // Get credit logs for the user's balance
   const logsRes = await userLogService.getLogs({
     userId: req.auth.user.id,
+    cursor,
+    pageSize,
   });
 
   return NextResponse.json(logsRes, { status: logsRes.status });

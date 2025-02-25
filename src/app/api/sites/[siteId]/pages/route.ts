@@ -27,9 +27,5 @@ export const GET = auth(async function GET(req, res) {
 
   const pages = await pageService.getAllBy({ siteId, cursor, pageSize });
 
-  if (!pages.data) {
-    return NextResponse.json(pages, { status: pages.status });
-  }
-
   return NextResponse.json(pages, { status: pages.status });
 });

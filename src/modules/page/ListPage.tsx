@@ -59,7 +59,7 @@ const ListPage = ({ siteId }: IProps) => {
 
   const {
     data: pages,
-    isFetching: fetching,
+    isLoading: fetching,
     refetch: getPages,
     fetchNextPage,
     hasNextPage,

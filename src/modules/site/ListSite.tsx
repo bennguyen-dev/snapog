@@ -47,7 +47,7 @@ const ListSite = () => {
 
   const {
     data: sites,
-    isFetching: fetching,
+    isLoading: fetching,
     refetch: getSites,
     fetchNextPage,
     hasNextPage,

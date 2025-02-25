@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { ICreateUserLog } from "@/services/userLog";
+import { ICreateUserLog, IUserLog } from "@/services/userLog";
+import { IResponseWithCursor, ISearchParams } from "@/types/global";
 
 class UserLogService {
   async create({ userId, type, metadata, amount, status }: ICreateUserLog) {
@@ -29,24 +30,44 @@ class UserLogService {
     }
   }
 
-  async getLogs({ userId }: { userId: string }) {
+  async getLogs({
+    userId,
+    cursor,
+    pageSize = 10,
+  }: {
+    userId: string;
+  } & ISearchParams): Promise<IResponseWithCursor<IUserLog[] | null>> {
     try {
-      const logs = await prisma.userLog.findMany({
+      const results = await prisma.userLog.findMany({
         where: { userId },
+        take: pageSize + 1,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: { createdAt: "desc" },
       });
 
+      let nextCursor = null;
+      if (results.length > pageSize) {
+        const nextItem = results.pop();
+        nextCursor = nextItem?.id || null;
+      }
+
       return {
-        data: logs,
         message: "User logs fetched successfully",
         status: 200,
+        data: {
+          data: results,
+          nextCursor,
+        },
       };
     } catch (error) {
       console.error("Error fetching user logs:", error);
       return {
-        data: null,
         message: "Failed to fetch user logs",
         status: 500,
+        data: {
+          data: null,
+          nextCursor: null,
+        },
       };
     }
   }

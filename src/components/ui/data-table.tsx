@@ -125,7 +125,9 @@ export function DataTable<TData, TValue>({
           {isFetchingNextPage && (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                <Loader2 className="icon animate-spin text-primary" />
+                <div className="flex items-center justify-center">
+                  <Loader2 className="icon animate-spin text-primary" />
+                </div>
               </TableCell>
             </TableRow>
           )}
