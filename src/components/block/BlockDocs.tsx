@@ -30,7 +30,7 @@ const BlockDocs = () => {
           <Typography variant="h2">Getting Started</Typography>
         </CardHeader>
         <CardContent>
-          <Typography className="mb-4">
+          <Typography>
             SnapOG provides a simple API to generate Open Graph images for your
             web pages. To get started, you'll need an API key which you can
             obtain from your dashboard after signing up.

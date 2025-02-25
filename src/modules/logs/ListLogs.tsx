@@ -34,6 +34,7 @@ const ListLogs = () => {
   const {
     data: logs,
     isLoading: fetching,
+    isRefetching: refetching,
     refetch: getLogs,
     fetchNextPage,
     hasNextPage,
@@ -194,7 +195,7 @@ const ListLogs = () => {
               logs?.pages?.flatMap((page: { data: IUserLog[] }) => page.data) ||
               []
             }
-            loading={fetching}
+            loading={fetching || refetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}

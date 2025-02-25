@@ -60,6 +60,7 @@ const ListPage = ({ siteId }: IProps) => {
   const {
     data: pages,
     isLoading: fetching,
+    isRefetching: refetching,
     refetch: getPages,
     fetchNextPage,
     hasNextPage,
@@ -365,7 +366,7 @@ const ListPage = ({ siteId }: IProps) => {
             data={
               pages?.pages?.flatMap((page: { data: Page[] }) => page.data) || []
             }
-            loading={fetching}
+            loading={fetching || refetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}

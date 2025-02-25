@@ -48,6 +48,7 @@ const ListSite = () => {
   const {
     data: sites,
     isLoading: fetching,
+    isRefetching: refetching,
     refetch: getSites,
     fetchNextPage,
     hasNextPage,
@@ -249,7 +250,7 @@ const ListSite = () => {
             data={
               sites?.pages?.flatMap((page: { data: Site[] }) => page.data) || []
             }
-            loading={fetching}
+            loading={fetching || refetching}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
