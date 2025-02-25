@@ -52,7 +52,7 @@ const ListSite = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetSites();
+  } = useGetSites({});
   const { mutate: deleteSite, isPending: deleting } = useDeleteSiteById();
 
   const columns: ColumnDef<Site>[] = useMemo(() => {

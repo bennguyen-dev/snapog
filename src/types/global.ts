@@ -6,6 +6,19 @@ export interface IResponse<T> {
   data: T;
 }
 
+export interface ISearchParams {
+  cursor?: string;
+  pageSize?: number;
+}
+
+export interface IResponseWithCursor<T> {
+  message: string;
+  status: number;
+  data: {
+    data: T;
+    nextCursor: string | null;
+  };
+}
 export type ValuesOf<T> = T[keyof T];
 
 export interface NavItem {

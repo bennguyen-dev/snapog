@@ -61,6 +61,9 @@ const ListPage = ({ siteId }: IProps) => {
     data: pages,
     isFetching: fetching,
     refetch: getPages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useGetPages({ siteId });
   const { data: site, isLoading: loadingSite } = useGetSiteById({ siteId });
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
@@ -165,7 +168,11 @@ const ListPage = ({ siteId }: IProps) => {
                   "_blank",
                 );
               }}
-              src={row.original.imageSrc}
+              src={getLinkSmartOGImage({
+                host: window.location.host,
+                url: row.original.url,
+                apiKey: session?.user.apiKey || "",
+              })}
               width={120}
               height={62}
               className="aspect-[1200/630] max-w-40 cursor-pointer rounded"
@@ -359,8 +366,13 @@ const ListPage = ({ siteId }: IProps) => {
         <CardContent>
           <DataTable
             columns={columns}
-            data={pages?.data || []}
+            data={
+              pages?.pages?.flatMap((page: { data: Page[] }) => page.data) || []
+            }
             loading={fetching}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
           />
         </CardContent>
       </Card>

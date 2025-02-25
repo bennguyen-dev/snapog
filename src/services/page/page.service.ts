@@ -13,7 +13,7 @@ import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 import { userBalanceService } from "@/services/userBalance";
 import { userLogService } from "@/services/userLog";
-import { IResponse } from "@/types/global";
+import { ISearchParams, IResponse, IResponseWithCursor } from "@/types/global";
 import {
   getDomainName,
   getUrlWithoutProtocol,
@@ -273,20 +273,30 @@ class PageService {
 
   async getAllBy({
     siteId,
-  }: {
-    siteId: string;
-  }): Promise<IResponse<Page[] | null>> {
+    cursor,
+    pageSize = 10,
+  }: IGetPageBy & ISearchParams): Promise<IResponseWithCursor<Page[] | null>> {
     try {
-      const pages = await prisma.page.findMany({
-        where: {
-          siteId,
-        },
+      const results = await prisma.page.findMany({
+        where: { siteId },
+        take: pageSize + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { createdAt: "desc" },
       });
 
+      let nextCursor = null;
+      if (results.length > pageSize) {
+        const nextItem = results.pop();
+        nextCursor = nextItem?.id || null;
+      }
+
       return {
-        message: "Pages found",
+        message: "Pages fetched successfully",
         status: 200,
-        data: pages,
+        data: {
+          data: results,
+          nextCursor,
+        },
       };
     } catch (error) {
       console.error(`Error getting pages: ${error}`);
@@ -294,7 +304,10 @@ class PageService {
         status: 500,
         message:
           error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
+        data: {
+          data: null,
+          nextCursor: null,
+        },
       };
     }
   }

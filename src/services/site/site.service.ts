@@ -9,7 +9,7 @@ import {
   ISiteDetail,
   IUpdateSiteBy,
 } from "@/services/site";
-import { IResponse } from "@/types/global";
+import { ISearchParams, IResponse, IResponseWithCursor } from "@/types/global";
 
 class SiteService {
   async create({
@@ -102,11 +102,8 @@ class SiteService {
     userId,
     cursor,
     pageSize = 10,
-  }: IGetSitesBy & { cursor?: string; pageSize?: number }): Promise<
-    IResponse<{
-      data: ISiteDetail[];
-      nextCursor: string | null;
-    } | null>
+  }: IGetSitesBy & ISearchParams): Promise<
+    IResponseWithCursor<ISiteDetail[] | null>
   > {
     try {
       const results = await prisma.site.findMany({
@@ -136,7 +133,10 @@ class SiteService {
         status: 500,
         message:
           error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
+        data: {
+          data: null,
+          nextCursor: null,
+        },
       };
     }
   }

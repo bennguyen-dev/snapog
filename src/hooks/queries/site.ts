@@ -13,9 +13,9 @@ import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const siteKeys = generateQueryKey("site");
 
-export const useGetSites = (pageSize = 2) => {
+export const useGetSites = ({ pageSize = 10 }: { pageSize?: number }) => {
   return useInfiniteQuery({
-    queryKey: [...siteKeys.all, pageSize],
+    queryKey: siteKeys.list({ pageSize }),
     initialPageParam: null as string | null,
     queryFn: async ({ pageParam }) => {
       const url = `/api/sites?pageSize=${pageSize}${
