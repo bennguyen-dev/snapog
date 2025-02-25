@@ -16,6 +16,7 @@ import { userLogService } from "@/services/userLog";
 import { ISearchParams, IResponse, IResponseWithCursor } from "@/types/global";
 import {
   getDomainName,
+  getImageLinkFromAWS,
   getUrlWithoutProtocol,
   getUrlWithProtocol,
   sanitizeFilename,
@@ -290,11 +291,16 @@ class PageService {
         nextCursor = nextItem?.id || null;
       }
 
+      const pagesWithFullImageUrls = results.map((page) => ({
+        ...page,
+        imageSrc: page.imageSrc ? getImageLinkFromAWS(page.imageSrc) : null,
+      }));
+
       return {
         message: "Pages fetched successfully",
         status: 200,
         data: {
-          data: results,
+          data: pagesWithFullImageUrls,
           nextCursor,
         },
       };
