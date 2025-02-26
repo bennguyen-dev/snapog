@@ -8,3 +8,4 @@ export * from "./queries/demo";
 export * from "./queries/product";
 export * from "./queries/logs";
 export * from "./queries/user-stats";
+export * from "./useDebounce";

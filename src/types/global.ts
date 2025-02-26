@@ -9,6 +9,7 @@ export interface IResponse<T> {
 export interface ISearchParams {
   cursor?: string;
   pageSize?: number;
+  search?: string;
 }
 
 export interface IResponseWithCursor<T> {

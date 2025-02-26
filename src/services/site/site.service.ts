@@ -102,12 +102,22 @@ class SiteService {
     userId,
     cursor,
     pageSize = 10,
+    search,
   }: IGetSitesBy & ISearchParams): Promise<
     IResponseWithCursor<ISiteDetail[] | null>
   > {
     try {
+      const whereCondition: any = { userId };
+
+      if (search && search.trim() !== "") {
+        whereCondition.domain = {
+          contains: search,
+          mode: "insensitive",
+        };
+      }
+
       const results = await prisma.site.findMany({
-        where: { userId },
+        where: whereCondition,
         take: pageSize + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: { createdAt: "desc" },

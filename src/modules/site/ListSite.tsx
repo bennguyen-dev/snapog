@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { Site } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
@@ -27,9 +27,15 @@ import {
 } from "@/components/ui/card";
 import { CodeBlock } from "@/components/ui/code-block";
 import { DataTable } from "@/components/ui/data-table";
+import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
-import { useConfirmDialog, useDeleteSiteById, useGetSites } from "@/hooks";
+import {
+  useConfirmDialog,
+  useDebounce,
+  useDeleteSiteById,
+  useGetSites,
+} from "@/hooks";
 import {
   AddSiteDialog,
   EditSiteDialog,
@@ -45,6 +51,10 @@ const ListSite = () => {
   const addSiteRef = useRef<IAddSiteDialogRef>(null);
   const editSiteRef = useRef<IEditSiteDialogRef>(null);
 
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearchTerm = useDebounce(search, 500);
+
   const {
     data: sites,
     isLoading: fetching,
@@ -53,7 +63,7 @@ const ListSite = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetSites({});
+  } = useGetSites({ search: debouncedSearchTerm });
   const { mutate: deleteSite, isPending: deleting } = useDeleteSiteById();
 
   const columns: ColumnDef<Site>[] = useMemo(() => {
@@ -216,35 +226,50 @@ const ListSite = () => {
         </Breadcrumb>
       </div>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 sm:items-start">
-          <div className="flex flex-col space-y-1.5">
-            <CardTitle>Sites</CardTitle>
-            <CardDescription className="max-sm:hidden">
-              List of sites where you can use social images
-            </CardDescription>
-          </div>
-          <div className="flex items-center justify-end gap-2 sm:gap-4">
-            <Button
-              variant="outline"
-              onClick={async () => {
-                await getSites();
-              }}
-              icon={<RefreshCw className="icon" />}
-              loading={fetching}
-            >
-              <span className="max-sm:hidden">Refresh</span>
-            </Button>
-            <Button
-              onClick={() => {
-                addSiteRef.current?.open();
-              }}
-              icon={<Plus className="icon" />}
-            >
-              <span className="max-sm:hidden">Add site</span>
-            </Button>
-          </div>
+        <CardHeader>
+          <CardTitle>Sites</CardTitle>
+          <CardDescription className="max-sm:hidden">
+            List of sites where you can use social images
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
+            <Input
+              id="search"
+              placeholder="Enter domain..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              className="max-w-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getSites();
+                }
+              }}
+            />
+            <div className="flex items-center justify-end gap-2 sm:gap-4">
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  await getSites();
+                }}
+                icon={<RefreshCw className="icon" />}
+                loading={refetching}
+              >
+                <span className="max-sm:hidden">Refresh</span>
+              </Button>
+              <Button
+                onClick={() => {
+                  addSiteRef.current?.open();
+                }}
+                icon={<Plus className="icon" />}
+              >
+                <span className="max-sm:hidden">Add site</span>
+              </Button>
+            </div>
+          </div>
+
           <DataTable
             columns={columns}
             data={

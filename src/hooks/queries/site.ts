@@ -8,19 +8,27 @@ import {
 
 import { logsKeys, pageKeys, userStatsKeys } from "@/hooks";
 import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
-import { IResponse } from "@/types/global";
+import { IResponse, ISearchParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const siteKeys = generateQueryKey("site");
 
-export const useGetSites = ({ pageSize = 10 }: { pageSize?: number }) => {
+export const useGetSites = ({ pageSize = 10, search }: ISearchParams) => {
   return useInfiniteQuery({
-    queryKey: siteKeys.list({ pageSize }),
+    queryKey: siteKeys.list({ pageSize, search }),
     initialPageParam: null as string | null,
     queryFn: async ({ pageParam }) => {
-      const url = `/api/sites?pageSize=${pageSize}${
-        pageParam ? `&cursor=${pageParam}` : ""
-      }`;
+      const params = new URLSearchParams();
+
+      params.append("pageSize", String(pageSize));
+      if (pageParam) {
+        params.append("cursor", pageParam);
+      }
+      if (search) {
+        params.append("search", search);
+      }
+
+      const url = `/api/sites?${params.toString()}`;
       const result = await fetch(url);
       const response: IResponse<{
         data: Site[];
