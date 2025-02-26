@@ -276,10 +276,36 @@ class PageService {
     siteId,
     cursor,
     pageSize = 10,
+    search,
   }: IGetPageBy & ISearchParams): Promise<IResponseWithCursor<Page[] | null>> {
     try {
+      const whereCondition: any = { siteId };
+
+      if (search && search.trim() !== "") {
+        whereCondition.OR = [
+          {
+            url: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            OGTitle: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            OGDescription: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ];
+      }
+
       const results = await prisma.page.findMany({
-        where: { siteId },
+        where: whereCondition,
         take: pageSize + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: { createdAt: "desc" },

@@ -236,7 +236,7 @@ const ListSite = () => {
           <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
             <Input
               id="search"
-              placeholder="Enter domain..."
+              placeholder="Enter domain to search..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);

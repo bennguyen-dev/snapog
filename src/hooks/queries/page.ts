@@ -8,10 +8,11 @@ import {
 import { creditKeys, logsKeys, userStatsKeys } from "@/hooks";
 import {
   IDeletePagesBy,
+  IGetPageBy,
   IInvalidateCachePageBy,
   IUpdatePagesBy,
 } from "@/services/page";
-import { IResponse } from "@/types/global";
+import { IResponse, ISearchParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const pageKeys = generateQueryKey("page");
@@ -19,18 +20,25 @@ export const pageKeys = generateQueryKey("page");
 export const useGetPages = ({
   siteId,
   pageSize = 10,
-}: {
-  siteId: string;
-  pageSize?: number;
-}) => {
+  search,
+}: IGetPageBy & ISearchParams) => {
   return useInfiniteQuery({
-    queryKey: pageKeys.list({ siteId, pageSize }),
+    queryKey: pageKeys.list({ siteId, pageSize, search }),
     initialPageParam: null as string | null,
-    queryFn: async ({ pageParam }) => {
-      const url = `/api/sites/${siteId}/pages?pageSize=${pageSize}${
-        pageParam ? `&cursor=${pageParam}` : ""
-      }`;
-      const result = await fetch(url);
+    queryFn: async ({ pageParam, signal }) => {
+      const params = new URLSearchParams();
+
+      params.append("pageSize", String(pageSize));
+      if (pageParam) {
+        params.append("cursor", pageParam);
+      }
+      if (search) {
+        params.append("search", search);
+      }
+
+      const url = `/api/sites/${siteId}/pages?${params.toString()}`;
+
+      const result = await fetch(url, { signal });
       const response: IResponse<{
         data: Page[];
         nextCursor: string | null;

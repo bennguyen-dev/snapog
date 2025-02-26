@@ -17,7 +17,7 @@ export const useGetSites = ({ pageSize = 10, search }: ISearchParams) => {
   return useInfiniteQuery({
     queryKey: siteKeys.list({ pageSize, search }),
     initialPageParam: null as string | null,
-    queryFn: async ({ pageParam }) => {
+    queryFn: async ({ pageParam, signal }) => {
       const params = new URLSearchParams();
 
       params.append("pageSize", String(pageSize));
@@ -29,7 +29,8 @@ export const useGetSites = ({ pageSize = 10, search }: ISearchParams) => {
       }
 
       const url = `/api/sites?${params.toString()}`;
-      const result = await fetch(url);
+
+      const result = await fetch(url, { signal });
       const response: IResponse<{
         data: Site[];
         nextCursor: string | null;

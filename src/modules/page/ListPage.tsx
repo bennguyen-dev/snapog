@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
@@ -27,11 +27,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
 import {
   useConfirmDialog,
+  useDebounce,
   useDeletePageById,
   useGetPages,
   useGetSiteById,
@@ -57,6 +59,10 @@ const ListPage = ({ siteId }: IProps) => {
   } = useConfirmDialog();
   const editPageRef = useRef<IEditPageDialogRef>(null);
 
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearchTerm = useDebounce(search, 500);
+
   const {
     data: pages,
     isLoading: fetching,
@@ -65,7 +71,7 @@ const ListPage = ({ siteId }: IProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetPages({ siteId });
+  } = useGetPages({ siteId, search: debouncedSearchTerm });
   const { data: site, isLoading: loadingSite } = useGetSiteById({ siteId });
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
     siteId,
@@ -330,37 +336,51 @@ const ListPage = ({ siteId }: IProps) => {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between space-y-0">
-          <div className="flex flex-col space-y-1.5">
-            <CardTitle>Pages</CardTitle>
-            <CardDescription>
-              List of pages for the site{" "}
-              {site && (
-                <Link
-                  href={getUrlWithProtocol(site.data.domain)}
-                  target="_blank"
-                  className="text-link"
-                >
-                  {site.data.domain}
-                </Link>
-              )}
-              {loadingSite && (
-                <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
-              )}
-            </CardDescription>
-          </div>
-          <div className="flex items-center justify-end gap-4">
-            <Button
-              variant="outline"
-              onClick={() => getPages()}
-              icon={<RefreshCw className="icon" />}
-              loading={fetching}
-            >
-              <span className="max-sm:hidden">Refresh</span>
-            </Button>
-          </div>
+        <CardHeader>
+          <CardTitle>Pages</CardTitle>
+          <CardDescription>
+            List of pages for the site{" "}
+            {site && (
+              <Link
+                href={getUrlWithProtocol(site.data.domain)}
+                target="_blank"
+                className="text-link"
+              >
+                {site.data.domain}
+              </Link>
+            )}
+            {loadingSite && (
+              <Skeleton className="-mb-0.5 inline-block h-3 w-40" />
+            )}
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
+            <Input
+              id="search"
+              placeholder="Enter url, title or description to search..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              className="max-w-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getPages();
+                }
+              }}
+            />
+            <div className="flex items-center justify-end gap-2 sm:gap-4">
+              <Button
+                variant="outline"
+                onClick={() => getPages()}
+                icon={<RefreshCw className="icon" />}
+                loading={fetching}
+              >
+                <span className="max-sm:hidden">Refresh</span>
+              </Button>
+            </div>
+          </div>
           <DataTable
             columns={columns}
             data={
