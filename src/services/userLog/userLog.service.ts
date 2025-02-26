@@ -34,12 +34,44 @@ class UserLogService {
     userId,
     cursor,
     pageSize = 10,
+    search,
   }: {
     userId: string;
   } & ISearchParams): Promise<IResponseWithCursor<IUserLog[] | null>> {
     try {
+      const whereCondition: any = { userId };
+
+      if (search && search.trim() !== "") {
+        whereCondition.OR = [
+          {
+            metadata: {
+              path: ["productName"],
+              string_contains: search,
+            },
+          },
+          {
+            metadata: {
+              path: ["userAgent"],
+              string_contains: search,
+            },
+          },
+          {
+            metadata: {
+              path: ["error", "message"],
+              string_contains: search,
+            },
+          },
+          {
+            metadata: {
+              path: ["pageUrl"],
+              string_contains: search,
+            },
+          },
+        ];
+      }
+
       const results = await prisma.userLog.findMany({
-        where: { userId },
+        where: whereCondition,
         take: pageSize + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: { createdAt: "desc" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { LOG_STATUS, UserLog } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
@@ -25,12 +25,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
-import { useGetLogs } from "@/hooks";
+import { useDebounce, useGetLogs } from "@/hooks";
 import { IUserLog } from "@/services/userLog";
 import { cn, formatDate } from "@/utils";
 
 const ListLogs = () => {
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearchTerm = useDebounce(search, 500);
+
   const {
     data: logs,
     isLoading: fetching,
@@ -39,7 +44,7 @@ const ListLogs = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetLogs({});
+  } = useGetLogs({ search: debouncedSearchTerm });
 
   const columns: ColumnDef<UserLog>[] = useMemo(() => {
     return [
@@ -170,25 +175,39 @@ const ListLogs = () => {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 sm:items-start">
-          <div className="flex flex-col space-y-1.5">
-            <CardTitle>Logs</CardTitle>
-            <CardDescription>
-              View your credit usage history and transactions
-            </CardDescription>
-          </div>
-          <div className="flex items-center justify-end gap-4">
-            <Button
-              variant="outline"
-              onClick={() => getLogs()}
-              icon={<RefreshCw className="icon" />}
-              loading={fetching}
-            >
-              <span className="max-sm:hidden">Refresh</span>
-            </Button>
-          </div>
+        <CardHeader>
+          <CardTitle>Logs</CardTitle>
+          <CardDescription className="max-sm:hidden">
+            View your credit usage history and transactions
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
+            <Input
+              id="search"
+              placeholder="Enter url, user agent, product name or error to search..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              className="max-w-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getLogs();
+                }
+              }}
+            />
+            <div className="flex items-center justify-end gap-2 sm:gap-4">
+              <Button
+                variant="outline"
+                onClick={() => getLogs()}
+                icon={<RefreshCw className="icon" />}
+                loading={fetching}
+              >
+                <span className="max-sm:hidden">Refresh</span>
+              </Button>
+            </div>
+          </div>
           <DataTable
             columns={columns}
             data={

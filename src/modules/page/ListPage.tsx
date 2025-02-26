@@ -338,7 +338,7 @@ const ListPage = ({ siteId }: IProps) => {
       <Card>
         <CardHeader>
           <CardTitle>Pages</CardTitle>
-          <CardDescription>
+          <CardDescription className="max-sm:hidden">
             List of pages for the site{" "}
             {site && (
               <Link
