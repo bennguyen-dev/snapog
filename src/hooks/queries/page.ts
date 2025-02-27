@@ -12,7 +12,7 @@ import {
   IInvalidateCachePageBy,
   IUpdatePagesBy,
 } from "@/services/page";
-import { IResponse, ISearchParams } from "@/types/global";
+import { IResponse, IFilterParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const pageKeys = generateQueryKey("page");
@@ -21,7 +21,7 @@ export const useGetPages = ({
   siteId,
   pageSize = 10,
   search,
-}: IGetPageBy & ISearchParams) => {
+}: IGetPageBy & IFilterParams) => {
   return useInfiniteQuery({
     queryKey: pageKeys.list({ siteId, pageSize, search }),
     initialPageParam: null as string | null,

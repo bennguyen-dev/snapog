@@ -1,15 +1,25 @@
 import { ReactNode } from "react";
 
+import { IUserLogStatus, IUserLogType } from "@/services/userLog";
+
 export interface IResponse<T> {
   message: string;
   status: number;
   data: T;
 }
 
-export interface ISearchParams {
+export interface IFilterParams {
   cursor?: string;
   pageSize?: number;
   search?: string;
+
+  filter?: {
+    amounts?: ("plus" | "minus" | "zero")[];
+    types?: IUserLogType[];
+    statuses?: IUserLogStatus[];
+    dateFrom?: Date | string;
+    dateTo?: Date | string;
+  };
 }
 
 export interface IResponseWithCursor<T> {

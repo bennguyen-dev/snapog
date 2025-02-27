@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { ICreateUserLog, IUserLog } from "@/services/userLog";
-import { IResponseWithCursor, ISearchParams } from "@/types/global";
+import { IResponseWithCursor, IFilterParams } from "@/types/global";
 
 class UserLogService {
   async create({ userId, type, metadata, amount, status }: ICreateUserLog) {
@@ -35,14 +35,78 @@ class UserLogService {
     cursor,
     pageSize = 10,
     search,
+    filter,
   }: {
     userId: string;
-  } & ISearchParams): Promise<IResponseWithCursor<IUserLog[] | null>> {
+  } & IFilterParams): Promise<IResponseWithCursor<IUserLog[] | null>> {
     try {
       const whereCondition: any = { userId };
 
+      const amounts = filter?.amounts;
+      const types = filter?.types;
+      const statuses = filter?.statuses;
+      const dateFrom = filter?.dateFrom;
+      const dateTo = filter?.dateTo;
+
+      // Apply amount filter (multiple values)
+      if (amounts && amounts.length > 0) {
+        const amountConditions = [];
+
+        for (const filter of amounts) {
+          switch (filter) {
+            case "plus":
+              amountConditions.push({ amount: { gt: 0 } });
+              break;
+            case "minus":
+              amountConditions.push({ amount: { lt: 0 } });
+              break;
+            case "zero":
+              amountConditions.push({ amount: { equals: 0 } });
+              break;
+          }
+        }
+
+        if (amountConditions.length > 0) {
+          // If we already have an OR condition from search
+          if (whereCondition.OR) {
+            // We need to wrap the existing OR and the new amount OR in an AND
+            whereCondition.AND = [
+              { OR: whereCondition.OR },
+              { OR: amountConditions },
+            ];
+            delete whereCondition.OR;
+          } else {
+            whereCondition.OR = amountConditions;
+          }
+        }
+      }
+
+      // Apply type filter (multiple values)
+      if (types && types.length > 0) {
+        whereCondition.type = { in: types };
+      }
+
+      // Apply status filter (multiple values)
+      if (statuses && statuses.length > 0) {
+        whereCondition.status = { in: statuses };
+      }
+
+      // Apply date range filter
+      if (dateFrom || dateTo) {
+        whereCondition.createdAt = {};
+
+        if (dateFrom) {
+          whereCondition.createdAt.gte = dateFrom;
+        }
+
+        if (dateTo) {
+          whereCondition.createdAt.lte = dateTo;
+        }
+      }
+
+      // Apply search filter
       if (search && search.trim() !== "") {
-        whereCondition.OR = [
+        const searchCondition = [
           {
             metadata: {
               path: ["productName"],
@@ -68,6 +132,18 @@ class UserLogService {
             },
           },
         ];
+
+        // If we already have an OR condition from amount filters
+        if (whereCondition.OR) {
+          // We need to wrap the existing OR and the new search OR in an AND
+          whereCondition.AND = [
+            { OR: whereCondition.OR },
+            { OR: searchCondition },
+          ];
+          delete whereCondition.OR;
+        } else {
+          whereCondition.OR = searchCondition;
+        }
       }
 
       const results = await prisma.userLog.findMany({

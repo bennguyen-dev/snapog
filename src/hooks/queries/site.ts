@@ -8,12 +8,12 @@ import {
 
 import { logsKeys, pageKeys, userStatsKeys } from "@/hooks";
 import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
-import { IResponse, ISearchParams } from "@/types/global";
+import { IResponse, IFilterParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const siteKeys = generateQueryKey("site");
 
-export const useGetSites = ({ pageSize = 10, search }: ISearchParams) => {
+export const useGetSites = ({ pageSize = 10, search }: IFilterParams) => {
   return useInfiniteQuery({
     queryKey: siteKeys.list({ pageSize, search }),
     initialPageParam: null as string | null,

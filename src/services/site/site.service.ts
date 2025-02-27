@@ -9,7 +9,7 @@ import {
   ISiteDetail,
   IUpdateSiteBy,
 } from "@/services/site";
-import { ISearchParams, IResponse, IResponseWithCursor } from "@/types/global";
+import { IFilterParams, IResponse, IResponseWithCursor } from "@/types/global";
 
 class SiteService {
   async create({
@@ -103,7 +103,7 @@ class SiteService {
     cursor,
     pageSize = 10,
     search,
-  }: IGetSitesBy & ISearchParams): Promise<
+  }: IGetSitesBy & IFilterParams): Promise<
     IResponseWithCursor<ISiteDetail[] | null>
   > {
     try {

@@ -13,7 +13,7 @@ import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
 import { userBalanceService } from "@/services/userBalance";
 import { userLogService } from "@/services/userLog";
-import { ISearchParams, IResponse, IResponseWithCursor } from "@/types/global";
+import { IFilterParams, IResponse, IResponseWithCursor } from "@/types/global";
 import {
   getDomainName,
   getImageLinkFromAWS,
@@ -277,7 +277,7 @@ class PageService {
     cursor,
     pageSize = 10,
     search,
-  }: IGetPageBy & ISearchParams): Promise<IResponseWithCursor<Page[] | null>> {
+  }: IGetPageBy & IFilterParams): Promise<IResponseWithCursor<Page[] | null>> {
     try {
       const whereCondition: any = { siteId };
 
