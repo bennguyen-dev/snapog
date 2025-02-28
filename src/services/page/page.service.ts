@@ -277,9 +277,26 @@ class PageService {
     cursor,
     pageSize = 10,
     search,
+    filter,
   }: IGetPageBy & IFilterParams): Promise<IResponseWithCursor<Page[] | null>> {
     try {
+      const dateFrom = filter?.dateFrom;
+      const dateTo = filter?.dateTo;
+
       const whereCondition: any = { siteId };
+
+      // Apply date range filter
+      if (dateFrom || dateTo) {
+        whereCondition.imageExpiresAt = {};
+
+        if (dateFrom) {
+          whereCondition.imageExpiresAt.gte = dateFrom;
+        }
+
+        if (dateTo) {
+          whereCondition.imageExpiresAt.lte = dateTo;
+        }
+      }
 
       if (search && search.trim() !== "") {
         whereCondition.OR = [

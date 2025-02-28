@@ -143,11 +143,11 @@ export function DatePicker({
   // Format date display for button
   const formatDateDisplay = () => {
     if (mode === "single") {
-      return date ? format(date, "PPP") : placeholder;
+      return date ? format(date, "PP") : placeholder;
     } else {
       if (!dateRange?.from) return placeholder;
-      if (!dateRange.to) return format(dateRange.from, "PPP");
-      return `${format(dateRange.from, "PPP")} - ${format(dateRange.to, "PPP")}`;
+      if (!dateRange.to) return format(dateRange.from, "PP");
+      return `${format(dateRange.from, "PP")} - ${format(dateRange.to, "PP")}`;
     }
   };
 

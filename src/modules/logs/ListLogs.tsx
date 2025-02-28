@@ -199,7 +199,7 @@ const ListLogs = () => {
       },
       {
         accessorKey: "createdAt",
-        header: "Date",
+        header: "Created At",
         cell: ({ row }) => {
           return (
             <Typography className="min-w-40" affects="muted">
@@ -246,7 +246,7 @@ const ListLogs = () => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              className="min-w-40 max-w-sm"
+              className="w-full sm:max-w-sm"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   getLogs();
@@ -272,10 +272,11 @@ const ListLogs = () => {
               options={AMOUNT_OPTIONS}
             />
             <DatePicker
-              placeholder="Pick a date range"
+              placeholder="Created At"
               mode="range"
               initialDateRange={date}
               onDateRangeChange={setDate}
+              presetDays={[-90, -30, -14, -7, 1]}
             />
             <Button
               variant="outline"

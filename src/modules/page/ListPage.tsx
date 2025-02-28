@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
+import * as React from "react";
 
 import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { DateRange } from "react-day-picker";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -27,6 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
@@ -60,6 +63,7 @@ const ListPage = ({ siteId }: IProps) => {
   const editPageRef = useRef<IEditPageDialogRef>(null);
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<DateRange | undefined>();
 
   const debouncedSearchTerm = useDebounce(search, 500);
 
@@ -71,7 +75,11 @@ const ListPage = ({ siteId }: IProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetPages({ siteId, search: debouncedSearchTerm });
+  } = useGetPages({
+    siteId,
+    search: debouncedSearchTerm,
+    filter: { dateFrom: date?.from, dateTo: date?.to },
+  });
   const { data: site, isLoading: loadingSite } = useGetSiteById({ siteId });
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
     siteId,
@@ -355,7 +363,7 @@ const ListPage = ({ siteId }: IProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-4">
             <Input
               id="search"
               placeholder="Enter url, title or description to search..."
@@ -363,23 +371,28 @@ const ListPage = ({ siteId }: IProps) => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              className="max-w-sm"
+              className="w-full sm:max-w-sm"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   getPages();
                 }
               }}
             />
-            <div className="flex items-center justify-end gap-2 sm:gap-4">
-              <Button
-                variant="outline"
-                onClick={() => getPages()}
-                icon={<RefreshCw className="icon" />}
-                loading={fetching}
-              >
-                <span className="max-sm:hidden">Refresh</span>
-              </Button>
-            </div>
+            <DatePicker
+              placeholder="Expired At"
+              mode="range"
+              initialDateRange={date}
+              onDateRangeChange={setDate}
+              presetDays={[1, 7, 14, 30, 90]}
+            />
+            <Button
+              variant="outline"
+              onClick={() => getPages()}
+              icon={<RefreshCw className="icon" />}
+              loading={fetching}
+            >
+              <span className="max-sm:hidden">Refresh</span>
+            </Button>
           </div>
           <DataTable
             columns={columns}
