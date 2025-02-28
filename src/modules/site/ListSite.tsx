@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import * as React from "react";
 
 import { Site } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
 import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { DateRange } from "react-day-picker";
 
 import Link from "next/link";
 
@@ -27,6 +29,7 @@ import {
 } from "@/components/ui/card";
 import { CodeBlock } from "@/components/ui/code-block";
 import { DataTable } from "@/components/ui/data-table";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "@/components/ui/use-toast";
@@ -52,6 +55,7 @@ const ListSite = () => {
   const editSiteRef = useRef<IEditSiteDialogRef>(null);
 
   const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<DateRange | undefined>();
 
   const debouncedSearchTerm = useDebounce(search, 500);
 
@@ -63,7 +67,10 @@ const ListSite = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetSites({ search: debouncedSearchTerm });
+  } = useGetSites({
+    search: debouncedSearchTerm,
+    filter: { dateFrom: date?.from, dateTo: date?.to },
+  });
   const { mutate: deleteSite, isPending: deleting } = useDeleteSiteById();
 
   const columns: ColumnDef<Site>[] = useMemo(() => {
@@ -233,7 +240,7 @@ const ListSite = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-4">
             <Input
               id="search"
               placeholder="Enter domain to search..."
@@ -241,33 +248,38 @@ const ListSite = () => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              className="max-w-sm"
+              className="w-full lg:max-w-sm"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   getSites();
                 }
               }}
             />
-            <div className="flex items-center justify-end gap-2 sm:gap-4">
-              <Button
-                variant="outline"
-                onClick={async () => {
-                  await getSites();
-                }}
-                icon={<RefreshCw className="icon" />}
-                loading={refetching}
-              >
-                <span className="max-sm:hidden">Refresh</span>
-              </Button>
-              <Button
-                onClick={() => {
-                  addSiteRef.current?.open();
-                }}
-                icon={<Plus className="icon" />}
-              >
-                <span className="max-sm:hidden">Add site</span>
-              </Button>
-            </div>
+            <DatePicker
+              placeholder="Created At"
+              mode="range"
+              initialDateRange={date}
+              onDateRangeChange={setDate}
+              presetDays={[-90, -30, -14, -7, 1]}
+            />
+            <Button
+              variant="outline"
+              onClick={async () => {
+                await getSites();
+              }}
+              icon={<RefreshCw className="icon" />}
+              loading={refetching}
+            >
+              <span className="max-sm:hidden">Refresh</span>
+            </Button>
+            <Button
+              onClick={() => {
+                addSiteRef.current?.open();
+              }}
+              icon={<Plus className="icon" />}
+            >
+              <span className="max-sm:hidden">Add site</span>
+            </Button>
           </div>
 
           <DataTable

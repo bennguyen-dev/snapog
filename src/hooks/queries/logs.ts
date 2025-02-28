@@ -31,11 +31,17 @@ export const useGetLogs = ({
         const formattedFilter = { ...filter };
 
         if (filter.dateFrom instanceof Date) {
-          formattedFilter.dateFrom = filter.dateFrom.toISOString();
+          // Set to start of day (00:00:00.000)
+          const startDate = new Date(filter.dateFrom);
+          startDate.setHours(0, 0, 0, 0);
+          formattedFilter.dateFrom = startDate.toISOString();
         }
 
         if (filter.dateTo instanceof Date) {
-          formattedFilter.dateTo = filter.dateTo.toISOString();
+          // Set to end of day (23:59:59.999)
+          const endDate = new Date(filter.dateTo);
+          endDate.setHours(23, 59, 59, 999);
+          formattedFilter.dateTo = endDate.toISOString();
         }
 
         params.append("filter", JSON.stringify(formattedFilter));

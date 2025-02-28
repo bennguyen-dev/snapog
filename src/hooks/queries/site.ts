@@ -13,9 +13,13 @@ import generateQueryKey from "@/utils/queryKeyFactory";
 
 export const siteKeys = generateQueryKey("site");
 
-export const useGetSites = ({ pageSize = 10, search }: IFilterParams) => {
+export const useGetSites = ({
+  pageSize = 10,
+  search,
+  filter,
+}: IFilterParams) => {
   return useInfiniteQuery({
-    queryKey: siteKeys.list({ pageSize, search }),
+    queryKey: siteKeys.list({ pageSize, search, filter }),
     initialPageParam: null as string | null,
     queryFn: async ({ pageParam, signal }) => {
       const params = new URLSearchParams();
@@ -26,6 +30,28 @@ export const useGetSites = ({ pageSize = 10, search }: IFilterParams) => {
       }
       if (search) {
         params.append("search", search);
+      }
+
+      // Add filter as a JSON string if it exists and has properties
+      if (filter && Object.keys(filter).length > 0) {
+        // Format dates if they are Date objects
+        const formattedFilter = { ...filter };
+
+        if (filter.dateFrom instanceof Date) {
+          // Set to start of day (00:00:00.000)
+          const startDate = new Date(filter.dateFrom);
+          startDate.setHours(0, 0, 0, 0);
+          formattedFilter.dateFrom = startDate.toISOString();
+        }
+
+        if (filter.dateTo instanceof Date) {
+          // Set to end of day (23:59:59.999)
+          const endDate = new Date(filter.dateTo);
+          endDate.setHours(23, 59, 59, 999);
+          formattedFilter.dateTo = endDate.toISOString();
+        }
+
+        params.append("filter", JSON.stringify(formattedFilter));
       }
 
       const url = `/api/sites?${params.toString()}`;

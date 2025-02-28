@@ -298,6 +298,7 @@ class PageService {
         }
       }
 
+      // Apply search filter
       if (search && search.trim() !== "") {
         whereCondition.OR = [
           {

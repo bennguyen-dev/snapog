@@ -103,12 +103,30 @@ class SiteService {
     cursor,
     pageSize = 10,
     search,
+    filter,
   }: IGetSitesBy & IFilterParams): Promise<
     IResponseWithCursor<ISiteDetail[] | null>
   > {
     try {
       const whereCondition: any = { userId };
 
+      const dateFrom = filter?.dateFrom;
+      const dateTo = filter?.dateTo;
+
+      // Apply date range filter
+      if (dateFrom || dateTo) {
+        whereCondition.createdAt = {};
+
+        if (dateFrom) {
+          whereCondition.createdAt.gte = dateFrom;
+        }
+
+        if (dateTo) {
+          whereCondition.createdAt.lte = dateTo;
+        }
+      }
+
+      // Apply search filter
       if (search && search.trim() !== "") {
         whereCondition.domain = {
           contains: search,
