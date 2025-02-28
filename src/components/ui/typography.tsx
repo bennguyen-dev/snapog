@@ -11,7 +11,7 @@ export const typographyVariants = cva("text-base", {
       h2: "scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0",
       h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
       h4: "scroll-m-20 text-xl font-semibold tracking-tight",
-      h5: "scroll-m-20 text-base font-semibold tracking-tight",
+      h5: "scroll-m-20 text-lg font-semibold tracking-tight",
       p: "leading-7 [&:not(:first-child)]:mt-2",
       code: "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
     },

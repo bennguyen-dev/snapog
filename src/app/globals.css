@@ -111,7 +111,7 @@
   }
 
   .text-link {
-    @apply cursor-pointer leading-5 text-blue-500 hover:underline active:underline;
+    @apply cursor-pointer leading-5 text-primary hover:underline active:underline;
   }
 
   .icon {

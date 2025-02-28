@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Accordion,
   AccordionContent,
@@ -13,12 +15,12 @@ const BlockFAQs = () => {
     {
       key: "getting-started",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do I get started with SnapOG?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>Getting started with SnapOG is simple:</Typography>
           <ol className="list-decimal space-y-2 pl-4">
             <li>
@@ -42,12 +44,12 @@ const BlockFAQs = () => {
     {
       key: "implementation",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do I implement SnapOG in my website?
         </Typography>
       ),
       content: (
-        <div className="space-y-4 text-muted-foreground">
+        <div className="space-y-4">
           <Typography>
             Implementation is straightforward. Use this URL format for your OG
             image:
@@ -77,12 +79,12 @@ const BlockFAQs = () => {
     {
       key: "url-rules",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           What are the URL requirements and limitations?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>When using URLs with our service:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -110,12 +112,12 @@ const BlockFAQs = () => {
     {
       key: "usage-limits",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do credits work?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>Understanding credits and usage:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -145,12 +147,12 @@ const BlockFAQs = () => {
     {
       key: "credits-purchase",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do I purchase credits?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>Purchasing credits is straightforward:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -178,12 +180,12 @@ const BlockFAQs = () => {
     {
       key: "credit-balance",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do I monitor my credit balance?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>Track your credit usage in the admin panel:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -209,12 +211,12 @@ const BlockFAQs = () => {
     {
       key: "cache-management",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How do I manage image caching?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>Cache management options in the admin panel:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -235,12 +237,12 @@ const BlockFAQs = () => {
     {
       key: "security",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           How secure is the service?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>SnapOG implements several security measures:</Typography>
           <ul className="list-disc space-y-2 pl-4">
             <li>
@@ -262,12 +264,12 @@ const BlockFAQs = () => {
     {
       key: "large-scale",
       title: (
-        <Typography variant="h4" className="text-left text-base font-medium">
+        <Typography variant="h5" className="text-left font-medium">
           What if my website has many unique URLs?
         </Typography>
       ),
       content: (
-        <div className="space-y-2 text-muted-foreground">
+        <div className="space-y-2">
           <Typography>
             SnapOG is designed to handle websites with many URLs efficiently:
           </Typography>
@@ -300,6 +302,79 @@ const BlockFAQs = () => {
             If you have specific requirements for handling large numbers of
             URLs, please contact us to discuss your needs.
           </Typography>
+        </div>
+      ),
+    },
+    {
+      key: "cache-invalidation",
+      title: (
+        <Typography variant="h5" className="text-left font-medium">
+          My website isn't showing up properly on social media. What should I
+          do?
+        </Typography>
+      ),
+      content: (
+        <div className="space-y-2">
+          <Typography className="mb-2">
+            When sharing your website on social media, there's a chance that it
+            will look different from the preview here. The main reason is that
+            your website has been shared before, so any recent changes you made
+            haven't been reflected yet.
+          </Typography>
+          <Typography>
+            Click any of the official Open Graph debugger tools below to
+            re-scrape your website:
+          </Typography>
+          <ul className="list-disc space-y-2 pl-4 font-semibold">
+            <li>
+              <Typography>
+                Facebook, Instagram, WhatApp:{" "}
+                <Link
+                  className="text-link"
+                  target="_blank"
+                  href="https://developers.facebook.com/tools/debug/"
+                >
+                  https://developers.facebook.com/tools/debug/
+                </Link>
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Twitter:{" "}
+                <Link
+                  className="text-link"
+                  target="_blank"
+                  href="https://cards-dev.twitter.com/validator"
+                >
+                  https://cards-dev.twitter.com/validator
+                </Link>
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                LinkedIn:{" "}
+                <Link
+                  className="text-link"
+                  target="_blank"
+                  href="https://www.linkedin.com/post-inspector/"
+                >
+                  https://www.linkedin.com/post-inspector/
+                </Link>
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Google:{" "}
+                <Link
+                  className="text-link"
+                  target="_blank"
+                  href="https://search.google.com/structured-data/testing-tool/u/0/"
+                >
+                  https://search.google.com/structured-data/testing-tool/u/0/
+                </Link>
+              </Typography>
+            </li>
+          </ul>
         </div>
       ),
     },
