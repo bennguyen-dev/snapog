@@ -30,19 +30,20 @@ const BlockInputDemo = ({ hidePreview = false }: IProps) => {
       >
         <Typography
           variant="h1"
-          className="mb-2 break-keep bg-gradient-to-br from-secondary via-primary to-secondary bg-clip-text text-2xl sm:text-xl lg:text-3xl xl:text-5xl xl:leading-tight"
+          className="mb-2 break-keep bg-gradient-to-br from-secondary via-primary to-secondary bg-clip-text text-3xl lg:text-3xl xl:text-5xl xl:leading-tight"
         >
-          <span className="bg-clip-text text-transparent">Automate </span>
-          your open-graph: <br />
-          <span className="text-transparent">Dynamic screenshots </span>by URL,
+          <span className="bg-clip-text text-transparent">Effortless </span>
+          Social Previews: <br />
+          <span className="text-transparent">AI-Automated </span> OG Images,
           <br className={cn(hidePreview && "hidden")} />
           <span className={cn("text-transparent", hidePreview && "ml-1")}>
-            zero code
+            No Code
           </span>
         </Typography>
         <Typography className="max-w-screen-md lg:text-xl">
-          Turn any URL into engaging social previews instantly. Auto-generate OG
-          screenshots without code.
+          Boost social media engagement by 40% with AI-powered, automated
+          open-graph images. Create stunning previews for any URL without
+          coding.
         </Typography>
 
         <GoogleCaptchaProvider>

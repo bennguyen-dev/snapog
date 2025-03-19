@@ -32,9 +32,9 @@ interface GenerateSchemaProps extends GenerateMetadataProps {
 
 const defaultMetadata = {
   siteName: "SnapOG",
-  baseTitle: "Automate your open-graph: Dynamic screenshots by URL, zero code",
+  baseTitle: "Effortless Social Previews: AI-Automated OG Images, No Code",
   baseDescription:
-    "Transform your social media presence with automated OG images. Boost engagement by up to 40% with AI-powered social previews.",
+    "Boost social media engagement by 40% with AI-powered, automated open-graph images. Create stunning previews for any URL without coding.",
   baseKeywords: [
     "OG image generator",
     "social media preview",
@@ -45,6 +45,14 @@ const defaultMetadata = {
     "social media tools",
     "marketing automation",
     "SEO tools",
+    "open-graph",
+    "social previews",
+    "social media",
+    "engagement",
+    "AI-powered",
+    "no coding",
+    "AI-automated",
+    "no code",
     "social preview generator",
     "website screenshot tool",
     "social media marketing",
