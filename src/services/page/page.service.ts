@@ -119,25 +119,45 @@ class PageService {
             balanceRes.data.usedCredits;
 
           if (availableCredits < 1) {
-            userLogService.create({
-              userId: balanceRes.data.userId,
-              amount: 0,
-              type: LOG_TYPE.PAGE_CREATION,
-              status: LOG_STATUS.ERROR,
-              metadata: {
-                pageUrl: urlWithProtocol,
-                siteId,
-                userAgent: headers?.["user-agent"],
-                ipAddress:
-                  headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
-                error: {
-                  message: "Insufficient credits",
-                  details: {
-                    availableCredits,
-                  },
+            const userId = balanceRes.data.userId;
+            const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+            // Check if a similar log exists recently
+            const recentInsufficientCreditLog = await prisma.userLog.findFirst({
+              where: {
+                userId: userId,
+                type: LOG_TYPE.PAGE_CREATION,
+                status: LOG_STATUS.ERROR,
+                createdAt: { gte: oneWeekAgo },
+                metadata: {
+                  path: ["error", "message"],
+                  equals: "Insufficient credits",
                 },
               },
+              select: { id: true },
             });
+
+            if (!recentInsufficientCreditLog) {
+              userLogService.create({
+                userId: balanceRes.data.userId,
+                amount: 0,
+                type: LOG_TYPE.PAGE_CREATION,
+                status: LOG_STATUS.ERROR,
+                metadata: {
+                  pageUrl: urlWithProtocol,
+                  siteId,
+                  userAgent: headers?.["user-agent"],
+                  ipAddress:
+                    headers?.["x-forwarded-for"] || headers?.["x-real-ip"],
+                  error: {
+                    message: "Insufficient credits",
+                    details: {
+                      availableCredits,
+                    },
+                  },
+                },
+              });
+            }
 
             return {
               message: "Insufficient credits",
