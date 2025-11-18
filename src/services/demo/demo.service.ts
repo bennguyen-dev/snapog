@@ -125,8 +125,9 @@ class DemoService {
         };
       }
 
-      if (!linksRes.data) {
-        throw new Error(linksRes.message);
+      if (!linksRes.data || linksRes.data.links.length === 0) {
+        console.log("No internal links found, using original URL as fallback");
+        linksRes.data = { links: [url] };
       }
 
       // Step 2: Get info of URLs
@@ -142,7 +143,7 @@ class DemoService {
         if (result.data && result.data.screenshot) {
           const { url, ogImage, title, description, screenshot } = result.data;
 
-          // Upload screenshot to S3
+          // Upload screenshot to S3 if available
           let uploadRes = null;
           if (!!screenshot) {
             const folderName = sanitizeFilename(getUrlWithoutProtocol(domain));
@@ -167,11 +168,22 @@ class DemoService {
       });
 
       const results = (await Promise.all(uploadPromises)).filter(
-        (result) => !!result && !!result.SnapOGImage,
+        (result) => !!result && (!!result.SnapOGImage || !!result.OGTitle),
       );
 
       // Check if there are no valid results
       if (results.length === 0 || !results) {
+        console.error("No valid results found. Debug info:", {
+          urlsInfoCount: urlsInfo.length,
+          urlsInfoResults: urlsInfo.map((r) => ({
+            status: r.status,
+            hasData: !!r.data,
+            hasScreenshot: !!r.data?.screenshot,
+            hasTitle: !!r.data?.title,
+            message: r.message,
+          })),
+        });
+
         return {
           status: 400,
           message: "No valid results found for the domain",
