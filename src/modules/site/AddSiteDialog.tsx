@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { CACHE_DURATION_DAYS, DURATION_CACHES } from "@/constants";
+import { DURATION_CACHES } from "@/constants";
 import { useCreateSite } from "@/hooks";
 
 export interface IAddSiteDialogRef {
@@ -48,7 +48,7 @@ const formSchema = z.object({
 
 const defaultValues = {
   domain: "",
-  cacheDurationDays: CACHE_DURATION_DAYS.toString(),
+  cacheDurationDays: "",
 };
 
 export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
@@ -65,7 +65,9 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
     createSite(
       {
         domain: formData.domain,
-        cacheDurationDays: parseInt(formData.cacheDurationDays, 10),
+        cacheDurationDays: formData.cacheDurationDays
+          ? parseInt(formData.cacheDurationDays, 10)
+          : undefined,
       },
       {
         onSuccess(data) {

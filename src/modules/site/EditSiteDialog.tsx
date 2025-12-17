@@ -67,7 +67,9 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef>((props, ref) => {
       {
         id: formData.id,
         overridePage: formData.overridePage,
-        cacheDurationDays: parseInt(formData.cacheDurationDays, 10),
+        cacheDurationDays: formData.cacheDurationDays
+          ? parseInt(formData.cacheDurationDays, 10)
+          : undefined,
       },
       {
         onSuccess(data) {
@@ -95,7 +97,7 @@ export const EditSiteDialog = forwardRef<IEditSiteDialogRef>((props, ref) => {
       form.reset({
         id: item?.id,
         domain: item?.domain,
-        cacheDurationDays: item?.cacheDurationDays?.toString(),
+        cacheDurationDays: item?.cacheDurationDays?.toString() || "",
         overridePage: false,
       });
       setOpened(true);

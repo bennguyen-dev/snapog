@@ -30,7 +30,6 @@ class PageService {
   }: ICreatePage): Promise<IResponse<Page | null>> {
     const urlWithProtocol = getUrlWithProtocol(url);
     const urlWithoutProtocol = getUrlWithoutProtocol(url);
-    const today = new Date();
 
     // Generate a unique lock key combining siteId and URL
     const lockKey = Buffer.from(`page:${siteId}:${urlWithProtocol}`).reduce(
@@ -235,8 +234,13 @@ class PageService {
           }
 
           // Calculate expiration
-          const newExpiresAt = new Date(today);
-          newExpiresAt.setDate(today.getDate() + (site.cacheDurationDays ?? 0));
+          const today = new Date();
+          let newExpiresAt: Date | null = null;
+
+          if (site.cacheDurationDays) {
+            newExpiresAt = new Date(today);
+            newExpiresAt.setDate(today.getDate() + site.cacheDurationDays);
+          }
 
           // Create page and deduct credit atomically
           const page = await tx.page.create({
@@ -478,9 +482,10 @@ class PageService {
             data: {
               cacheDurationDays,
               updatedAt: new Date(),
-              imageExpiresAt: page.imageExpiresAt
-                ? new Date(page.imageExpiresAt.getTime() + extendTime)
-                : null,
+              imageExpiresAt:
+                cacheDurationDays && page.imageExpiresAt
+                  ? new Date(page.imageExpiresAt.getTime() + extendTime)
+                  : null,
             },
           });
         }),
@@ -690,8 +695,12 @@ class PageService {
 
       // Update page with new image and metadata
       const today = new Date();
-      const newExpiresAt = new Date(today);
-      newExpiresAt.setDate(today.getDate() + (page.cacheDurationDays ?? 0));
+      let newExpiresAt: Date | null = null;
+
+      if (page.cacheDurationDays) {
+        newExpiresAt = new Date(today);
+        newExpiresAt.setDate(today.getDate() + page.cacheDurationDays);
+      }
 
       const updatedPage = await prisma.page.update({
         where: { id },

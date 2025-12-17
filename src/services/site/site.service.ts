@@ -1,4 +1,3 @@
-import { CACHE_DURATION_DAYS } from "@/constants";
 import { prisma } from "@/lib/db";
 import { pageService } from "@/services/page";
 import {
@@ -15,7 +14,7 @@ class SiteService {
   async create({
     userId,
     domain,
-    cacheDurationDays = CACHE_DURATION_DAYS,
+    cacheDurationDays,
   }: ICreateSite): Promise<IResponse<ISiteDetail | null>> {
     try {
       const exists = await prisma.site.findFirst({

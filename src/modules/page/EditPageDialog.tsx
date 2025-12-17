@@ -64,7 +64,9 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
       updatePage(
         {
           id: formData.id,
-          cacheDurationDays: Number(formData.cacheDurationDays),
+          cacheDurationDays: formData.cacheDurationDays
+            ? Number(formData.cacheDurationDays)
+            : undefined,
         },
         {
           onSuccess(data) {
@@ -92,7 +94,7 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
         form.reset({
           id: item.id,
           url: item.url,
-          cacheDurationDays: item?.cacheDurationDays?.toString(),
+          cacheDurationDays: item?.cacheDurationDays?.toString() || "",
         });
         setOpened(true);
       },
