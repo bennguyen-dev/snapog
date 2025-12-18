@@ -48,7 +48,7 @@ const formSchema = z.object({
 
 const defaultValues = {
   domain: "",
-  cacheDurationDays: "",
+  cacheDurationDays: "infinity",
 };
 
 export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
@@ -65,9 +65,11 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
     createSite(
       {
         domain: formData.domain,
-        cacheDurationDays: formData.cacheDurationDays
-          ? parseInt(formData.cacheDurationDays, 10)
-          : undefined,
+        cacheDurationDays:
+          formData.cacheDurationDays &&
+          formData.cacheDurationDays !== "infinity"
+            ? parseInt(formData.cacheDurationDays, 10)
+            : undefined,
       },
       {
         onSuccess(data) {

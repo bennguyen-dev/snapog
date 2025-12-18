@@ -64,9 +64,11 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
       updatePage(
         {
           id: formData.id,
-          cacheDurationDays: formData.cacheDurationDays
-            ? Number(formData.cacheDurationDays)
-            : undefined,
+          cacheDurationDays:
+            formData.cacheDurationDays &&
+            formData.cacheDurationDays !== "infinity"
+              ? Number(formData.cacheDurationDays)
+              : null,
         },
         {
           onSuccess(data) {
@@ -94,7 +96,11 @@ export const EditPageDialog = forwardRef<IEditPageDialogRef, IProps>(
         form.reset({
           id: item.id,
           url: item.url,
-          cacheDurationDays: item?.cacheDurationDays?.toString() || "",
+          cacheDurationDays:
+            item?.cacheDurationDays !== null &&
+            item?.cacheDurationDays !== undefined
+              ? item?.cacheDurationDays.toString()
+              : "infinity",
         });
         setOpened(true);
       },

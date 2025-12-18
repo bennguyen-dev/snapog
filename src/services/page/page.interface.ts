@@ -21,7 +21,7 @@ export interface IGetPageBy {
 export interface IUpdatePagesBy {
   id?: string;
   siteId?: string;
-  cacheDurationDays?: number;
+  cacheDurationDays?: number | null;
   headers?: IHeaders;
 }
 

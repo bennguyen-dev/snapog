@@ -51,13 +51,19 @@ class ScrapeService {
         );
       }
 
-      // If metadata failed, don't save to database - return error
-      if (!metadata) {
+      // If both metadata and screenshot failed, return error
+      if (!metadata && !screenshot) {
         return {
           status: 500,
-          message: "Failed to fetch metadata - not saving to database",
+          message: "Failed to fetch both metadata and screenshot",
           data: null,
         };
+      }
+
+      if (!metadata) {
+        console.warn(
+          "Metadata failed but screenshot succeeded - continuing with screenshot only",
+        );
       }
 
       // If screenshot failed but metadata succeeded, continue (screenshot is optional)

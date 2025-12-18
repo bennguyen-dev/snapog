@@ -26,7 +26,7 @@ export interface IGetSiteBy {
 export interface IUpdateSiteBy {
   id: string;
 
-  cacheDurationDays?: number;
+  cacheDurationDays?: number | null;
   overridePage?: boolean;
 }
 

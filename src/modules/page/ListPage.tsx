@@ -220,7 +220,7 @@ const ListPage = ({ siteId }: IProps) => {
         cell: ({ row }) => {
           return (
             <Typography className="text-center" affects="small">
-              {row.original.cacheDurationDays}
+              {row.original.cacheDurationDays ?? "Infinity"}
             </Typography>
           );
         },
@@ -230,7 +230,11 @@ const ListPage = ({ siteId }: IProps) => {
         header: "Expired at",
         cell: ({ row }) => {
           if (!row.original?.imageExpiresAt) {
-            return null;
+            return (
+              <Typography affects="muted" className="italic">
+                Never
+              </Typography>
+            );
           }
           return (
             <Typography affects="muted">

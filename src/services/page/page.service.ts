@@ -469,23 +469,42 @@ class PageService {
       // Update each page with new expiration time
       const updatedPages = await Promise.all(
         pagesToUpdate.map(async (page) => {
-          const currentCacheDuration = page.cacheDurationDays || 0;
-          const extendTime =
-            ((cacheDurationDays || 0) - currentCacheDuration) *
-            24 *
-            60 *
-            60 *
-            1000; // Convert days to milliseconds
+          let newImageExpiresAt = page.imageExpiresAt;
+
+          // Only recalculate if cacheDurationDays is being updated (not undefined)
+          if (cacheDurationDays !== undefined) {
+            if (cacheDurationDays === null) {
+              // Case: Switch to Infinity
+              newImageExpiresAt = null;
+            } else {
+              // Case: Switch to specific duration
+              if (page.imageExpiresAt) {
+                // Previously had expiration: Adjust based on difference
+                const currentCacheDuration = page.cacheDurationDays || 0;
+                const extendTime =
+                  (cacheDurationDays - currentCacheDuration) *
+                  24 *
+                  60 *
+                  60 *
+                  1000;
+                newImageExpiresAt = new Date(
+                  page.imageExpiresAt.getTime() + extendTime,
+                );
+              } else {
+                // Previously Infinity (null): Set from NOW
+                const today = new Date();
+                newImageExpiresAt = new Date(today);
+                newImageExpiresAt.setDate(today.getDate() + cacheDurationDays);
+              }
+            }
+          }
 
           return prisma.page.update({
             where: { id: page.id },
             data: {
               cacheDurationDays,
               updatedAt: new Date(),
-              imageExpiresAt:
-                cacheDurationDays && page.imageExpiresAt
-                  ? new Date(page.imageExpiresAt.getTime() + extendTime)
-                  : null,
+              imageExpiresAt: newImageExpiresAt,
             },
           });
         }),
@@ -700,6 +719,8 @@ class PageService {
       if (page.cacheDurationDays) {
         newExpiresAt = new Date(today);
         newExpiresAt.setDate(today.getDate() + page.cacheDurationDays);
+      } else {
+        newExpiresAt = null;
       }
 
       const updatedPage = await prisma.page.update({
@@ -738,6 +759,9 @@ class PageService {
       };
     } catch (error) {
       console.error("Error regenerating page image:", error);
+      if (error instanceof Error) {
+        console.error("Error stack:", error.stack);
+      }
       return {
         message: "Failed to regenerate image",
         status: 500,

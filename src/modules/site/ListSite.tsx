@@ -137,7 +137,7 @@ const ListSite = () => {
         cell: ({ row }) => {
           return (
             <Typography className="text-center" affects="small">
-              {row.original.cacheDurationDays}
+              {row.original.cacheDurationDays ?? "Infinity"}
             </Typography>
           );
         },
