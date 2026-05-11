@@ -13,7 +13,7 @@ import { storageService } from "@/services/storage";
 import { IResponse } from "@/types/global";
 import {
   getDomainName,
-  getImageLinkFromAWS,
+  getCdnImageUrl,
   getUrlWithoutProtocol,
   sanitizeFilename,
 } from "@/utils";
@@ -51,7 +51,7 @@ class DemoService {
             ({
               ...page,
               SnapOgImage: page?.SnapOGImage
-                ? getImageLinkFromAWS(page.SnapOGImage)
+                ? getCdnImageUrl(page.SnapOGImage)
                 : null,
             }) as IGetDemoResponse,
         ),

@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Prisma 5 + PostgreSQL (Neon)
 - NextAuth v5 beta (GitHub + Google + email)
 - Inngest for background jobs and cron
-- AWS S3 + CloudFront for image storage/CDN
+- Cloudflare R2 (S3-compatible API) for image storage; served via R2 public hostname / Cloudflare CDN
 - Polar for payments (`@polar-sh/sdk`, `@polar-sh/nextjs`)
 - Firecrawl (link discovery) + ScreenshotOne (screenshots) via `src/services/scrapeApi`
 - Tailwind + Radix UI, TanStack Query, React Hook Form + Zod
@@ -90,7 +90,7 @@ Registered in `src/services/inngest/inngest.service.ts`, mounted at `src/app/api
 
 ### Storage
 
-`src/services/storage` wraps S3 upload + CloudFront invalidation. Images are keyed by `imageSrc` (stable per page) so re-uploads overwrite in place and CloudFront sees fresh bytes after invalidation.
+`src/services/storage` wraps R2 (Cloudflare's S3-compatible object storage) using `@aws-sdk/client-s3` pointed at `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`. Images are keyed by `imageSrc` (stable per page) so re-uploads overwrite in place — Cloudflare CDN revalidates automatically. The image route returns `302` redirects to `https://${R2_PUBLIC_HOSTNAME}/${key}` instead of proxying bytes through Vercel.
 
 ## Layout
 
@@ -126,7 +126,7 @@ Domains under `modules/`: `api-keys`, `auth`, `credits`, `dashboard`, `logs`, `p
 
 ## Environment
 
-See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, AWS S3/CloudFront creds (`AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_BUCKET_NAME`, `AWS_CDN_HOSTNAME`, `AWS_CLOUDFRONT_DISTRIBUTION_ID`), `INNGEST_*`, `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `FIRECRAWL_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally.
+See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `INNGEST_*`, `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `FIRECRAWL_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
 
 ## Known sharp edges
 

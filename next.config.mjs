@@ -32,7 +32,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.AWS_CDN_HOSTNAME,
+        hostname: process.env.R2_PUBLIC_HOSTNAME,
         port: "",
       },
     ],

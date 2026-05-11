@@ -114,8 +114,8 @@ export function getDomainName(url: string) {
   return new URL(getUrlWithProtocol(url?.trim()))?.hostname;
 }
 
-export function getImageLinkFromAWS(key: string) {
-  return `https://${process.env.AWS_CDN_HOSTNAME}/${key}`;
+export function getCdnImageUrl(key: string) {
+  return `https://${process.env.R2_PUBLIC_HOSTNAME}/${key}`;
 }
 
 export function getSnippetHowToUse({

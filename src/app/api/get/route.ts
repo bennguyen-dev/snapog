@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { imageService } from "@/services/image";
-import { cleanUrl, getImageLinkFromAWS, getUrlWithProtocol } from "@/utils";
+import { cleanUrl, getCdnImageUrl, getUrlWithProtocol } from "@/utils";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -37,9 +37,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const cloudfrontUrl = getImageLinkFromAWS(res.data.imageSrc);
+    const cdnUrl = getCdnImageUrl(res.data.imageSrc);
 
-    return NextResponse.redirect(cloudfrontUrl, {
+    return NextResponse.redirect(cdnUrl, {
       status: 302,
       headers: {
         ...CORS_HEADERS,

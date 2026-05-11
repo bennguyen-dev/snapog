@@ -16,7 +16,7 @@ import { userLogService } from "@/services/userLog";
 import { IFilterParams, IResponse, IResponseWithCursor } from "@/types/global";
 import {
   getDomainName,
-  getImageLinkFromAWS,
+  getCdnImageUrl,
   getUrlWithoutProtocol,
   getUrlWithProtocol,
   sanitizeFilename,
@@ -361,7 +361,7 @@ class PageService {
 
       const pagesWithFullImageUrls = results.map((page) => ({
         ...page,
-        imageSrc: page.imageSrc ? getImageLinkFromAWS(page.imageSrc) : null,
+        imageSrc: page.imageSrc ? getCdnImageUrl(page.imageSrc) : null,
       }));
 
       return {
