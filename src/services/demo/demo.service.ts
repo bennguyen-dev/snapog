@@ -95,6 +95,32 @@ class DemoService {
     console.time(`Create demo for url: ${url}`);
     try {
       const domain = getDomainName(url);
+      const normalizedUrl = getUrlWithoutProtocol(url);
+
+      const existingDemo = await prisma.demo.findUnique({
+        where: {
+          domain,
+        },
+        include: {
+          demoPages: {
+            where: {
+              url: normalizedUrl,
+            },
+            select: {
+              id: true,
+            },
+            take: 1,
+          },
+        },
+      });
+
+      if (existingDemo?.demoPages.length) {
+        return {
+          status: 200,
+          message: "Demo already exists",
+          data: existingDemo,
+        };
+      }
 
       const pageCrawlInfo = await scrapeService.scrapeInfo({
         url,
@@ -130,7 +156,7 @@ class DemoService {
       }
 
       const demoPage = {
-        url: getUrlWithoutProtocol(url),
+        url: normalizedUrl,
         OGImage: ogImage,
         OGTitle: title,
         OGDescription: description,
@@ -147,6 +173,7 @@ class DemoService {
         await tx.demoPage.deleteMany({
           where: {
             demoId: demo.id,
+            url: normalizedUrl,
           },
         });
 
