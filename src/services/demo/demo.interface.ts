@@ -1,7 +1,6 @@
 // create demo
 export interface ICreateDemo {
   url: string;
-  numberOfImages?: number;
 }
 
 export interface ICreateDemoResponse {

@@ -8,12 +8,11 @@ export const useCreateDemo = () => {
   return useMutation({
     mutationFn: async ({
       url,
-      numberOfImages = 3,
       gReCaptchaToken,
     }: ICreateDemo & IVerifyCaptcha) => {
       const result = await fetch(`/api/demo`, {
         method: "POST",
-        body: JSON.stringify({ url, numberOfImages, gReCaptchaToken }),
+        body: JSON.stringify({ url, gReCaptchaToken }),
       });
       const response: IResponse<ICreateDemoResponse> = await result.json();
       if (response.status === 200) {

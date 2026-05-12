@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Inngest for background jobs and cron
 - Cloudflare R2 (S3-compatible API) for image storage; served via R2 public hostname / Cloudflare CDN
 - Polar for payments (`@polar-sh/sdk`, `@polar-sh/nextjs`)
-- Firecrawl (link discovery) + ScreenshotOne (screenshots) via `src/services/scrapeApi`
+- ScreenshotOne for screenshots via `src/services/scrapeApi`; metadata is parsed directly from page HTML
 - Tailwind + Radix UI, TanStack Query, React Hook Form + Zod
 
 ## Commands
@@ -68,7 +68,7 @@ Errors bubble up as `IResponse` with non-2xx `status`; the route serializes them
 
 Registered in `src/services/inngest/inngest.service.ts`, mounted at `src/app/api/inngest/route.ts`.
 
-- `background/create.site` — fires after a site is created. Calls `scrapeService.scrapeInternalLinks` (currently hard-capped at `limit: 3`, see TODO in code) and creates `Page` rows for each link via `pageService.create`. Failures are collected via `Promise.allSettled`.
+- `background/create.site` — fires after a site is created and creates the homepage `Page` via `pageService.create`.
 - `schedule/update.ogimage.daily` — cron `0 0 * * *`. Selects `Page`s where `imageExpiresAt <= now`, re-scrapes via `scrapeService.scrapeInfo`, re-uploads to S3 reusing the same `imageSrc` key, and pushes `imageExpiresAt` forward by `cacheDurationDays`. Pages with no/infinite cache duration are excluded from auto-renewal.
 
 ### Credits
@@ -126,11 +126,10 @@ Domains under `modules/`: `api-keys`, `auth`, `credits`, `dashboard`, `logs`, `p
 
 ## Environment
 
-See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `INNGEST_*`, `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `FIRECRAWL_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
+See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `INNGEST_*`, `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
 
 ## Known sharp edges
 
-- `scrapeInternalLinks` is hard-coded to `limit: 3` in `inngestService.backgroundCreateSite` — explicit TODO for when paid tiers ship.
 - The image route fetches the S3 object server-side and pipes the buffer through Next.js rather than redirecting to CloudFront. Intentional today (header control, hide CDN), but doubles egress — don't "optimize" without checking the reason.
 - Catch blocks across services tend to `console.error` and return a 500 `IResponse`. There is no Sentry/structured logger wired up; check Vercel logs when debugging production.
 - No rate limiting on `/api/[apiKey]`. A leaked key burns credits until depleted.

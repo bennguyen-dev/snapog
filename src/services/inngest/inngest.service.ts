@@ -4,6 +4,7 @@ import { pageService } from "@/services/page";
 import { scrapeService } from "@/services/scrapeApi";
 import { siteService } from "@/services/site";
 import { storageService } from "@/services/storage";
+import { getUrlWithProtocol } from "@/utils";
 
 class InngestService {
   public backgroundCreateSite = inngest.createFunction(
@@ -19,57 +20,24 @@ class InngestService {
             return { status: "error", message: "Site not found" };
           }
 
-          // Get internal links
-          const urlsResult = await scrapeService.scrapeInternalLinks({
-            url: site.data.domain as string,
-            limit: 3, // TODO: make it configurable later when user has pricing
+          const homepageUrl = getUrlWithProtocol(site.data.domain as string);
+          const page = await pageService.create({
+            siteId: site.data.id,
+            url: homepageUrl,
           });
-          if (
-            !urlsResult ||
-            !urlsResult.data ||
-            !urlsResult.data.links ||
-            urlsResult.data.links.length === 0
-          ) {
-            console.error(`No URLs found for domain: ${site.data.domain}`);
-            return { status: "error", message: "No URLs found" };
+
+          if (!page.data) {
+            console.error(
+              `Failed to create homepage for ${site.data.domain}:`,
+              page.message,
+            );
+            return { status: "error", message: page.message };
           }
-
-          // Create pages
-          const pageCreationPromises = urlsResult.data.links.map((link) =>
-            pageService.create({
-              siteId: site.data?.id as string,
-              url: link,
-            }),
-          );
-
-          const results = await Promise.allSettled(pageCreationPromises);
-
-          const summary = results.reduce<{
-            succeeded: string[];
-            failed: { url: string; error: string }[];
-          }>(
-            (acc, result, index) => {
-              if (result.status === "fulfilled") {
-                acc.succeeded.push(urlsResult.data?.links?.[index] as string);
-              } else {
-                acc.failed.push({
-                  url: urlsResult.data?.links?.[index] as string,
-                  error: result.reason,
-                });
-                console.error(
-                  `Failed to create page for ${urlsResult.data?.links?.[index]}:`,
-                  result.reason,
-                );
-              }
-              return acc;
-            },
-            { succeeded: [], failed: [] },
-          );
 
           return {
             status: "success",
-            message: "Site processing complete",
-            summary,
+            message: "Homepage created successfully",
+            page: page.data,
           };
         } catch (error) {
           console.error("Error in background site creation:", error);

@@ -91,120 +91,79 @@ class DemoService {
 
   async createDemo({
     url,
-    numberOfImages = 3,
   }: ICreateDemo): Promise<IResponse<ICreateDemoResponse | null>> {
     console.time(`Create demo for url: ${url}`);
     try {
       const domain = getDomainName(url);
-      // Check if the domain already exists in the database
-      const existingDomain = await prisma.demo.findUnique({
-        where: {
-          domain,
-        },
-      });
 
-      if (existingDomain) {
-        return {
-          status: 200,
-          message: "Domain already exists",
-          data: existingDomain,
-        };
-      }
-
-      // Step 1: Get URLs of the domain
-      const linksRes = await scrapeService.scrapeInternalLinks({
+      const pageCrawlInfo = await scrapeService.scrapeInfo({
         url,
-        limit: numberOfImages,
       });
 
-      if (linksRes.status === 404) {
+      if (!pageCrawlInfo.data) {
         return {
-          status: 404,
-          message: linksRes.message,
+          status: pageCrawlInfo.status,
+          message: pageCrawlInfo.message,
           data: null,
         };
       }
 
-      if (!linksRes.data || linksRes.data.links.length === 0) {
-        console.log("No internal links found, using original URL as fallback");
-        linksRes.data = { links: [url] };
-      }
-
-      // Step 2: Get info of URLs
-      const urlsInfoPromises = linksRes.data?.links.map((url) =>
-        scrapeService.scrapeInfo({
-          url,
-        }),
-      );
-      const urlsInfo = await Promise.all(urlsInfoPromises);
-
-      // Step 3: Upload screenshots concurrently
-      const uploadPromises = urlsInfo.map(async (result) => {
-        if (result.data && result.data.screenshot) {
-          const { url, ogImage, title, description, screenshot } = result.data;
-
-          // Upload screenshot to S3 if available
-          let uploadRes = null;
-          if (!!screenshot) {
-            const folderName = sanitizeFilename(getUrlWithoutProtocol(domain));
-            const fileName = `${sanitizeFilename(getUrlWithoutProtocol(url))}.${IMAGE_TYPES.PNG.EXTENSION}`;
-            const key = `demo/${folderName}/${fileName}`;
-
-            uploadRes = await storageService.uploadImage({
-              image: screenshot,
-              key: key,
-            });
-          }
-
-          return {
-            url: getUrlWithoutProtocol(url),
-            OGImage: ogImage,
-            OGTitle: title,
-            OGDescription: description,
-            SnapOGImage: uploadRes?.data?.src,
-          };
-        }
-        return null;
-      });
-
-      const results = (await Promise.all(uploadPromises)).filter(
-        (result) => !!result && (!!result.SnapOGImage || !!result.OGTitle),
-      );
-
-      // Check if there are no valid results
-      if (results.length === 0 || !results) {
-        console.error("No valid results found. Debug info:", {
-          urlsInfoCount: urlsInfo.length,
-          urlsInfoResults: urlsInfo.map((r) => ({
-            status: r.status,
-            hasData: !!r.data,
-            hasScreenshot: !!r.data?.screenshot,
-            hasTitle: !!r.data?.title,
-            message: r.message,
-          })),
-        });
-
+      const { ogImage, title, description, screenshot } = pageCrawlInfo.data;
+      if (!screenshot && !title) {
         return {
           status: 400,
-          message: "No valid results found for the domain",
+          message: "No valid results found for the URL",
           data: null,
         };
       }
 
-      // Create a new demo entry in the database
-      const newDemo = await prisma.demo.create({
-        data: {
-          domain,
-          demoPages: {
-            create: results as any,
-          }, // Assuming you have an images field to store the results
-        },
+      let uploadRes = null;
+      if (screenshot) {
+        const folderName = sanitizeFilename(getUrlWithoutProtocol(domain));
+        const fileName = `${sanitizeFilename(getUrlWithoutProtocol(url))}.${IMAGE_TYPES.PNG.EXTENSION}`;
+        const key = `demo/${folderName}/${fileName}`;
+
+        uploadRes = await storageService.uploadImage({
+          image: screenshot,
+          key,
+        });
+      }
+
+      const demoPage = {
+        url: getUrlWithoutProtocol(url),
+        OGImage: ogImage,
+        OGTitle: title,
+        OGDescription: description,
+        SnapOGImage: uploadRes?.data?.src,
+      };
+
+      const demo = await prisma.$transaction(async (tx) => {
+        const demo = await tx.demo.upsert({
+          where: { domain },
+          create: { domain },
+          update: {},
+        });
+
+        await tx.demoPage.deleteMany({
+          where: {
+            demoId: demo.id,
+          },
+        });
+
+        await tx.demoPage.create({
+          data: {
+            demoId: demo.id,
+            ...demoPage,
+          },
+        });
+
+        return demo;
       });
 
       return {
         status: 200,
-        message: "Domain created successfully",
-        data: newDemo,
+        message: "Demo created successfully",
+        data: demo,
       };
     } catch (error) {
       console.error(`Error creating demo for url: ${url}`, error);

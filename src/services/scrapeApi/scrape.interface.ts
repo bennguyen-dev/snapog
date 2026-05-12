@@ -9,12 +9,3 @@ export interface IScraperInfoResponse {
   description?: string;
   ogImage?: string;
 }
-
-export interface IScrapeInternalLinks {
-  url: string;
-  limit?: number;
-}
-
-export interface IScrapeInternalLinksResponse {
-  links: string[];
-}

@@ -1,6 +1,4 @@
 import {
-  IScrapeInternalLinks,
-  IScrapeInternalLinksResponse,
   IScraperInfo,
   IScraperInfoResponse,
 } from "@/services/scrapeApi/scrape.interface";
@@ -8,7 +6,7 @@ import { IResponse } from "@/types/global";
 
 class ScrapeService {
   /**
-   * Get page info using Firecrawl for metadata and ScreenshotOne for screenshot
+   * Get page metadata from HTML and screenshot from ScreenshotOne.
    */
   public async scrapeInfo({
     url,
@@ -329,76 +327,6 @@ class ScrapeService {
             : "Failed to capture screenshot",
         data: null,
       };
-    }
-  }
-
-  /**
-   * Get internal links using Firecrawl API
-   */
-  public async scrapeInternalLinks({
-    url,
-    limit,
-  }: IScrapeInternalLinks): Promise<
-    IResponse<IScrapeInternalLinksResponse | null>
-  > {
-    console.time(`Execute time scrape api get internal links for ${url}`);
-
-    try {
-      const response = await fetch("https://api.firecrawl.dev/v2/scrape", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: url,
-          onlyMainContent: true,
-          parsers: [],
-          maxAge: 172800000, // 2 days cache
-          formats: ["links"],
-        }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          return {
-            status: 404,
-            message: "Page not found",
-            data: null,
-          };
-        }
-        throw new Error(
-          `Firecrawl API error: ${response.status} ${response.statusText}`,
-        );
-      }
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(`Firecrawl failed: ${data.error || "Unknown error"}`);
-      }
-
-      // Extract links from the response (v2 API structure)
-      const links: string[] = data.data?.links || [];
-
-      return {
-        status: 200,
-        message: "Internal links fetched successfully",
-        data: {
-          links: links.slice(0, limit),
-        },
-      };
-    } catch (error) {
-      console.error(`Error fetching internal links for ${url}:`, error);
-
-      return {
-        status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
-      };
-    } finally {
-      console.timeEnd(`Execute time scrape api get internal links for ${url}`);
     }
   }
 }
