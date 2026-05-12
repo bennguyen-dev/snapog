@@ -116,7 +116,7 @@ Domains under `modules/`: `api-keys`, `auth`, `credits`, `dashboard`, `logs`, `p
 
 ## Environment
 
-See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
+See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar and reCAPTCHA are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
 
 ## Known sharp edges
 
