@@ -1,9 +1,6 @@
-import { prisma } from "@/lib/db";
 import { inngest } from "@/lib/inngest";
 import { pageService } from "@/services/page";
-import { scrapeService } from "@/services/scrapeApi";
 import { siteService } from "@/services/site";
-import { storageService } from "@/services/storage";
 import { getUrlWithProtocol } from "@/utils";
 
 class InngestService {
@@ -43,114 +40,6 @@ class InngestService {
           console.error("Error in background site creation:", error);
           return { status: "error", message: "Internal processing error" };
         }
-      });
-    },
-  );
-
-  public scheduleUpdateOGImageDaily = inngest.createFunction(
-    { id: "schedule/update.ogimage.daily", name: "Update OG Image Daily" },
-    { cron: "0 0 * * *" },
-    async ({ step }) => {
-      const today = new Date();
-
-      // Step 1: Fetch expired OG Images
-      const { pages } = await step.run("Fetch expired OG Images", async () => {
-        console.log("Fetching expired OG Images");
-        const pages = await prisma.page.findMany({
-          where: {
-            imageExpiresAt: {
-              lte: today,
-            },
-          },
-        });
-
-        console.log(
-          `Found ${pages.length} images to update on ${today.toISOString()}`,
-        );
-        return { pages };
-      });
-
-      if (pages.length === 0) {
-        return {
-          message: "No OG Images found to update",
-          status: 200,
-          data: null,
-        };
-      }
-
-      // Step 2: Process and update OG Images
-      return await step.run("Process and update OG Images", async () => {
-        const updatePromises = pages.map(async (page) => {
-          if (!page || !page.imageSrc) {
-            throw Error("No imageSrc found for page");
-          }
-
-          const cacheDurationDays = page.cacheDurationDays ?? 0;
-
-          console.log(`Processing page: ${page.url}`);
-          const pageCrawlInfo = await scrapeService.scrapeInfo({
-            url: page.url,
-          });
-
-          if (!pageCrawlInfo.data?.screenshot) {
-            console.error(`No screenshot available for ${page.url}`);
-            throw Error(pageCrawlInfo.message);
-          }
-
-          const uploadRes = await storageService.uploadImage({
-            image: pageCrawlInfo.data.screenshot,
-            key: page.imageSrc,
-          });
-
-          if (!uploadRes.data) {
-            console.error(`Failed to upload image for ${page.url}`);
-            throw Error(uploadRes.message);
-          }
-
-          const newExpiresAt = new Date(
-            today.getTime() + cacheDurationDays * 24 * 60 * 60 * 1000,
-          );
-
-          return prisma.page.update({
-            where: { id: page.id },
-            data: {
-              imageSrc: uploadRes.data.src,
-              imageExpiresAt: newExpiresAt,
-              updatedAt: new Date(),
-            },
-          });
-        });
-
-        const results = await Promise.allSettled(updatePromises);
-
-        const summary = results.reduce<{
-          succeeded: string[];
-          failed: { url: string; error: string }[];
-        }>(
-          (acc, result, index) => {
-            if (result.status === "fulfilled") {
-              acc.succeeded.push(pages?.[index]?.url as string);
-            } else {
-              acc.failed.push({
-                url: pages?.[index]?.url as string,
-                error: result.reason,
-              });
-              console.error(
-                `Failed to create page for ${pages?.[index]?.url}:`,
-                result.reason,
-              );
-            }
-            return acc;
-          },
-          { succeeded: [], failed: [] },
-        );
-
-        console.log("OG Images updated successfully");
-        return {
-          status: "success",
-          message: "Site processing complete",
-          summary,
-        };
       });
     },
   );

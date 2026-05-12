@@ -87,10 +87,9 @@ model Authenticator {
 }
 
 model Site {
-  id                String @id @default(cuid())
-  domain            String
-  userId            String
-  cacheDurationDays Int?
+  id     String @id @default(cuid())
+  domain String
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -102,15 +101,12 @@ model Site {
 }
 
 model Page {
-  id             String    @id @default(cuid())
-  url            String
-  siteId         String
-  OGTitle        String?
-  OGDescription  String?
-  imageSrc       String?
-  imageExpiresAt DateTime?
-
-  cacheDurationDays Int?
+  id            String  @id @default(cuid())
+  url           String
+  siteId        String
+  OGTitle       String?
+  OGDescription String?
+  imageSrc      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -121,9 +117,8 @@ model Page {
 }
 
 model Demo {
-  id                String @id @default(cuid())
-  domain            String
-  cacheDurationDays Int?
+  id     String @id @default(cuid())
+  domain String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

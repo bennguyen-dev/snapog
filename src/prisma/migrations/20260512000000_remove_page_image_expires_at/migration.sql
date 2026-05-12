@@ -1,0 +1,1 @@
+ALTER TABLE "Page" DROP COLUMN IF EXISTS "imageExpiresAt";

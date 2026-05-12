@@ -1,12 +1,10 @@
 import { prisma } from "@/lib/db";
-import { pageService } from "@/services/page";
 import {
   ICreateSite,
   IDeleteSitesBy,
   IGetSiteBy,
   IGetSitesBy,
   ISiteDetail,
-  IUpdateSiteBy,
 } from "@/services/site";
 import { IFilterParams, IResponse, IResponseWithCursor } from "@/types/global";
 
@@ -14,7 +12,6 @@ class SiteService {
   async create({
     userId,
     domain,
-    cacheDurationDays,
   }: ICreateSite): Promise<IResponse<ISiteDetail | null>> {
     try {
       const exists = await prisma.site.findFirst({
@@ -36,7 +33,6 @@ class SiteService {
         data: {
           domain,
           userId,
-          cacheDurationDays,
         },
       });
 
@@ -168,57 +164,6 @@ class SiteService {
     }
   }
 
-  async updateBy({
-    id,
-    cacheDurationDays,
-    overridePage = false,
-  }: IUpdateSiteBy): Promise<IResponse<ISiteDetail | null>> {
-    try {
-      if (!id) {
-        return {
-          message: "Id is required",
-          status: 400,
-          data: null,
-        };
-      }
-
-      if (overridePage) {
-        await pageService.updateManyBy({ siteId: id, cacheDurationDays });
-      }
-
-      const site = await prisma.site.update({
-        where: {
-          id,
-        },
-        data: {
-          cacheDurationDays,
-        },
-      });
-
-      if (!site) {
-        return {
-          message: "Site not found",
-          status: 404,
-          data: null,
-        };
-      }
-
-      return {
-        message: "Sites updated successfully",
-        status: 200,
-        data: site,
-      };
-    } catch (error) {
-      console.error(`Error updating sites: ${error}`);
-      return {
-        status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
-      };
-    }
-  }
-
   async deleteManyBy({
     userId,
     domain,
@@ -242,10 +187,16 @@ class SiteService {
       }
 
       for (const site of sites) {
-        const deletePages = await pageService.deleteManyBy({ siteId: site.id });
+        const deletePages = await prisma.page.deleteMany({
+          where: { siteId: site.id },
+        });
 
-        if (deletePages.status !== 200) {
-          return deletePages;
+        if (!deletePages) {
+          return {
+            message: "Pages not found",
+            status: 404,
+            data: null,
+          };
         }
       }
 

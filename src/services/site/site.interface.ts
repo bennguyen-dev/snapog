@@ -5,8 +5,6 @@ export interface ISiteDetail extends Site {}
 export interface ICreateSite {
   userId: string;
   domain: string;
-
-  cacheDurationDays?: number;
 }
 
 export interface IGetSitesBy {
@@ -21,13 +19,6 @@ export interface IGetSiteBy {
   domain?: string;
 
   id?: string;
-}
-
-export interface IUpdateSiteBy {
-  id: string;
-
-  cacheDurationDays?: number | null;
-  overridePage?: boolean;
 }
 
 export interface IDeleteSitesBy {

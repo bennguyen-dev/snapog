@@ -10,7 +10,6 @@ import {
   IDeletePagesBy,
   IGetPageBy,
   IInvalidateCachePageBy,
-  IUpdatePagesBy,
 } from "@/services/page";
 import { IResponse, IFilterParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
@@ -78,29 +77,6 @@ export const useGetPages = ({
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     enabled: !!siteId,
-  });
-};
-
-export const useUpdatePageById = ({ siteId }: { siteId: string }) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, cacheDurationDays }: IUpdatePagesBy) => {
-      const result = await fetch(`/api/pages/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({ cacheDurationDays }),
-      });
-      const response: IResponse<Page> = await result.json();
-      if (response.status === 200) {
-        return response;
-      }
-      throw new Error(response.message);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: pageKeys.list({ siteId }),
-      });
-    },
   });
 };
 

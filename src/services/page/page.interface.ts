@@ -18,13 +18,6 @@ export interface IGetPageBy {
   headers?: IHeaders;
 }
 
-export interface IUpdatePagesBy {
-  id?: string;
-  siteId?: string;
-  cacheDurationDays?: number | null;
-  headers?: IHeaders;
-}
-
 export interface IDeletePagesBy {
   siteId?: string;
   id?: string;

@@ -223,11 +223,8 @@ const BlockFAQs = () => {
               <Typography>Clear cache for specific URLs</Typography>
             </li>
             <li>
-              <Typography>Adjust cache duration settings</Typography>
-            </li>
-            <li>
               <Typography>
-                Automatic cache clearing on content updates (coming soon)
+                Regenerate images manually when page content changes
               </Typography>
             </li>
           </ul>

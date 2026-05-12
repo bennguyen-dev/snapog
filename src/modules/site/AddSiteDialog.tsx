@@ -24,15 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { DURATION_CACHES } from "@/constants";
 import { useCreateSite } from "@/hooks";
 
 export interface IAddSiteDialogRef {
@@ -43,12 +35,10 @@ const formSchema = z.object({
   domain: z.string().min(1, {
     message: "Domain is required",
   }),
-  cacheDurationDays: z.string(),
 });
 
 const defaultValues = {
   domain: "",
-  cacheDurationDays: "infinity",
 };
 
 export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
@@ -65,11 +55,6 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
     createSite(
       {
         domain: formData.domain,
-        cacheDurationDays:
-          formData.cacheDurationDays &&
-          formData.cacheDurationDays !== "infinity"
-            ? parseInt(formData.cacheDurationDays, 10)
-            : undefined,
       },
       {
         onSuccess(data) {
@@ -121,36 +106,6 @@ export const AddSiteDialog = forwardRef<IAddSiteDialogRef>((props, ref) => {
                     placeholder="www.yoursite.com"
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="cacheDurationDays"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cache duration (days)</FormLabel>
-                <FormControl>
-                  <Select
-                    disabled={creating}
-                    onValueChange={field.onChange}
-                    value={field.value?.toString()}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Cache duration (days)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DURATION_CACHES.map((item) => {
-                        return (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>

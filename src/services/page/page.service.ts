@@ -7,7 +7,6 @@ import {
   IDeletePagesBy,
   IGetPageBy,
   IInvalidateCachePageBy,
-  IUpdatePagesBy,
 } from "@/services/page";
 import { scrapeService } from "@/services/scrapeApi";
 import { storageService } from "@/services/storage";
@@ -87,7 +86,6 @@ class PageService {
               id: true,
               userId: true,
               domain: true,
-              cacheDurationDays: true,
             },
           });
 
@@ -233,23 +231,12 @@ class PageService {
             };
           }
 
-          // Calculate expiration
-          const today = new Date();
-          let newExpiresAt: Date | null = null;
-
-          if (site.cacheDurationDays) {
-            newExpiresAt = new Date(today);
-            newExpiresAt.setDate(today.getDate() + site.cacheDurationDays);
-          }
-
           // Create page and deduct credit atomically
           const page = await tx.page.create({
             data: {
               url: urlWithProtocol,
               siteId,
-              cacheDurationDays: site.cacheDurationDays,
               imageSrc: uploadRes.data.src,
-              imageExpiresAt: newExpiresAt,
               OGTitle: pageCrawlInfo.data.title,
               OGDescription: pageCrawlInfo.data.description,
             },
@@ -301,26 +288,9 @@ class PageService {
     cursor,
     pageSize = 10,
     search,
-    filter,
   }: IGetPageBy & IFilterParams): Promise<IResponseWithCursor<Page[] | null>> {
     try {
-      const dateFrom = filter?.dateFrom;
-      const dateTo = filter?.dateTo;
-
       const whereCondition: any = { siteId };
-
-      // Apply date range filter
-      if (dateFrom || dateTo) {
-        whereCondition.imageExpiresAt = {};
-
-        if (dateFrom) {
-          whereCondition.imageExpiresAt.gte = dateFrom;
-        }
-
-        if (dateTo) {
-          whereCondition.imageExpiresAt.lte = dateTo;
-        }
-      }
 
       // Apply search filter
       if (search && search.trim() !== "") {
@@ -427,96 +397,6 @@ class PageService {
       };
     } catch (error) {
       console.error(`Error getting page: ${error}`);
-      return {
-        status: 500,
-        message:
-          error instanceof Error ? error.message : "Internal Server Error",
-        data: null,
-      };
-    }
-  }
-
-  async updateManyBy({
-    id,
-    siteId,
-    cacheDurationDays,
-  }: IUpdatePagesBy): Promise<IResponse<Page[] | null>> {
-    if (!id && !siteId) {
-      return {
-        message: "Missing id or siteId",
-        status: 400,
-        data: null,
-      };
-    }
-
-    try {
-      // First get the pages to update
-      const pagesToUpdate = await prisma.page.findMany({
-        where: {
-          id,
-          siteId,
-        },
-      });
-
-      if (!pagesToUpdate.length) {
-        return {
-          message: "No pages found to update",
-          status: 404,
-          data: null,
-        };
-      }
-
-      // Update each page with new expiration time
-      const updatedPages = await Promise.all(
-        pagesToUpdate.map(async (page) => {
-          let newImageExpiresAt = page.imageExpiresAt;
-
-          // Only recalculate if cacheDurationDays is being updated (not undefined)
-          if (cacheDurationDays !== undefined) {
-            if (cacheDurationDays === null) {
-              // Case: Switch to Infinity
-              newImageExpiresAt = null;
-            } else {
-              // Case: Switch to specific duration
-              if (page.imageExpiresAt) {
-                // Previously had expiration: Adjust based on difference
-                const currentCacheDuration = page.cacheDurationDays || 0;
-                const extendTime =
-                  (cacheDurationDays - currentCacheDuration) *
-                  24 *
-                  60 *
-                  60 *
-                  1000;
-                newImageExpiresAt = new Date(
-                  page.imageExpiresAt.getTime() + extendTime,
-                );
-              } else {
-                // Previously Infinity (null): Set from NOW
-                const today = new Date();
-                newImageExpiresAt = new Date(today);
-                newImageExpiresAt.setDate(today.getDate() + cacheDurationDays);
-              }
-            }
-          }
-
-          return prisma.page.update({
-            where: { id: page.id },
-            data: {
-              cacheDurationDays,
-              updatedAt: new Date(),
-              imageExpiresAt: newImageExpiresAt,
-            },
-          });
-        }),
-      );
-
-      return {
-        message: "Pages updated successfully",
-        status: 200,
-        data: updatedPages,
-      };
-    } catch (error) {
-      console.error(`Error updating pages: ${error}`);
       return {
         status: 500,
         message:
@@ -712,22 +592,10 @@ class PageService {
         };
       }
 
-      // Update page with new image and metadata
-      const today = new Date();
-      let newExpiresAt: Date | null = null;
-
-      if (page.cacheDurationDays) {
-        newExpiresAt = new Date(today);
-        newExpiresAt.setDate(today.getDate() + page.cacheDurationDays);
-      } else {
-        newExpiresAt = null;
-      }
-
       const updatedPage = await prisma.page.update({
         where: { id },
         data: {
           imageSrc: uploadRes.data?.src,
-          imageExpiresAt: newExpiresAt,
           OGTitle: pageCrawlInfo.data?.title,
           OGDescription: pageCrawlInfo.data?.description,
         },

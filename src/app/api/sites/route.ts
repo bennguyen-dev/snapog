@@ -11,8 +11,6 @@ export const POST = auth(async function POST(req) {
 
   const domain = getDomainName(body?.domain);
 
-  const cacheDurationDays = body?.cacheDurationDays;
-
   if (!req.auth?.user?.id) {
     return NextResponse.json({
       message: "Unauthorized",
@@ -32,7 +30,6 @@ export const POST = auth(async function POST(req) {
   const site = await siteService.create({
     userId: req.auth.user.id,
     domain,
-    cacheDurationDays,
   });
 
   if (!site.data) {
@@ -63,7 +60,7 @@ export const POST = auth(async function POST(req) {
   // send event to inngest
   // await inngest.send({
   //   name: "background/create.site",
-  //   data: { siteId: site.data.id, cacheDurationDays },
+  //   data: { siteId: site.data.id },
   // });
 
   const res = {

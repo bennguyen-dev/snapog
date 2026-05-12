@@ -69,7 +69,8 @@ Errors bubble up as `IResponse` with non-2xx `status`; the route serializes them
 Registered in `src/services/inngest/inngest.service.ts`, mounted at `src/app/api/inngest/route.ts`.
 
 - `background/create.site` — fires after a site is created and creates the homepage `Page` via `pageService.create`.
-- `schedule/update.ogimage.daily` — cron `0 0 * * *`. Selects `Page`s where `imageExpiresAt <= now`, re-scrapes via `scrapeService.scrapeInfo`, re-uploads to S3 reusing the same `imageSrc` key, and pushes `imageExpiresAt` forward by `cacheDurationDays`. Pages with no/infinite cache duration are excluded from auto-renewal.
+
+There is no automatic image regeneration cron. Pages are generated on creation/request and refreshed only through explicit user actions.
 
 ### Credits
 

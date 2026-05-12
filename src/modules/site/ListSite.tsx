@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { Site } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
-import { Pencil, Plus, RefreshCw, TrashIcon } from "lucide-react";
+import { Plus, RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { DateRange } from "react-day-picker";
 
@@ -39,12 +39,7 @@ import {
   useDeleteSiteById,
   useGetSites,
 } from "@/hooks";
-import {
-  AddSiteDialog,
-  EditSiteDialog,
-  IAddSiteDialogRef,
-  IEditSiteDialogRef,
-} from "@/modules/site";
+import { AddSiteDialog, IAddSiteDialogRef } from "@/modules/site";
 import { formatDate, getLinkSmartOGImage, getSnippetHowToUse } from "@/utils";
 
 const ListSite = () => {
@@ -52,7 +47,6 @@ const ListSite = () => {
   const { data: session } = useSession();
 
   const addSiteRef = useRef<IAddSiteDialogRef>(null);
-  const editSiteRef = useRef<IEditSiteDialogRef>(null);
 
   const [search, setSearch] = useState<string>("");
   const [date, setDate] = useState<DateRange | undefined>();
@@ -132,17 +126,6 @@ const ListSite = () => {
         },
       },
       {
-        accessorKey: "cacheDurationDays",
-        header: "Cache duration (days)",
-        cell: ({ row }) => {
-          return (
-            <Typography className="text-center" affects="small">
-              {row.original.cacheDurationDays ?? "Infinity"}
-            </Typography>
-          );
-        },
-      },
-      {
         accessorKey: "createdAt",
         header: "Created at",
         cell: ({ row }) => {
@@ -198,14 +181,6 @@ const ListSite = () => {
                 disabled={deleting}
               >
                 <TrashIcon className="icon" />
-              </Button>
-              <Button
-                size="icon"
-                onClick={() => {
-                  editSiteRef.current?.open(site);
-                }}
-              >
-                <Pencil className="icon" />
               </Button>
             </div>
           );
@@ -296,7 +271,6 @@ const ListSite = () => {
       </Card>
 
       <AddSiteDialog ref={addSiteRef} />
-      <EditSiteDialog ref={editSiteRef} />
       <ConfirmDialog loading={deleting} />
     </div>
   );

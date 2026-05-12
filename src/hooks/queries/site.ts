@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 
 import { logsKeys, pageKeys, userStatsKeys } from "@/hooks";
-import { ICreateSite, IDeleteSitesBy, IUpdateSiteBy } from "@/services/site";
+import { ICreateSite, IDeleteSitesBy } from "@/services/site";
 import { IResponse, IFilterParams } from "@/types/global";
 import generateQueryKey from "@/utils/queryKeyFactory";
 
@@ -93,13 +93,10 @@ export const useGetSiteById = ({ siteId }: { siteId: string }) => {
 export const useCreateSite = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      cacheDurationDays,
-      domain,
-    }: Omit<ICreateSite, "userId">) => {
+    mutationFn: async ({ domain }: Omit<ICreateSite, "userId">) => {
       const result = await fetch("/api/sites", {
         method: "POST",
-        body: JSON.stringify({ cacheDurationDays, domain }),
+        body: JSON.stringify({ domain }),
       });
       const response: IResponse<Site> = await result.json();
 
@@ -120,36 +117,6 @@ export const useCreateSite = () => {
       });
       queryClient.invalidateQueries({
         queryKey: userStatsKeys.all,
-      });
-    },
-  });
-};
-
-export const useUpdateSiteById = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      id,
-      cacheDurationDays,
-      overridePage,
-    }: IUpdateSiteBy) => {
-      const result = await fetch(`/api/sites/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({ cacheDurationDays, overridePage }),
-      });
-      const response: IResponse<Site> = await result.json();
-
-      if (response.status === 200) {
-        return response;
-      }
-      throw new Error(response.message);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: siteKeys.all,
-      });
-      queryClient.invalidateQueries({
-        queryKey: pageKeys.list({ siteId: data.data.id }),
       });
     },
   });

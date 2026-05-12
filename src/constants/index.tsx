@@ -74,15 +74,6 @@ export const AUTH_ROUTES: NavItem[] = [
   },
 ];
 
-export const CACHE_DURATION_DAYS = 30;
-
-export const DURATION_CACHES = [
-  { value: "infinity", label: "Infinity" },
-  ...Array(CACHE_DURATION_DAYS)
-    .fill(null)
-    .map((_, i) => ({ value: `${i + 1}`, label: `${i + 1} days` })),
-];
-
 export const IMAGE_TYPES = Object.freeze({
   PNG: {
     MIME: "image/png",

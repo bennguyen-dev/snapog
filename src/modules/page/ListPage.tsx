@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import * as React from "react";
 
 import { Page } from "@prisma/client";
 import { ColumnDef } from "@tanstack/table-core";
-import { Pencil, RefreshCw, TrashIcon } from "lucide-react";
+import { RefreshCw, TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { DateRange } from "react-day-picker";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +28,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
-import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Typography } from "@/components/ui/typography";
@@ -42,11 +40,7 @@ import {
   useGetSiteById,
   useInvalidateCachePageById,
 } from "@/hooks";
-import {
-  EditPageDialog,
-  IEditPageDialogRef,
-} from "@/modules/page/EditPageDialog";
-import { formatDate, getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
+import { getLinkSmartOGImage, getUrlWithProtocol } from "@/utils";
 
 interface IProps {
   siteId: string;
@@ -60,10 +54,8 @@ const ListPage = ({ siteId }: IProps) => {
     onCloseConfirm: onCloseInvalidate,
     ConfirmDialog: InvalidateCacheDialog,
   } = useConfirmDialog();
-  const editPageRef = useRef<IEditPageDialogRef>(null);
 
   const [search, setSearch] = useState<string>("");
-  const [date, setDate] = useState<DateRange | undefined>();
 
   const debouncedSearchTerm = useDebounce(search, 500);
 
@@ -78,7 +70,6 @@ const ListPage = ({ siteId }: IProps) => {
   } = useGetPages({
     siteId,
     search: debouncedSearchTerm,
-    filter: { dateFrom: date?.from, dateTo: date?.to },
   });
   const { data: site, isLoading: loadingSite } = useGetSiteById({ siteId });
   const { mutate: deletePage, isPending: deleting } = useDeletePageById({
@@ -215,35 +206,6 @@ const ListPage = ({ siteId }: IProps) => {
         },
       },
       {
-        accessorKey: "cacheDurationDays",
-        header: "Cache duration (days)",
-        cell: ({ row }) => {
-          return (
-            <Typography className="text-center" affects="small">
-              {row.original.cacheDurationDays ?? "Infinity"}
-            </Typography>
-          );
-        },
-      },
-      {
-        accessorKey: "expiredAt",
-        header: "Expired at",
-        cell: ({ row }) => {
-          if (!row.original?.imageExpiresAt) {
-            return (
-              <Typography affects="muted" className="italic">
-                Never
-              </Typography>
-            );
-          }
-          return (
-            <Typography affects="muted">
-              {formatDate(row.original?.imageExpiresAt)}
-            </Typography>
-          );
-        },
-      },
-      {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {
@@ -278,15 +240,6 @@ const ListPage = ({ siteId }: IProps) => {
                 disabled={deleting}
               >
                 <RefreshCw className="icon" />
-              </Button>
-
-              <Button
-                size="icon"
-                onClick={() => {
-                  editPageRef.current?.open(page);
-                }}
-              >
-                <Pencil className="icon" />
               </Button>
 
               <Button
@@ -382,13 +335,6 @@ const ListPage = ({ siteId }: IProps) => {
                 }
               }}
             />
-            <DatePicker
-              placeholder="Expired At"
-              mode="range"
-              initialDateRange={date}
-              onDateRangeChange={setDate}
-              presetDays={[1, 7, 14, 30, 90]}
-            />
             <Button
               variant="outline"
               onClick={() => getPages()}
@@ -413,7 +359,6 @@ const ListPage = ({ siteId }: IProps) => {
 
       <ConfirmDialog loading={deleting} />
       <InvalidateCacheDialog loading={invalidating} />
-      <EditPageDialog ref={editPageRef} siteId={siteId} />
     </div>
   );
 };
