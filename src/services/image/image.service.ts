@@ -1,7 +1,6 @@
+import { prisma } from "@/lib/db";
 import { IGenerateOGImage, IGenerateOGImageResponse } from "@/services/image";
 import { pageService } from "@/services/page";
-import { siteService } from "@/services/site";
-import { userService } from "@/services/user";
 import { IResponse } from "@/types/global";
 import { getDomainName, getUrlWithoutProtocol } from "@/utils";
 
@@ -12,33 +11,57 @@ class ImageService {
     headers,
   }: IGenerateOGImage): Promise<IResponse<IGenerateOGImageResponse | null>> {
     const domain = getDomainName(url);
+    const normalizedUrl = getUrlWithoutProtocol(url);
 
     try {
-      const userRes = await userService.getUser({ apiKey });
-      if (!userRes.data) {
-        return { message: userRes.message, status: userRes.status, data: null };
-      }
-
-      const site = await siteService.getBy({ domain, userId: userRes.data.id });
-      if (!site.data) {
-        return { message: site.message, status: site.status, data: null };
-      }
-
-      const page = await pageService.getBy({
-        url: getUrlWithoutProtocol(url),
-        siteId: site.data.id,
+      const cachedPage = await prisma.page.findFirst({
+        where: {
+          imageSrc: {
+            not: null,
+          },
+          OR: [{ url }, { url: normalizedUrl }],
+          site: {
+            domain,
+            user: {
+              apiKey,
+            },
+          },
+        },
+        select: {
+          imageSrc: true,
+        },
       });
 
-      if (page.data?.imageSrc) {
+      if (cachedPage?.imageSrc) {
         return {
           message: "Image found",
           status: 200,
-          data: { imageSrc: page.data.imageSrc },
+          data: { imageSrc: cachedPage.imageSrc },
+        };
+      }
+
+      const site = await prisma.site.findFirst({
+        where: {
+          domain,
+          user: {
+            apiKey,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!site) {
+        return {
+          message: "Site not found",
+          status: 404,
+          data: null,
         };
       }
 
       const newPage = await pageService.create({
-        siteId: site.data.id,
+        siteId: site.id,
         url,
         headers,
       });
