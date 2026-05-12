@@ -30,4 +30,4 @@ Recent history uses Conventional Commit prefixes such as `feat:`, `fix:`, `chore
 
 ## Security & Configuration Tips
 
-Do not commit secrets. Local configuration should provide database, auth, R2 storage, Inngest, scraping, and payment-related environment variables as needed. Be careful with `npm run build`: it deploys Prisma migrations, so review generated migration SQL before merging.
+Do not commit secrets. Local configuration should provide database, auth, R2 storage, scraping, and payment-related environment variables as needed. Be careful with `npm run build`: it deploys Prisma migrations, so review generated migration SQL before merging.

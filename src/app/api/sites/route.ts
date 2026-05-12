@@ -57,12 +57,6 @@ export const POST = auth(async function POST(req) {
     return NextResponse.json(page, { status: page.status });
   }
 
-  // send event to inngest
-  // await inngest.send({
-  //   name: "background/create.site",
-  //   data: { siteId: site.data.id },
-  // });
-
   const res = {
     status: site.status,
     data: {

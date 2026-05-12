@@ -55,7 +55,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "framer-motion": "^11.18.0",
     "gray-matter": "^4.0.3",
-    "inngest": "^3.19.18",
     "lucide-react": "^0.474.0",
     "next": "^14.2.35",
     "next-auth": "^5.0.0-beta.18",

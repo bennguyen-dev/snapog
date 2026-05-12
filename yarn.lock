@@ -5277,23 +5277,6 @@ inherits@^2.0.3, inherits@2:
   resolved "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
-inngest@^3.19.18:
-  version "3.19.18"
-  resolved "https://registry.npmjs.org/inngest/-/inngest-3.19.18.tgz"
-  integrity sha512-tmSdSZbeaibyi8RB1IuiZIyxroTFLKQ8AImK5dKhEDyWYfeDYE1QAXohrK+8sG7j6e5VnlSIF9jV94W9Vwsxbw==
-  dependencies:
-    "@types/debug" "^4.1.12"
-    canonicalize "^1.0.8"
-    chalk "^4.1.2"
-    cross-fetch "^4.0.0"
-    debug "^4.3.4"
-    hash.js "^1.1.7"
-    json-stringify-safe "^5.0.1"
-    ms "^2.1.3"
-    serialize-error-cjs "^0.1.3"
-    strip-ansi "^5.2.0"
-    zod "~3.22.3"
-
 internal-slot@^1.0.7:
   version "1.0.7"
   resolved "https://registry.npmjs.org/internal-slot/-/internal-slot-1.0.7.tgz"

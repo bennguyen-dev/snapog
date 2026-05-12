@@ -11,7 +11,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Next.js 14 (App Router, RSC) + TypeScript, React 18
 - Prisma 5 + PostgreSQL (Neon)
 - NextAuth v5 beta (GitHub + Google + email)
-- Inngest for background jobs and cron
 - Cloudflare R2 (S3-compatible API) for image storage; served via R2 public hostname / Cloudflare CDN
 - Polar for payments (`@polar-sh/sdk`, `@polar-sh/nextjs`)
 - ScreenshotOne for screenshots via `src/services/scrapeApi`; metadata is parsed directly from page HTML
@@ -64,14 +63,6 @@ Entry: `src/app/api/[apiKey]/route.ts` → `imageService.generateOGImage` (`src/
 
 Errors bubble up as `IResponse` with non-2xx `status`; the route serializes them as JSON.
 
-### Background jobs (Inngest)
-
-Registered in `src/services/inngest/inngest.service.ts`, mounted at `src/app/api/inngest/route.ts`.
-
-- `background/create.site` — fires after a site is created and creates the homepage `Page` via `pageService.create`.
-
-There is no automatic image regeneration cron. Pages are generated on creation/request and refreshed only through explicit user actions.
-
 ### Credits
 
 - `UserBalance` holds `freeCredits` + `paidCredits`. New users get 30 free credits.
@@ -87,7 +78,6 @@ There is no automatic image regeneration cron. Pages are generated on creation/r
 ### Webhooks
 
 - `/api/webhook/polar` — Polar payment events; updates products/credits.
-- `/api/inngest` — Inngest dispatcher; never call directly.
 
 ### Storage
 
@@ -100,7 +90,6 @@ src/
 ├── app/
 │   ├── api/                # Route handlers; thin, delegate to services
 │   │   ├── [apiKey]/       # Public image endpoint
-│   │   ├── inngest/        # Inngest function dispatcher
 │   │   ├── webhook/polar/  # Polar payment webhook
 │   │   └── ...             # auth, sites, pages, credits, api-keys, products, user, demo, get, logs
 │   ├── dashboard/          # Authenticated UI
@@ -109,13 +98,13 @@ src/
 ├── services/               # Business logic (one folder per domain)
 ├── modules/                # Feature UI bundles consumed by routes
 ├── components/{ui,customs} # Radix primitives wrapped with Tailwind + bespoke components
-├── lib/                    # db (Prisma client), inngest client
+├── lib/                    # db (Prisma client), payment helpers
 ├── hooks/, utils/, constants/, types/, content/, assets/
 ├── auth.ts, middleware.ts
 └── prisma/schema-postgres.prisma
 ```
 
-Domains under `services/`: `blog`, `demo`, `googleCaptcha`, `image`, `inngest`, `page`, `product`, `scrapeApi`, `site`, `stats`, `storage`, `user`, `userBalance`, `userLog`, `webhook`.
+Domains under `services/`: `blog`, `demo`, `googleCaptcha`, `image`, `page`, `product`, `scrapeApi`, `site`, `stats`, `storage`, `user`, `userBalance`, `userLog`, `webhook`.
 
 Domains under `modules/`: `api-keys`, `auth`, `credits`, `dashboard`, `logs`, `page`, `payment`, `site`.
 
@@ -127,7 +116,7 @@ Domains under `modules/`: `api-keys`, `auth`, `credits`, `dashboard`, `logs`, `p
 
 ## Environment
 
-See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `INNGEST_*`, `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
+See `.example.env`. Required for local dev: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, at least one OAuth provider, R2 storage (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_HOSTNAME`), `SCRAPE_API_URL` + `SNAP_OG_API_KEY`, `SCREENSHOTONE_ACCESS_KEY`. Polar + reCAPTCHA + Hotjar are optional locally. `R2_PUBLIC_HOSTNAME` is whatever serves the bucket publicly — either `pub-xxxxx.r2.dev` (free, dev-tier) or a custom domain in Cloudflare DNS.
 
 ## Known sharp edges
 
